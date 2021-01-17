@@ -1,8 +1,0 @@
-com\lrm\po\Tag.class
-com\lrm\po\Notice.class
-com\lrm\po\User.class
-com\lrm\po\Comment.class
-com\lrm\dao\UserRepository.class
-com\lrm\Application.class
-com\lrm\po\Question.class
-com\lrm\NotFoundException.class
