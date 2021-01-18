@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <style>
+        .nav {
+            float: left;
+            margin-left: 60px;
+        }
+        
+        .nav ul li {
+            float: left;
+            margin: 0 15px;
+        }
+        
+        .nav ul li a {
+            display: block;
+            height: 42px;
+            padding: 0 10px;
+            line-height: 42px;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .nav ul a:hover {
+            border-bottom: 2px solid white;
+            color: white;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        body {
+            height: 1000px;
+            background-image: url(beiyou.jpeg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-attachment: fixed;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .w {
+            width: 1200px;
+            margin: auto;
+        }
+        
+        .clearfix:before,
+        .clearfix:after {
+            content: "";
+            display: table;
+        }
+        
+        .clearfix:after {
+            clear: both;
+        }
+        
+        .clearfix {
+            *zoom: 1;
+        }
+        
+        .header {
+            height: 43px;
+            background-color: skyblue;
+            margin: 30px auto;
+        }
+        
+        .logo {
+            margin-left: 30px;
+            float: left;
+            width: 100px;
+            height: 42px;
+            background: url("物模型.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .search {
+            float: left;
+            width: 412px;
+            height: 42px;
+            background-color: skyblue;
+            margin-left: 70px;
+        }
+        
+        .banner {
+            height: 421px;
+            background-color: skyblue;
+        }
+        
+        .banner .w {
+            height: 421px;
+            background-color: white;
+        }
+        
+        .one {
+            animation-name: roll1;
+            margin-left: 7px;
+            float: left;
+            height: 421px;
+            width: 49.5%;
+            background-color: skyblue;
+        }
+        
+        .two {
+            margin-left: 7px;
+            float: left;
+            height: 421px;
+            width: 24%;
+            background-color: skyblue;
+        }
+        
+        .honor {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            margin-left: 9px;
+            margin-top: 58px;
+            height: 205px;
+            width: 270px;
+            background-color: white;
+        }
+        
+        .honor1 {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding-bottom: 20px;
+            margin-left: 10px;
+            height: 10px;
+            width: 250px;
+            background-color: skyblue;
+            text-align: center;
+            color: white;
+        }
+        
+        .honor2 {
+            border-radius: 10px;
+            margin-top: 10px;
+            margin-left: 60px;
+            height: 150px;
+            width: 150px;
+            background-color: skyblue;
+        }
+        
+        .wrap {
+            position: relative;
+        }
+        
+        .list {
+            width: 150px;
+            height: 150px;
+            list-style: none;
+            position: relative;
+        }
+        
+        .itemm {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .itemm:nth-child(1) {
+            background: url(youxiang4.jpg);
+            background-size: contain;
+        }
+        
+        .itemm:nth-child(2) {
+            background: url(fuliye.jpg);
+            background-size: contain;
+        }
+        
+        .itemm:nth-child(3) {
+            background: url(youxiang.jpg);
+            background-size: contain;
+        }
+        
+        .itemm:nth-child(4) {
+            background: url(youxiang1.jpg);
+            background-size: contain;
+        }
+        
+        .itemm:nth-child(5) {
+            background: url(youxiang2.jpg);
+            background-size: contain;
+        }
+        
+        .itemm.active {
+            z-index: 100000;
+        }
+        
+        .three {
+            margin-left: 7px;
+            float: left;
+            height: 421px;
+            width: 24%;
+            background-color: white;
+        }
+        
+        .touxiang {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-top: 20px;
+            margin-left: 45px;
+        }
+        
+        div img {
+            width: 100%;
+        }
+        
+        .question {
+            float: left;
+            width: 200px;
+            height: 100px;
+            background-color: white;
+            margin-top: 20px;
+            margin-left: 45px;
+        }
+        
+        h1 {
+            font-size: 35px;
+            color: white;
+            text-align: center;
+        }
+        
+        .username {
+            color: skyblue;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        .goods {
+            margin-left: 165px;
+            width: 890px;
+            height: 60px;
+            margin-top: 10px;
+            line-height: 60px;
+        }
+        
+        .button1 {
+            float: left;
+            width: 222.5px;
+            height: 60px;
+            border: none;
+        }
+        
+        .box {
+            margin-top: 30px;
+        }
+        
+        .box-hd {
+            height: 45px;
+        }
+        
+        .box-bd {
+            float: left;
+            width: 900px;
+        }
+        
+        .thefirst {
+            float: left;
+            width: 150px;
+            height: 270px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-color: rgb(239, 239, 239);
+        }
+        
+        .thesecond {
+            margin-left: 20px;
+            float: left;
+            width: 630px;
+            height: 238px;
+        }
+        
+        .thethirdup {
+            margin-top: 50px;
+            width: 150px;
+            height: 110px;
+        }
+        
+        .box-right {
+            margin-top: 30px;
+            margin-left: 5px;
+            width: 290px;
+            height: 1000px;
+            float: left;
+        }
+        
+        .first {
+            margin-left: 20px;
+            width: 264px;
+            height: 320px;
+        }
+        
+        .second {
+            margin-top: 50px;
+            width: 6px;
+            height: 500px;
+            background-color: skyblue;
+        }
+        
+        .inside2 {
+            margin-top: 10px;
+            margin-left: 25px;
+            width: 70px;
+            height: 41px;
+            background-color: white;
+        }
+        
+        .insider2 a {
+            color: white;
+        }
+        
+        .third {
+            margin-top: 50px;
+            width: 290px;
+            height: 210px;
+        }
+        
+        .box-bd .info {
+            margin: 0 20px 0 25px;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .footer {
+            height: 100px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <!--  <div class="ui attached stackable menu"> -->
+    <div class="ui container">
+        <!--  <div style="margin: auto;"> -->
+        <div class="background"></div>
+        <div class="header w">
+            <div class="logo"></div>
+            <div class="nav">
+                <ul>
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">首页</a></li>
+                </ul>
+            </div>
+            <div class="search">
+                <div class="ui large fluid icon input">
+                    <input type="text" placeholder="搜索">
+                    <i class="inverted circular search link icon"></i>
+                </div>
+            </div>
+
+            <div class="nav">
+                <ul>
+                    <li><a href="#">我的</a></li>
+                    <li><a href="#">登录/注册</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="banner">
+            <div class="w">
+                <ul>
+                    <div class="one">
+                    </div>
+                    <li class="two">
+                        <h1>公告</h1>
+                        <div class="ui icon message">
+                            <i class="rss icon"></i>
+                            <div class="content">
+                                <p>暂无公告</p>
+                            </div>
+
+                        </div>
+                        <div class="honor">
+                            <div class="honor1">活跃用户</div>
+                            <div class="honor2">
+                                <div class="wrap">
+                                    <ul class="list">
+                                        <li class="itemm"></li>
+                                        <li class="itemm"></li>
+                                        <li class="itemm"></li>
+                                        <li class="itemm"></li>
+                                        <li class="itemm"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="three">
+                        <div class="ui shape">
+                            <div class="sides">
+                                <div class="active side">
+                                    <div class="touxiang">
+                                        <img src="fuliye.jpg"></div>
+                                    <!--  <div class="username">早上好,打工人！</div> -->
+                                    <div class="question">
+                                        <button class="ui big primary button" style="margin-top: 30px;width: 200px;height: 100px; " onclick="funtion()">提问</div>
+                     </div><div class="side"> 
+                                    <div class="username">早上好,打工人！</div>
+                                    
+                   </div>   </div>
+                </div> </li>
+                </ul>
+            </div>
+        </div>
+        <div class="goods ">
+            <h3>
+                <div class="ui huge buttons" style="margin-left: -158px;margin-top: 10px;">
+                    <button class="ui button" style="width:222.5px;height:60px">问题</button>
+                                        <button class="ui button" style="width:222.5px;height:60px">广场</button>
+                                        <button class="ui button" style="width:222.5px;height:60px">发现</button>
+                                        <button class="ui button" style="width:222.5px;height:60px">树洞</button>
+                                    </div>
+                                    </h3>
+                                </div>
+                                <div class="box w ">
+                                    <div class="box-bd ">
+                                        <div class="clearfix ">
+                                            <div class="ui segment " style="height:300px;width: 836px; margin-left: 30px;margin-bottom: 35px; ">
+                                                <div class="thefirst ">
+                                                    <div class="thethirdup ">
+                                                        <div><img class="ui centered tiny circular image " src="youxiang2.jpg ">
+                                                            <div style="text-align: center;margin-top: 5px; ">
+                                                                <h2>yubo</h2>
+                                                            </div>
+                                                            <div style="text-align: center;margin-top: 2px; ">
+                                                                <p>2 hours ago</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="thesecond ">
+                                                    <div></div>
+                                                    <h2>这道问题怎么写</h2>
+                                                    <div class="metadata ">
+                                                        <div class="message " style="color: black; ">
+                                                            <i class="large black eye icon " style="margin-left: 10px; "></i>10
+                                                        </div>
+                                                        <img class="ui medium right floated image " src="test.jpeg " style="margin-top: -50px; ">
+                                                        <div style="font-size:medium ">
+                                                            <p>一段测试用的填充内容，没有任何意义。
+                                                            </p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="ui icon small bottom attached buttons " style="float: left;margin-left: 20px; ">
+                                                    <div class="ui labeled button " tabindex="0 ">
+                                                        <div class="ui red button ">
+                                                            <i class="thumbs up icon "></i>
+                                                        </div>
+                                                        <a class="ui basic red left pointing label ">0</a>
+                                                    </div>
+                                                </div>
+                                                <div class="ui icon small bottom attached buttons " style="float: left;margin-left: 12px; ">
+                                                    <div class="ui labeled button " tabindex="0 ">
+                                                        <div class="ui blue button ">
+                                                            <i class="thumbs down icon "></i>
+                                                        </div>
+                                                        <a class="ui basic blue left pointing label ">0</a>
+                                                    </div>
+                                                </div>
+                                                <div class="ui icon small bottom attached buttons " style="float: left;margin-left: 12px; ">
+                                                    <div class="ui labeled button " tabindex="0 ">
+                                                        <div class="ui yellow button ">
+                                                            <i class="star icon "></i>
+                                                        </div>
+                                                        <a class="ui basic yellow left pointing label ">0</a>
+                                                    </div>
+                                                </div>
+                                                <div class="ui icon small bottom attached buttons " style="float: left;margin-left: 12px; ">
+                                                    <div class="ui labeled button " tabindex="0 ">
+                                                        <div class="ui green button ">
+                                                            <i class="comment icon "></i>
+                                                        </div>
+                                                        <a class="ui basic green left pointing label ">0</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <button class="ui right floated blue button " style="width: 890px; ">下一页</button>
+                                        </div>
+                                    </div>
+                                    <div class="box-right ">
+                                        <ul>
+                                            <li class="first ">
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">信通</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">电子</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">计软</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">网安</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">AI</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">自邮</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">经管</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">梨园</button>
+                                                <button class="circular big ui icon button" style="width:80px;height: 80px;">果园</button>
+                                            </li>
+                                            <li class="second ">
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">数学分析<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">电子电路基础<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">高等数学<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">线性代数<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">数字电路与逻辑<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">程序设计<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">工程数学<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">C++<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right medium labeled input ">
+                                                        <a href=" " class="ui teal tag label ">自动机<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                                <div class="inside2 ">
+                                                    <div class="ui right large labeled input ">
+                                                        <a href=" " class="ui teal tag label ">汇编基础<div class="floating mini ui red label">22</div></a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="third ">
+                                                <div class="ui small link card ">
+                                                    <div class="content "><a class="ui red ribbon label">推荐</a>
+                                                        <div class="meta ">
+                                                            <span class="category ">动物</span>
+                                                        </div>
+                                                        <div class="description ">
+                                                            <p></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="extra content ">
+                                                        <div class="right floated author "><img class="ui avatar image " src="fuliye.jpg "> Matt </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!--       </div>
+            </div> -->
+                                <script>
+                                    var items = document.getElementsByClassName("itemm ");
+                                    var index = 0;
+                                    var clearActive = function() {
+                                        for (var i = 0; i <
+                                            items.length; i++) {
+                                            items[i].className = "itemm ";
+                                        }
+                                    }
+                                    var goIndex = function() {
+                                        clearActive();
+                                        items[index].className = "itemm active "
+                                    }
+                                    var goNext = function() {
+                                        index++;
+                                        goIndex();
+                                        if (index == 4) {
+                                            index = -1;
+                                        }
+                                    }
+                                    setInterval(function() {
+                                        goNext();
+                                    }, 2000);
+
+                                    funtion() {
+                                        $(".ui.shape").shape("flip left")
+
+                                    }
+                                </script>
+</body>
+
+</html>
