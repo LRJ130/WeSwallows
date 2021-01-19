@@ -46,6 +46,8 @@ public class LoginController {
         User user = userService.checkUser(username, password);
         if(user !=null)
         {
+            //因为user是要传递到前端的 这个操作是为了不把密码这个字段传递到前端
+            // 不会同步到数据库中
             user.setPassword(null);
             session.setAttribute("user", user);
             return "首页页面";

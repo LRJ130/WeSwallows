@@ -2,6 +2,7 @@ package com.lrm.service;
 
 import com.lrm.dao.UserRepository;
 import com.lrm.po.User;
+import com.lrm.util.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +28,14 @@ class UserServiceimpl implements UserService
     public void saveUser(String username, String password, String nickname) {
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(MD5Utils.code(password));
         user.setNickname(nickname);
         userRepository.save(user);
     }
 
     @Override
     public User checkUser(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username,password);
+        return userRepository.findByUsernameAndPassword(username,MD5Utils.code(password));
     }
 
 }
