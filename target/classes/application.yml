@@ -8,9 +8,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-#  messages:
+#  thymeleaf清除缓存，否则修改只有等重启之后才生效
+#  thymeleaf:
+#    cache=false:#  messages:
+
 #    basename: i18n/messages
-##我看看还好不好使
+
 server:
   port: 8080
 
