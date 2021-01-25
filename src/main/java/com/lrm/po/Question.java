@@ -26,6 +26,10 @@ public class Question
 
     private Integer view;
 
+    //不会进入数据库
+    @Transient
+    private  String tagIds;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
@@ -123,6 +127,38 @@ public class Question
         this.likes = likes;
     }
 
+    public String getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(String tagIds) {
+        this.tagIds = tagIds;
+    }
+
+    //真正起setTagIds作用的是这个方法
+    public void init() {
+        this.tagIds = tagsToIds(this.getTags());
+    }
+
+    //前端Tag对象的格式是以,分割的 tagIds作为一个媒介
+    private String tagsToIds(List<Tag> tags) {
+        if (!tags.isEmpty()) {
+            StringBuffer ids = new StringBuffer();
+            boolean flag = false;
+            for (Tag tag : tags) {
+                if (flag) {
+                    ids.append(",");
+                } else {
+                    flag = true;
+                }
+                ids.append(tag.getId());
+            }
+            return ids.toString();
+        } else {
+            return tagIds;
+        }
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -131,6 +167,7 @@ public class Question
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 ", view=" + view +
+                ", tagIds='" + tagIds + '\'' +
                 ", createTime=" + createTime +
                 ", tags=" + tags +
                 ", user=" + user +
