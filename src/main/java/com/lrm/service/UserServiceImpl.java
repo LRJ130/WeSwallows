@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class UserServiceimpl implements UserService
+public class UserServiceImpl implements UserService
 {
     //依赖注入 在某类中应用其他类的方法 需要调用这个类的对象 这就是依赖
     @Autowired
