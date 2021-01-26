@@ -2,7 +2,7 @@ package com.lrm.web;
 
 import com.lrm.po.User;
 import com.lrm.service.UserService;
-import com.lrm.vo.R;
+import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ public class LoginController {
 
     //注意这里需要返回<User> 需要确定泛型，否则操作无效了
     @PostMapping("/register")
-    public R<User> login(@RequestParam String username,
+    public Result<User> login(@RequestParam String username,
                          @RequestParam String password,
                          @RequestParam String nickname)
     {
@@ -27,16 +27,16 @@ public class LoginController {
         if(user !=null)
         {
             //跳转到注册页面
-            return new R<>(user, false, "该用户名或昵称已被注册过");
+            return new Result<>(user, false, "该用户名或昵称已被注册过");
         } else {
             userService.saveUser(username, password, nickname);
             //跳转到登录页面
-            return new R<>(user, true, "注册成功");
+            return new Result<>(user, true, "注册成功");
         }
     }
 
     @PostMapping("/login")
-    public R<User> login(@RequestParam String username,
+    public Result<User> login(@RequestParam String username,
                         @RequestParam String password,
                         HttpSession session)
     {
@@ -48,10 +48,10 @@ public class LoginController {
             user.setPassword(null);
             session.setAttribute("user", user);
             //返回首页
-            return new R<>(user, true, "登录成功");
+            return new Result<>(user, true, "登录成功");
         } else {
             //返回登录页面
-            return new R<>(null, false,"用户名或密码错误");
+            return new Result<>(null, false,"用户名或密码错误");
         }
     }
 
