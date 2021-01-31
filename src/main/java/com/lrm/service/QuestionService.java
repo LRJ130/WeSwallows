@@ -9,20 +9,23 @@ import java.util.List;
 
 public interface QuestionService {
     //简单的增删改查
-    Question saveQuestion(Question Question);
+    Question saveQuestion(Question question);
     void deleteQuestion(Long id);
-    Question updateQuestion(Long id, Question Question);
+    Question updateQuestionTime(Question question);
     Question getQuestion(Long id);
     Long countQuestion();
 
     //返回搜索后Question
-    Page<Question> listQuestion(Pageable pageable, QuestionQuery Question);
+    Page<Question> listQuestion(Pageable pageable, QuestionQuery question);
 
     //返回首页Question
     Page<Question> listQuestion(Pageable pageable);
 
     //返回标签所属Question
     Page<Question> listQuestion(Long tagId, Pageable pageable);
+
+    //返回用户自己的博客
+    Page<Question> listQuestionPlusUserId(Pageable pageable, QuestionQuery question, Long userId);
 
     //markdown转换
     //Question getAndConvert(Long id);

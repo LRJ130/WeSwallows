@@ -26,12 +26,19 @@ public class Question
 
     private Integer view;
 
-    //不会进入数据库
+    //问题的影响力 推荐
+    private Integer impact;
+    //显式的点赞数
+    private Integer likesNum;
+
+    //不通过数据库与前端交互 直接在service层转化为tags
     @Transient
     private  String tagIds;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date newCommentedTime;
 
     //无级联关系
     @ManyToMany
@@ -79,6 +86,7 @@ public class Question
         this.title = title;
     }
 
+
     public Integer getView() {
         return view;
     }
@@ -91,8 +99,24 @@ public class Question
         return createTime;
     }
 
+    public Integer getImpact() {
+        return impact;
+    }
+
+    public void setImpact(Integer impact) {
+        this.impact = impact;
+    }
+
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Date getNewCommentedTime() {
+        return newCommentedTime;
+    }
+
+    public void setNewCommentedTime(Date newCommentedTime) {
+        this.newCommentedTime = newCommentedTime;
     }
 
     public List<Tag> getTags() {
@@ -135,15 +159,23 @@ public class Question
         this.tagIds = tagIds;
     }
 
+    public Integer getLikesNum() {
+        return likesNum;
+    }
+
+    public void setLikesNum(Integer likesNum) {
+        this.likesNum = likesNum;
+    }
+
     //真正起setTagIds作用的是这个方法
+    //Tag集合转为String对象
     public void init() {
         this.tagIds = tagsToIds(this.getTags());
     }
-
     //前端Tag对象的格式是以,分割的 tagIds作为一个媒介
     private String tagsToIds(List<Tag> tags) {
         if (!tags.isEmpty()) {
-            StringBuffer ids = new StringBuffer();
+            StringBuilder ids = new StringBuilder();
             boolean flag = false;
             for (Tag tag : tags) {
                 if (flag) {
@@ -167,8 +199,11 @@ public class Question
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 ", view=" + view +
+                ", impact=" + impact +
                 ", tagIds='" + tagIds + '\'' +
+                ", likesNum=" + likesNum +
                 ", createTime=" + createTime +
+                ", newCommentedTime=" + newCommentedTime +
                 ", tags=" + tags +
                 ", user=" + user +
                 ", likes=" + likes +
