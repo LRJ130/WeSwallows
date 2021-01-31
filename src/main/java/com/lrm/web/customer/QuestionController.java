@@ -1,5 +1,6 @@
 package com.lrm.web.customer;
 
+import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Question;
 import com.lrm.po.Tag;
 import com.lrm.po.User;
@@ -105,8 +106,13 @@ public class QuestionController
     public Result<Map<String, Object>> delete(@PathVariable Long questionId)
     {
         Map<String, Object> hashMap = new HashMap<>();
-        questionService.deleteQuestion(questionId);
         Question question = questionService.getQuestion(questionId);
+        if(question == null)
+        {
+            throw new NotFoundException("该问题不存在");
+        }
+        questionService.deleteQuestion(questionId);
+        question = questionService.getQuestion(questionId);
         if(question != null)
         {
             hashMap.put("questions", question);

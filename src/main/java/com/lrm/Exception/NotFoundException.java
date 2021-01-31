@@ -10,24 +10,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class NotFoundException extends RuntimeException
 {
-    protected Integer errorCode;
     protected String errorMsg;
 
     public NotFoundException(){
 
     }
-    public NotFoundException(Integer errorCode, String errorMsg) {
-        this.errorCode = errorCode;
+
+    public NotFoundException(String errorMsg) {
         this.errorMsg = errorMsg;
     }
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
 
     public String getErrorMsg() {
         return errorMsg;
@@ -35,5 +27,13 @@ public class NotFoundException extends RuntimeException
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+
+    @Override
+    public String toString() {
+        return "NotFoundException{" +
+                "errorMsg='" + errorMsg + '\'' +
+                '}';
     }
 }
