@@ -3,9 +3,9 @@ package com.lrm.web.customer;
 import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Question;
 import com.lrm.po.Tag;
-import com.lrm.po.User;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
+import com.lrm.service.UserService;
 import com.lrm.vo.QuestionQuery;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//应该有一个拦截session中userid和url中userid不符的manage并抛出异常 这里是它俩相等的前提 在这样的前提下 不用考虑用户是否存在的异常
 @RequestMapping("/customer/{userId}")
 @RestController
 public class QuestionController
@@ -30,6 +30,9 @@ public class QuestionController
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private UserService userService;
 
     //后台返回个人所发问题的列表
     @GetMapping("/questions")
@@ -70,7 +73,7 @@ public class QuestionController
 
     //新增问题 初始化各部分属性
     @PostMapping("/questions")
-    public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, HttpSession session)
+    public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, @PathVariable Long userId)
     {
         Map<String, Object> hashMap= new HashMap<>();
         //后端检验valid
@@ -78,8 +81,8 @@ public class QuestionController
         {
             return new Result<>(hashMap, false, "标题、内容、概述均不能为空");
         }
-        question.setUser((User)session.getAttribute("user"));
-        //令前端只传回tagIds而不是tag对象 将他转换为List<Tag> 在service层找到对应的Tag保存到数据库
+        question.setUser(userService.getUser(userId));
+        //令前端只传回tagIds而不是tag对象 将它转换为List<Tag> 在service层找到对应的Tag保存到数据库
         question.setTags(tagService.listTag(question.getTagIds()));
         Question q;
 

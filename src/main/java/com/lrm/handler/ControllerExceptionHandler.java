@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 //全局异常处理 扫描所有的controller类
+//为了不将抛出的异常直接暴露给用户
 @RestControllerAdvice
 public class ControllerExceptionHandler
 {
@@ -30,6 +32,12 @@ public class ControllerExceptionHandler
     public Result NotFoundExceptionHandler(HttpServletRequest request, NotFoundException notFoundException) {
         logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), notFoundException);
         return Result.returnNotFoundException(notFoundException, request.getRequestURL());
+    }
+    //上传文件过大
+    @ExceptionHandler(IOException.class)
+    public Result IOEHandler(HttpServletRequest request, IOException ioException) {
+        logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), ioException);
+        return Result.returnIOException(ioException, request.getRequestURL());
     }
 
     @ExceptionHandler(Exception.class)

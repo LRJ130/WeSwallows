@@ -15,6 +15,8 @@ public class Question
     @GeneratedValue
     private Long id;
 
+    //懒加载 只有getContent了才加载
+    @Basic(fetch = FetchType.LAZY)
     @Lob
     @NotBlank(message = "请输入内容")
     private String content;
@@ -47,7 +49,7 @@ public class Question
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Likes> likes;
 
     //允许级联删除 删除问题即删除所有评论

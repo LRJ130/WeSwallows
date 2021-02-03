@@ -8,8 +8,15 @@ public interface UserService {
         //注册了的可以直接登录
     User checkRegister(String username, String nickname);
 
-    void saveUser(String username, String password, String nickname);
+    User saveUser(String username, String password, String nickname);
 
     User checkUser(String username, String password);
+
+    User updateUser(User user);
+
+    User getUser(Long userId);
+
+    Long countUser();
+
 
 }

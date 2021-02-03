@@ -29,7 +29,7 @@ public class LoginController {
             //跳转到注册页面
             return new Result<>(user, false, "该用户名或昵称已被注册过");
         } else {
-            userService.saveUser(username, password, nickname);
+            user = userService.saveUser(username, password, nickname);
             //跳转到登录页面
             return new Result<>(user, true, "注册成功");
         }

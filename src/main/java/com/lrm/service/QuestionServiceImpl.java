@@ -2,9 +2,7 @@ package com.lrm.service;
 
 import com.lrm.dao.QuestionRepository;
 import com.lrm.po.Question;
-import com.lrm.vo.MyBeanUtils;
 import com.lrm.vo.QuestionQuery;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,16 +36,11 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.save(question);
     }
 
-
-    //在Questions-input中没有createTime和view的隐含域 所以传到controller里的Question中是null的
-    //所以updateQuestion要通过这种复制方式 保留这个Question有createTim和view的值
     @Transactional
     @Override
     public Question updateQuestionTime(Question question) {
-        Question b = questionRepository.findOne(question.getId());
-        BeanUtils.copyProperties(question, b, MyBeanUtils.getNullPropertyNames(question));
-        b.setNewCommentedTime(new Date());
-        return questionRepository.save(b);
+        question.setNewCommentedTime(new Date());
+        return questionRepository.save(question);
     }
 
     @Override
@@ -62,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public Long countQuestion() {
-        return null;
+        return questionRepository.count();
     }
 
 
