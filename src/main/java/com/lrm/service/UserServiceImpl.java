@@ -66,6 +66,11 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
+    public User getUser(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
+
+    @Override
     public Long countUser() {
         return userRepository.count();
     }

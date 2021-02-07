@@ -12,6 +12,7 @@ public interface QuestionService {
     Question saveQuestion(Question question);
     void deleteQuestion(Long id);
     Question updateQuestionTime(Question question);
+    Question updateQuestion(Question question);
     Question getQuestion(Long id);
     Long countQuestion();
 
@@ -35,5 +36,4 @@ public interface QuestionService {
 
     //按日期顺序返回自己的问题
     //Map<String, List<Question>> archivesQuestion();
-
 }

@@ -20,7 +20,8 @@ public class User
     private Long id;     //每个类都要有一个id主键
     //用户个人属性
     private Boolean admin;     //是否为管理员
-      //必填部分
+    private Boolean canSpeak;  //能否发言
+    //必填部分
         //@NotBlank需要搭配有@Valid的controller方法使用 且只能用在String上
     @NotBlank(message = "请输入昵称")
     private String nickname;
@@ -36,6 +37,7 @@ public class User
       //自动生成时间
     @Temporal(TemporalType.TIMESTAMP)
     private Date registerTime;
+
 
     //关联关系 Merge Refresh Remove Persist
         //mappedBy="name" name为外键所在的表中关联的字段的名字
@@ -133,6 +135,14 @@ public class User
 
     public void setRegisterTime(Date registerTime) {
         this.registerTime = registerTime;
+    }
+
+    public Boolean getCanSpeak() {
+        return canSpeak;
+    }
+
+    public void setCanSpeak(Boolean canSpeak) {
+        this.canSpeak = canSpeak;
     }
 
     public List<Question> getQuestions() {

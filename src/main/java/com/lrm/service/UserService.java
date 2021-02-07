@@ -16,6 +16,8 @@ public interface UserService {
 
     User getUser(Long userId);
 
+    User getUser(String nickname);
+
     Long countUser();
 
 

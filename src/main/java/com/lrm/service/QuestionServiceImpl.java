@@ -2,7 +2,9 @@ package com.lrm.service;
 
 import com.lrm.dao.QuestionRepository;
 import com.lrm.po.Question;
+import com.lrm.vo.MyBeanUtils;
 import com.lrm.vo.QuestionQuery;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,13 @@ public class QuestionServiceImpl implements QuestionService{
     public Question updateQuestionTime(Question question) {
         question.setNewCommentedTime(new Date());
         return questionRepository.save(question);
+    }
+
+    public Question updateQuestion(Question question)
+    {
+        Question q = questionRepository.findOne(question.getId());
+        BeanUtils.copyProperties(question, q, MyBeanUtils.getNullPropertyNames(question));
+        return questionRepository.save(q);
     }
 
     @Override
@@ -88,6 +97,7 @@ public class QuestionServiceImpl implements QuestionService{
             }
             if( question.getTagIds() !=null)
             {
+                //这里应该怎么写呢
                 predicates.add(cb.like(root.get("tagIds"), "%"+question.getTagIds()+"%"));
             }
             Join join = root.join("user");

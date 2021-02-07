@@ -1,116 +1,141 @@
 package com.lrm.web.admin;
 
+import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Question;
+import com.lrm.po.Tag;
 import com.lrm.po.User;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
+import com.lrm.service.UserService;
+import com.lrm.vo.QuestionQuery;
+import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+//未考虑安全
+@RequestMapping("/admin}")
 @RestController
 public class AdminQuestionController
 {
-    private static final String INPUT = "admin/Questions-input";
-    private static final String LIST = "admin/Questions";
-    private static final String REDIRECT_LIST = "redirect:/admin/Questions";
-
     @Autowired
     private TagService tagService;
 
     @Autowired
-    private QuestionService QuestionService;
+    private QuestionService questionService;
 
-    //后台返回问题列表
-    //@GetMapping("/admin/Questions")
-    //因为有一堆数据，所以查询条件封装成QuestionQuery了
-    //public Map<String, List<Object>> Questions(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-    //                                          QuestionQuery Question, Model model)
-    //{
-    //    Map<String, List<Object>> hashmap = new HashMap<>();
-    //    hashmap.put("types", typeService.listType());
-    //    model.addAttribute("page", QuestionService.listQuestion(pageable, Question));
-    //    return LIST;
-    //}
+    @Autowired
+    private UserService userService;
 
-    //搜索
-//    @PostMapping("/Questions/search")
-//    public String search(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-//                         QuestionQuery Question, Model model)
-//    {
-//        model.addAttribute("page", QuestionService.listQuestion(pageable, Question));
-//        return "admin/Questions :: QuestionList";
-//    }
-//
-//    private  void setTypeAndTag(Model model)
-//    {
-//        model.addAttribute("types", typeService.listType());
-//        model.addAttribute("tags", tagService.listTag());
-//    }
+    //后台返回所有问题列表
+    @GetMapping("/questions")
+    public Result<Map<String, Object>> Questions(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                                 QuestionQuery question)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        //这个页面的查找功能 得给前端所有的tag
+        hashMap.put("tags", tagService.listTag());
+        hashMap.put("pages", questionService.listQuestion(pageable, question));
+        return new Result<>(hashMap, true, "");
+    }
+
+    //管理页根据userid、标题、标签搜索 前端传入questionquery对象和userid
+    @PostMapping("/questions/search")
+    public Result<Map<String, Object>> searchQuestion(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                              QuestionQuery question, Long userId)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        hashMap.put("tags", tagService.listTag());
+        hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
+        return new Result<>(hashMap, true, "搜索完成");
+    }
 
     //有初始化的作用 所有属性都是null
-    @GetMapping("/Questions/input")
-    public String input(Model model)
+    @GetMapping("/question/{id}/edit")
+    public Result<Map<String, Object>> editInput(@PathVariable Long id)
     {
-        setTypeAndTag(model);
-        //id自增1，传递到前端了
-        model.addAttribute("Question", new Question());
-        return INPUT;
+        Map<String, Object> hashMap= new HashMap<>();
+        Question question = questionService.getQuestion(id);
+        question.init();
+        List<Tag> tags = tagService.listTag();
+        hashMap.put("questions", question);
+        hashMap.put("tags", tags);
+        return new Result<>(hashMap, true, "");
     }
 
-    @GetMapping("/Questions/{id}/input")
-    public String editInput(@PathVariable Long id, Model model)
+    //新增问题 初始化各部分属性
+    @PostMapping("/questions")
+    public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult)
     {
-        setTypeAndTag(model);
-        Question Question= QuestionService.getQuestion(id);
-        Question.init();
-        model.addAttribute("Question", Question);
-        return INPUT;
-    }
-
-    @PostMapping("/Questions")
-    public String post(Question Question, RedirectAttributes attributes, HttpSession session)
-    {
-        Question.setUser((User)session.getAttribute("user"));
-//      传入Question对象了根据Question获取type，为什么不直接赋过去，还要得到id，再得到type?
-//      我觉得要用service就是因为与数据库挂钩，不然可能得不到这个映射的Type?
-        Question.setType(typeService.getType(Question.getType().getId()));
-        Question.setTags(tagService.listTag(Question.getTagIds()));
-        //保存重复属性会覆盖原有的 没有被覆盖的保持
-        Question b;
-        //注意 在没更改之前 编辑和新增用的都是saveQuestion 结果是编辑之后 原本的createTime和view变成null了
-        //原因：在Questions-input中没有createTime和view的隐含域 所以传到controller里的Question中是空的
-        //此外 如果无隐含域 即使你先设了creat和view的值 传递到impl中的save语句的 Question对象中这俩也是空的
-        //如果是新增 那么在impl的save语句中 id=null (Long类型的)条件下 有对它和updateTime的赋值语句
-        //但是如果是编辑 id不是null 那么没有语句创建createTime和view 而且原有的也没了 所以就null了
-        //所以整一个updateQuestion 通过id找到原来的Question 这个Question有createTim和view的值 然后更新一下Question 这样就不是null了！
-        if(Question.getId() == null)
+        Map<String, Object> hashMap= new HashMap<>();
+        //后端检验valid
+        if(bindingResult.hasErrors())
         {
-            b = QuestionService.saveQuestion(Question);
-        } else {
-            b = QuestionService.updateQuestion(Question.getId(), Question);
+            return new Result<>(hashMap, false, "标题、内容、概述均不能为空");
+        }
+        //令前端只传回tagIds而不是tag对象 将它转换为List<Tag> 在service层找到对应的Tag保存到数据库
+        question.setTags(tagService.listTag(question.getTagIds()));
+        Question q;
+
+        if(question.getId() != null)
+        {
+            q = questionService.updateQuestion(question);
+        }else
+        {
+            return new Result<>(null, false, "该问题不存在");
         }
 
-        if (b == null)
+        if (q == null)
         {
-            attributes.addFlashAttribute("message", "操作失败");
+            return new Result<>(null, false, "该问题已被删除");
         } else {
-            attributes.addFlashAttribute("message", "操作成功");
+            hashMap.put("questions", question);
+            return new Result<>(hashMap, true,"发布成功");
         }
-        return  REDIRECT_LIST;
     }
 
-    @GetMapping("/Questions/{id}/delete")
-    public String delete(@PathVariable Long id,RedirectAttributes attributes)
+    //删除问题
+    @GetMapping("/questions/{questionId}/delete")
+    public Result<Map<String, Object>> delete(@PathVariable Long questionId)
     {
-        QuestionService.deleteQuestion(id);
-        attributes.addFlashAttribute("message","删除成功");
-        return  REDIRECT_LIST;
+        Map<String, Object> hashMap = new HashMap<>();
+        Question question = questionService.getQuestion(questionId);
+        if(question == null)
+        {
+            throw new NotFoundException("该问题不存在");
+        }
+        questionService.deleteQuestion(questionId);
+        question = questionService.getQuestion(questionId);
+        if(question != null)
+        {
+            hashMap.put("questions", question);
+            return new Result<>(hashMap, false, "删除失败");
+        } else {
+            return new Result<>(null, true, "删除成功");
+        }
+    }
+
+    @PostMapping("/user/search")
+    public Result<Map<String, Object>> searchCustomer(String nickname)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        hashMap.put("user", userService.getUser(nickname));
+        return new Result<>(hashMap, true, "搜索完成");
+    }
+
+    //禁言/解禁
+    @GetMapping("/controlSpeak/{userId}")
+    public void controlSpeak(@PathVariable Long userId)
+    {
+        User user = userService.getUser(userId);
+        user.setCanSpeak(!user.getCanSpeak());
     }
 }
