@@ -14,6 +14,7 @@ public interface TagService {
 
     Tag getTagByName(String name);
 
+    //根据分页查询
     Page<Tag> listTag(Pageable pageable);
 
     List<Tag> listTag();
@@ -22,7 +23,7 @@ public interface TagService {
 
     List<Tag> listTag(String ids);
 
-    Tag updateTag(Long id, Tag type);
+    Tag updateTag(Tag tag);
 
     void deleteTag(Long id);
 }

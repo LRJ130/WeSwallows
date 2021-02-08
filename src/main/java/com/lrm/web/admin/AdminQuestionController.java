@@ -3,7 +3,6 @@ package com.lrm.web.admin;
 import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Question;
 import com.lrm.po.Tag;
-import com.lrm.po.User;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
 import com.lrm.service.UserService;
@@ -58,7 +57,6 @@ public class AdminQuestionController
         return new Result<>(hashMap, true, "搜索完成");
     }
 
-    //有初始化的作用 所有属性都是null
     @GetMapping("/question/{id}/edit")
     public Result<Map<String, Object>> editInput(@PathVariable Long id)
     {
@@ -71,7 +69,7 @@ public class AdminQuestionController
         return new Result<>(hashMap, true, "");
     }
 
-    //新增问题 初始化各部分属性
+    //修改问题
     @PostMapping("/questions")
     public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult)
     {
@@ -79,6 +77,7 @@ public class AdminQuestionController
         //后端检验valid
         if(bindingResult.hasErrors())
         {
+            hashMap.put("questions", question);
             return new Result<>(hashMap, false, "标题、内容、概述均不能为空");
         }
         //令前端只传回tagIds而不是tag对象 将它转换为List<Tag> 在service层找到对应的Tag保存到数据库
@@ -90,15 +89,15 @@ public class AdminQuestionController
             q = questionService.updateQuestion(question);
         }else
         {
-            return new Result<>(null, false, "该问题不存在");
+            throw new NotFoundException("该问题不存在");
         }
 
         if (q == null)
         {
-            return new Result<>(null, false, "该问题已被删除");
+            return new Result<>(null, false, "修改失败");
         } else {
             hashMap.put("questions", question);
-            return new Result<>(hashMap, true,"发布成功");
+            return new Result<>(hashMap, true,"修改成功");
         }
     }
 
@@ -123,19 +122,7 @@ public class AdminQuestionController
         }
     }
 
-    @PostMapping("/user/search")
-    public Result<Map<String, Object>> searchCustomer(String nickname)
-    {
-        Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("user", userService.getUser(nickname));
-        return new Result<>(hashMap, true, "搜索完成");
-    }
 
-    //禁言/解禁
-    @GetMapping("/controlSpeak/{userId}")
-    public void controlSpeak(@PathVariable Long userId)
-    {
-        User user = userService.getUser(userId);
-        user.setCanSpeak(!user.getCanSpeak());
-    }
+
+
 }

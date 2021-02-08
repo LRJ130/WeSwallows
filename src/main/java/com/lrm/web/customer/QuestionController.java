@@ -76,9 +76,10 @@ public class QuestionController
     public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, @PathVariable Long userId)
     {
         Map<String, Object> hashMap= new HashMap<>();
-        //后端检验valid
+        //后端检验valid 如果校验失败 返回input页面
         if(bindingResult.hasErrors())
         {
+            hashMap.put("questions", question);
             return new Result<>(hashMap, false, "标题、内容、概述均不能为空");
         }
         question.setUser(userService.getUser(userId));

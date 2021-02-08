@@ -31,8 +31,8 @@ public interface QuestionService {
     //markdown转换
     //Question getAndConvert(Long id);
 
-    //返回推荐值最高的size个Question
-    List<Question> listRecommendQuestionTop(Integer size);
+    //返回影响力最高的size个Question
+    List<Question> listImpactQuestionTop(Integer size);
 
     //按日期顺序返回自己的问题
     //Map<String, List<Question>> archivesQuestion();

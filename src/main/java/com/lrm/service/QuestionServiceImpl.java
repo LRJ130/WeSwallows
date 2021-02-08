@@ -8,12 +8,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -110,7 +114,7 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public Page<Question> listQuestion(Pageable pageable) {
-        return null;
+        return questionRepository.findAll(pageable);
     }
 
     @Override
@@ -118,10 +122,34 @@ public class QuestionServiceImpl implements QuestionService{
         return null;
     }
 
+    //返回最新评论在三天之内的 影响力为前size个的问题
     @Override
-    public List<Question> listRecommendQuestionTop(Integer size) {
-        return null;
-    }
+    public List<Question> listImpactQuestionTop(Integer size) {
+        Sort sort = new Sort(Sort.Direction.DESC, "impact");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = df.getCalendar();
+        Calendar c1 = df.getCalendar();
+        c.add(Calendar.DATE, -3);
+        List<Question> questions = questionRepository.findAll(new Specification<Question>()
+        {
+            @Override
+            public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> cq, CriteriaBuilder cb)
+            {
+
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(cb.between(root.get("newCommentedTime"), c, c1));
+                //参数是0么
+                cq.where(predicates.toArray(new Predicate[0]));
+                return null;
+            }
+        }, sort);
+
+        if(questions.size() > size-1)
+        {
+            return questions.subList(0,size-1);
+        }
+        return questions;
+        }
 
 
 }

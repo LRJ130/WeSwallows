@@ -2,9 +2,12 @@ package com.lrm.service;
 
 import com.lrm.dao.TagRepository;
 import com.lrm.po.Tag;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,45 +18,53 @@ public class TagServiceImpl implements TagService {
     @Autowired
     TagRepository tagRepository;
 
-
+    //简单的增删改查
     @Override
-    public Tag updateTag(Long id, Tag type) {
-        return null;
+    public Tag saveTag(Tag tag) {
+        return tagRepository.save(tag);
     }
 
     @Override
     public void deleteTag(Long id) {
-
+        tagRepository.delete(id);
     }
 
     @Override
-    public Tag saveTag(Tag type) {
-        return null;
+    public Tag updateTag(Tag tag) {
+        Tag t = tagRepository.findOne(tag.getId());
+        BeanUtils.copyProperties(tag,t);
+        return tagRepository.save(t);
     }
 
     @Override
     public Tag getTag(Long id) {
-        return null;
+        return tagRepository.findOne(id);
     }
 
+    //通过名字找标签
     @Override
     public Tag getTagByName(String name) {
-        return null;
+        return tagRepository.findByName(name);
     }
 
+    //标签分页
     @Override
     public Page<Tag> listTag(Pageable pageable) {
-        return null;
+        return tagRepository.findAll(pageable);
     }
 
+    //所有标签展示
     @Override
     public List<Tag> listTag() {
         return tagRepository.findAll();
     }
 
+    //部分标签展示
     @Override
     public List<Tag> listTagTop(Integer size) {
-        return null;
+        Sort sort = new Sort(Sort.Direction.DESC, "questions.size");
+        Pageable pageable = new PageRequest(0, size, sort);
+        return tagRepository.findTop(pageable);
     }
 
     //将String对象转为Tag集合

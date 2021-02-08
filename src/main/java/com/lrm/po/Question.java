@@ -28,7 +28,7 @@ public class Question
 
     private Integer view;
 
-    //问题的影响力 推荐
+    //问题的影响力 推荐 impact=user.donation*0.4+question.view*0.2+question.comment.count*0.2+question.comment.likes*0.2
     private Integer impact;
     //显式的点赞数
     private Integer likesNum;
@@ -37,8 +37,11 @@ public class Question
     @Transient
     private  String tagIds;
 
+    //被它修饰的时间会封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
+      //首页展示根据发布时间展示
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
+      //推荐时根据最新被评论时间展示
     @Temporal(TemporalType.TIMESTAMP)
     private Date newCommentedTime;
 

@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService
     private UserRepository userRepository;
 
     //注册
+        //检查
     @Override
     public User checkRegister(String username, String nickname) {
         User user1 = userRepository.findByUsername(username);
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService
             return user1;
         } else return user2;
     }
+        //记录在数据库
     @Override
     @Transactional
     public User saveUser(String username, String password, String nickname) {

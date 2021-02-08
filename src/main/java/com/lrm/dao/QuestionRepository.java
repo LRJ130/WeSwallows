@@ -11,11 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpecificationExecutor<Question> {
 
-//    查找推荐值最高的几个问题
-//    @Query("select q from Question q where q.recommend = true")
-//    List<Question> findTop(Pageable pageable);
 
-    @Query("select q from Question  q where q.title like ?1 or q.content like ?1")
+    @Query("select q from Question q where q.title like ?1 or q.content like ?1")
     Page<Question> findByQuery(String query, Pageable pageable);
 
 
