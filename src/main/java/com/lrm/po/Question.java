@@ -28,7 +28,9 @@ public class Question
 
     private Integer view;
 
+    //占比待定
     //问题的影响力 推荐 impact=user.donation*0.4+question.view*0.2+question.comment.count*0.2+question.comment.likes*0.2
+    //user.donation=user.comment2.count*4+user.comment2.likes*4
     private Integer impact;
     //显式的点赞数
     private Integer likesNum;

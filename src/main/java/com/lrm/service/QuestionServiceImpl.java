@@ -113,6 +113,11 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    public Page<Question> listQuestion(String query, Pageable pageable) {
+        return questionRepository.findByQuery(query, pageable);
+    }
+
+    @Override
     public Page<Question> listQuestion(Pageable pageable) {
         return questionRepository.findAll(pageable);
     }

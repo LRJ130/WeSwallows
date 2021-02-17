@@ -25,6 +25,8 @@ public interface QuestionService {
     //返回标签所属Question
     Page<Question> listQuestion(Long tagId, Pageable pageable);
 
+    Page<Question> listQuestion(String query, Pageable pageable);
+
     //返回用户自己的博客
     Page<Question> listQuestionPlusUserId(Pageable pageable, QuestionQuery question, Long userId);
 

@@ -20,10 +20,12 @@ public class CommentServiceImpl implements CommentService {
     //存放迭代找出的所有子代的集合
     private List<Comment> tempReplys = new ArrayList<>();
 
+    //得到问题下所有评论
     @Override
-    public List<Comment> listCommentByQuestionId(Long QuestionId) {
+    public List<Comment> listCommentByQuestionId(Long questionId) {
         Sort sort = new Sort(Sort.Direction.ASC,"createTime");
-        List<Comment> comments = commentRepository.findByQuestionIdAndParentCommentNull(QuestionId, sort);
+        //得到所有第一级评论
+        List<Comment> comments = commentRepository.findByQuestionIdAndParentCommentNull(questionId, sort);
         return eachComment(comments);
     }
 
@@ -41,7 +43,9 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
+    //遍历所有第一级评论
     private List<Comment> eachComment(List<Comment> comments) {
+        //将所有第一级评论保存到commentsView里
         List<Comment> commentsView = new ArrayList<>();
         for (Comment comment : comments) {
             Comment c = new Comment();
@@ -54,9 +58,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void combineChildren(List<Comment> comments) {
-
+        //遍历所有第一级评论
         for (Comment comment : comments) {
+            //得到回复第一级评论的第二级评论
             List<Comment> replys1 = comment.getReplyComments();
+            //遍历第二级评论
             for(Comment reply1 : replys1) {
                 //循环迭代，找出子代，存放在tempReplys中
                 recursively(reply1);
@@ -69,9 +75,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void recursively(Comment comment) {
-        tempReplys.add(comment);//顶节点添加到临时存放集合
+        tempReplys.add(comment);//第二级评论添加到临时存放集合
+        //如果第二级评论有子评论
         if (comment.getReplyComments().size()>0) {
             List<Comment> replys = comment.getReplyComments();
+            //遍历第三级评论 添加到临时存放集合
             for (Comment reply : replys) {
                 tempReplys.add(reply);
                 if (reply.getReplyComments().size()>0) {

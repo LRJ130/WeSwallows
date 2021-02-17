@@ -5,9 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpecificationExecutor<Question> {
 
@@ -22,10 +20,6 @@ public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpe
 //    @Query("select q from Question  q where function('date_format', q.updateTime, '%Y') = ?1")
 //    List<Question> findByYear(String year);
 
-    @Transactional
-    @Modifying
-    @Query("update Question q set q.view = q.view+1 where q.id = ?1")
-    int updateViews(Long id);
 
 
 }
