@@ -8,6 +8,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  http:
+    multipart:
+      #单个数据的大小
+      max-file-size: 1MB
+      #文件上传是否开启
+      enabled: true
+      #总数据的大小
+      max-request-size: 10MB
 #  thymeleaf清除缓存，否则修改只有等重启之后才生效
 #  thymeleaf:
 #    cache=false:#  messages:

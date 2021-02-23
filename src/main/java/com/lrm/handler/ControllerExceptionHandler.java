@@ -1,6 +1,5 @@
 package com.lrm.handler;
 
-import com.lrm.Exception.NoPermissionException;
 import com.lrm.Exception.NotFoundException;
 import com.lrm.vo.Result;
 import org.slf4j.Logger;
@@ -19,13 +18,6 @@ import java.io.IOException;
 public class ControllerExceptionHandler
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    //负责处理权限不足异常
-    @ExceptionHandler(NoPermissionException.class)
-    public Result NoPermissionExceptionHandler(HttpServletRequest request, NoPermissionException noPermissionException) {
-        logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), noPermissionException);
-        return Result.returnNoPermissionException(noPermissionException, request.getRequestURL());
-    }
 
     //访问不存在的资源
     @ExceptionHandler(NotFoundException.class)

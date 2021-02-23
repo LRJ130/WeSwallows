@@ -19,7 +19,7 @@ public class User
     @GeneratedValue
     private Long id;     //每个类都要有一个id主键
     //用户个人属性
-    private Boolean admin;     //是否为管理员
+    private Boolean isAdmin;     //是否为管理员
     private Boolean canSpeak;  //能否发言
     //必填部分
         //@NotBlank需要搭配有@Valid的controller方法使用 且只能用在String上
@@ -65,12 +65,12 @@ public class User
         this.id = id;
     }
 
-    public Boolean getAdmin() {
-        return admin;
+    public Boolean getIsAdmin() {
+        return isAdmin;
     }
 
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public String getNickname() {
@@ -189,7 +189,7 @@ public class User
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", admin=" + admin +
+                ", isAdmin=" + isAdmin +
                 ", nickname='" + nickname + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

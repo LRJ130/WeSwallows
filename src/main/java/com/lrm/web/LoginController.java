@@ -2,6 +2,7 @@ package com.lrm.web;
 
 import com.lrm.po.User;
 import com.lrm.service.UserService;
+import com.lrm.util.JWTUtils;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class LoginController {
@@ -36,19 +39,22 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public Result<User> login(@RequestParam String username,
-                        @RequestParam String password,
-                        HttpSession session)
+    public Result<String> login(@RequestParam String username,
+                        @RequestParam String password)
     {
         //先检查用户名和密码在数据库中存在不。(不考虑是否注册过了)。存在登录；不存在报错。
         User user = userService.checkUser(username, password);
+
         if(user !=null)
         {
-            //因为user是要传递到前端的 这个操作是为了不把密码这个字段传递到前端 但不会同步到数据库中
-            user.setPassword(null);
-            session.setAttribute("user", user);
+            //需要传递到前端的 包含在token内的信息 map用来存放payload
+            Map<String, String> map = new HashMap<>();
+            //只需要把userId和isAdmin放在请求头里便于拦截 其他东西在需要的时候可以另外返回
+            map.put("userId", user.getId().toString());
+            map.put("isAdmin", user.getIsAdmin().toString());
+            String token = JWTUtils.getToken(map);
             //返回首页
-            return new Result<>(user, true, "登录成功");
+            return new Result<>(token, true, "登录成功");
         } else {
             //返回登录页面
             return new Result<>(null, false,"用户名或密码错误");
@@ -56,9 +62,9 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public void logout(HttpSession session)
+    public void logout(HttpServletRequest request)
     {
         //返回首页
-        session.removeAttribute("user");
+        request.removeAttribute("token");
     }
 }
