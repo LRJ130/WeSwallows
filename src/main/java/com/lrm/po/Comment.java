@@ -36,8 +36,10 @@ public class Comment
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<Likes> likes;
 
+    //消息的接收者
     @ManyToOne
     private User receiveUser;
+    //消息的发送者
     @ManyToOne
     private User postUser;
 

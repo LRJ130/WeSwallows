@@ -17,8 +17,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private QuestionService questionService;
+
     //存放迭代找出的所有子代的集合
     private List<Comment> tempReplys = new ArrayList<>();
+
+
 
     //得到问题下所有评论
     @Override
@@ -29,18 +35,9 @@ public class CommentServiceImpl implements CommentService {
         return eachComment(comments);
     }
 
-    @Transactional
     @Override
-    public Comment saveComment(Comment comment) {
-        Long parentCommentId = comment.getParentComment().getId();
-        if (parentCommentId != -1) {
-            comment.setParentComment(commentRepository.findOne(parentCommentId));
-        } else {
-            //对象new了(初始化id为-1了) 但没有持久化会报错 所以设成null
-            comment.setParentComment(null);
-        }
-        comment.setCreateTime(new Date());
-        return commentRepository.save(comment);
+    public Comment getComment(Long commentId) {
+        return commentRepository.findOne(commentId);
     }
 
     //遍历所有第一级评论
@@ -88,4 +85,26 @@ public class CommentServiceImpl implements CommentService {
             }
         }
     }
+
+    //保存评论 如果不是通过回复的方式 那么前端传回parentCommentId默认设置为1
+    @Transactional
+    @Override
+    public Comment saveComment(Comment comment, Long questionId) {
+        Long parentCommentId = comment.getParentComment().getId();
+        //有父评论 则获得通知的人是父评论的发出者 否则为question的发出者
+        if (parentCommentId != -1) {
+            comment.setParentComment(commentRepository.findOne(parentCommentId));
+            comment.setQuestion(questionService.getQuestion(questionId));
+            comment.setReceiveUser(getComment(parentCommentId).getPostUser());
+        } else {
+            //在第一行comment.getParentComment中实际上new了一个parentComment对象(初始化id为-1了) 但id不能为-1 没有将p...持久化所以会报错 要设成null
+            comment.setParentComment(null);
+            comment.setQuestion(questionService.getQuestion(questionId));
+            comment.setReceiveUser(questionService.getQuestion(questionId).getUser());
+        }
+        comment.setRead(false);
+        comment.setCreateTime(new Date());
+        return commentRepository.save(comment);
+    }
+
 }

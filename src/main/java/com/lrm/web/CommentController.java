@@ -1,54 +1,63 @@
 package com.lrm.web;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.lrm.po.Comment;
 import com.lrm.po.User;
 import com.lrm.service.CommentService;
-import com.lrm.service.QuestionService;
+import com.lrm.service.UserService;
+import com.lrm.util.JWTUtils;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 public class CommentController
 {
     @Autowired
     private CommentService commentService;
 
     @Autowired
-    private QuestionService questionService;
+    private UserService userService;
 
-
-    @GetMapping("/comments/{blogId}")
-    public Result<Map<String, Object>> comments(@PathVariable Long blogId)
+    //ajax
+    @GetMapping("/comments/{questionId}")
+    public Result<Map<String, Object>> comments(@PathVariable Long questionId)
     {
         Map<String,Object> hashMap = new HashMap<>();
-        hashMap.put.addAttribute("comments", commentService.listCommentByBlogId(blogId));
-        return "blog :: commentList";
+        hashMap.put("comments", commentService.listCommentByQuestionId(questionId));
+        return new Result<>(hashMap, true, "");
     }
+
     //提交表单后 到这里 然后得到id 然后刷新评论
     @PostMapping("/comments")
-    public String post(Comment comment, HttpSession session)
+    public Result<Map<String, Object>> post(Comment comment, HttpServletRequest request)
     {
-        User user = (User)session.getAttribute("user");
-        Long blogId = comment.getBlog().getId();
-        comment.setBlog(blogService.getBlog(blogId));
-        if (user !=null)
+        Map<String, Object> hashMap= new HashMap<>();
+        String token = request.getHeader("token");
+        DecodedJWT decodedJWT = JWTUtils.getToken(token);
+        Long userId = decodedJWT.getClaim("userId").asLong();
+        User user = userService.getUser(userId);
+        Long questionId = comment.getQuestion().getId();
+
+        //直接保存不setQuestsion的话 只保存了questionId 其他的信息没有保存 似乎也可以 那么是不是mybatis更好呢...只用id就可以满足需要了...
+        comment.setPostUser(user);
+        commentService.saveComment(comment, questionId);
+
+        if(commentService.getComment(comment.getId()) != null)
         {
-            comment.setAvatar(user.getAvatar());
-            comment.setAdminComment(true);
-            //           comment.setNickname(user.getNickname());
-        } else {
-            comment.setAvatar(avatar);
+            hashMap.put("comments",comment);
+            return new Result<>(hashMap, true,"发布成功");
+        } else
+        {
+            return new Result<>(null, false, "发布失败");
         }
-        commentService.saveComment(comment);
-        return "redirect:/comments/" + blogId;
     }
 
 }
