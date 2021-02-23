@@ -23,14 +23,14 @@ public class JWTInterceptor extends HandlerInterceptorAdapter
         //在请求头中取得token
         String token = request.getHeader("token");
         //在请求头中取得userId
-        int userId = Integer.parseInt(request.getHeader("userId"));
+        Long userId = Long.parseLong(request.getHeader("userId"));
         Map<String, Object> map = new HashMap<>();
         //异常处理
         try {
             JWTUtils.verify(token);
             DecodedJWT decodedJWT = JWTUtils.getToken(token);
-            Integer customUserId = decodedJWT.getClaim("userId").asInt();
-            if(userId != customUserId) {
+            Long customUserId = decodedJWT.getClaim("userId").asLong();
+            if(!userId.equals(customUserId)) {
                 map.put("isSuccess", false);
                 map.put("msg","无访问权限");
             } else {
