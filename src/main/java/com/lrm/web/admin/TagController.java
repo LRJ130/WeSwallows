@@ -42,9 +42,9 @@ public class TagController {
 
     //修改标签
     @GetMapping("/tags/{tagId}/input")
-    public Result<Map<String, Object>> editInput(@PathVariable Long id) {
+    public Result<Map<String, Object>> editInput(@PathVariable Long tagId) {
         Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags", tagService.getTag(id));
+        hashMap.put("tags", tagService.getTag(tagId));
         return new Result<>(hashMap, true, "");
     }
 

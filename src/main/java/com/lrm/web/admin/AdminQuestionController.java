@@ -5,7 +5,6 @@ import com.lrm.po.Question;
 import com.lrm.po.Tag;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
-import com.lrm.service.UserService;
 import com.lrm.vo.QuestionQuery;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.lrm.web.customer.QuestionController.getMapResult;
+
 //未考虑安全
 @RequestMapping("/admin}")
 @RestController
@@ -30,9 +31,6 @@ public class AdminQuestionController
 
     @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private UserService userService;
 
     //后台返回所有问题列表
     @GetMapping("/questions")
@@ -111,15 +109,7 @@ public class AdminQuestionController
         {
             throw new NotFoundException("该问题不存在");
         }
-        questionService.deleteQuestion(questionId);
-        question = questionService.getQuestion(questionId);
-        if(question != null)
-        {
-            hashMap.put("questions", question);
-            return new Result<>(hashMap, false, "删除失败");
-        } else {
-            return new Result<>(null, true, "删除成功");
-        }
+        return getMapResult(questionId, hashMap, questionService);
     }
 
 

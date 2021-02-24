@@ -1,5 +1,6 @@
 package com.lrm.web.customer;
 
+import com.lrm.Exception.NoPermissionException;
 import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Question;
 import com.lrm.po.Tag;
@@ -105,16 +106,8 @@ public class QuestionController
         }
     }
 
-    //删除问题
-    @GetMapping("/questions/{questionId}/delete")
-    public Result<Map<String, Object>> delete(@PathVariable Long questionId)
-    {
-        Map<String, Object> hashMap = new HashMap<>();
-        Question question = questionService.getQuestion(questionId);
-        if(question == null)
-        {
-            throw new NotFoundException("该问题不存在");
-        }
+    public static Result<Map<String, Object>> getMapResult(@PathVariable Long questionId, Map<String, Object> hashMap, QuestionService questionService) {
+        Question question;
         questionService.deleteQuestion(questionId);
         question = questionService.getQuestion(questionId);
         if(question != null)
@@ -124,5 +117,22 @@ public class QuestionController
         } else {
             return new Result<>(null, true, "删除成功");
         }
+    }
+
+    //删除问题
+    @GetMapping("/questions/{questionId}/delete")
+    public Result<Map<String, Object>> delete(@PathVariable Long questionId, @PathVariable Long userId)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        Question question = questionService.getQuestion(questionId);
+        if(question == null)
+        {
+            throw new NotFoundException("该问题不存在");
+        }
+        if(!question.getUser().getId().equals(userId))
+        {
+            throw new NoPermissionException("无权限访问该资源");
+        }
+        return getMapResult(questionId, hashMap, questionService);
     }
 }

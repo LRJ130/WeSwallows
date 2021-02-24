@@ -5,10 +5,7 @@ import com.lrm.service.UserService;
 import com.lrm.vo.FileControl;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-
-
 @RequestMapping("/customer/{userId}")
+@RestController
 public class CustomerController {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     //返回个人信息
     @GetMapping("/personal")

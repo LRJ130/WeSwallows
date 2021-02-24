@@ -21,6 +21,10 @@ public class NoPermissionException extends RuntimeException {
         this.errorMsg = errorMsg;
     }
 
+    public NoPermissionException(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
     public Integer getErrorCode() {
         return errorCode;
     }
