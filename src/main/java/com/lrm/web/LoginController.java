@@ -47,9 +47,12 @@ public class LoginController {
         {
             //需要传递到前端的 包含在token内的信息 map用来存放payload
             Map<String, String> map = new HashMap<>();
-            //只需要把userId和isAdmin放在请求头里便于拦截 其他东西在需要的时候可以另外返回
+            //把这些字段放在请求头里 其他东西在需要的时候可以另外返回
             map.put("userId", user.getId().toString());
+            map.put("nickname", user.getNickname());
+            map.put("avatar", user.getAvatar());
             map.put("isAdmin", user.getIsAdmin().toString());
+            map.put("canSpeak", user.getCanSpeak().toString());
             String token = JWTUtils.getToken(map);
             //返回首页
             return new Result<>(token, true, "登录成功");

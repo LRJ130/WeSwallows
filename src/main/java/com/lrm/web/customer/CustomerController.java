@@ -2,7 +2,7 @@ package com.lrm.web.customer;
 
 import com.lrm.po.User;
 import com.lrm.service.UserService;
-import com.lrm.vo.FileControl;
+import com.lrm.util.FileControl;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

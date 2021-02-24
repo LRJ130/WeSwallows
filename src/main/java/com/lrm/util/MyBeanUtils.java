@@ -1,4 +1,4 @@
-package com.lrm.vo;
+package com.lrm.util;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;

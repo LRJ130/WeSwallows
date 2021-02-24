@@ -29,12 +29,13 @@ public class User
     private String username;
     @NotBlank(message = "请输入密码")
     private String password;
-      //非必填 可以在前端显示默认值
+    //非必填 可以在前端显示默认值
     private String avatar;
     private String email;
     private String QQid;
+    //贡献值
     private Integer donation;
-      //自动生成时间
+    //自动生成时间
     @Temporal(TemporalType.TIMESTAMP)
     private Date registerTime;
 

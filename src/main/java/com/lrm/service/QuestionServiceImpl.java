@@ -2,7 +2,7 @@ package com.lrm.service;
 
 import com.lrm.dao.QuestionRepository;
 import com.lrm.po.Question;
-import com.lrm.vo.MyBeanUtils;
+import com.lrm.util.MyBeanUtils;
 import com.lrm.vo.QuestionQuery;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

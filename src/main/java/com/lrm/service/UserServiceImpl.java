@@ -3,7 +3,7 @@ package com.lrm.service;
 import com.lrm.dao.UserRepository;
 import com.lrm.po.User;
 import com.lrm.util.MD5Utils;
-import com.lrm.vo.MyBeanUtils;
+import com.lrm.util.MyBeanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,8 @@ public class UserServiceImpl implements UserService
         user.setPassword(MD5Utils.code(password));
         user.setNickname(nickname);
         user.setDonation(0);
+        user.setCanSpeak(true);
+        user.setIsAdmin(false);
         user.setRegisterTime(new Date());
         return userRepository.save(user);
     }

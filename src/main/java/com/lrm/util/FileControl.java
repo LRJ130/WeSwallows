@@ -1,4 +1,4 @@
-package com.lrm.vo;
+package com.lrm.util;
 
 import java.io.File;
 
