@@ -13,12 +13,9 @@ public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpe
     @Query("select q from Question q where q.title like ?1 or q.content like ?1")
     Page<Question> findByQuery(String query, Pageable pageable);
 
+    //一个用户提出了多少个问题
+    //Integer countAllByUser(User user);
 
-//    查找自己发布过的问题
-//    @Query("select function('date_format', q.updateTime, '%Y') as year from Question b group by function('date_format', q.updateTime, '%Y') order by year desc ")
-//    List<String> findGroupYear();
-//    @Query("select q from Question  q where function('date_format', q.updateTime, '%Y') = ?1")
-//    List<Question> findByYear(String year);
 
 
 

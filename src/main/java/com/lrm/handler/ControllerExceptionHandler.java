@@ -1,5 +1,6 @@
 package com.lrm.handler;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.lrm.Exception.NoPermissionException;
 import com.lrm.Exception.NotFoundException;
 import com.lrm.vo.Result;
@@ -38,6 +39,12 @@ public class ControllerExceptionHandler
         logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), ioException);
         return Result.returnIOException(ioException, request.getRequestURL());
     }
+    @ExceptionHandler(JWTVerificationException.class)
+    public Result JWTHandler(HttpServletRequest request, JWTVerificationException jwtVerificationException) {
+        logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), jwtVerificationException);
+        return Result.returnJWTException(jwtVerificationException, request.getRequestURL());
+    }
+
 
     @ExceptionHandler(Exception.class)
     public Result exceptionHandler(HttpServletRequest request, Exception e) throws Exception {

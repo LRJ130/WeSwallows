@@ -21,7 +21,6 @@ import java.util.Map;
 
 import static com.lrm.web.customer.QuestionController.getMapResult;
 
-//未考虑安全
 @RequestMapping("/admin}")
 @RestController
 public class AdminQuestionController

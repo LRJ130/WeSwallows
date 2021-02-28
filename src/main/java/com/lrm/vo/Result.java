@@ -1,5 +1,6 @@
 package com.lrm.vo;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.lrm.Exception.NoPermissionException;
 import com.lrm.Exception.NotFoundException;
 
@@ -55,6 +56,15 @@ public class Result <T> {
         result.setData(null);
         result.setSuccess(false);
         result.setMsg("文件超过了1MB");
+        result.setUrl(url);
+        return result;
+    }
+
+    public  static Result returnJWTException(JWTVerificationException jwtVerificationException, StringBuffer url){
+        Result result = new Result();
+        result.setData(null);
+        result.setSuccess(false);
+        result.setMsg("用户令牌无效");
         result.setUrl(url);
         return result;
     }

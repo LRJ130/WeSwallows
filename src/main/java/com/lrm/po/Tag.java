@@ -8,8 +8,6 @@ import java.util.List;
 
 //注解大多写在了User类
 
-@NamedEntityGraph(name = "Tag",
-        attributeNodes = {@NamedAttributeNode("questions")})
 @Entity
 @Table(name = "t_tag")
 public class Tag

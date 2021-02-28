@@ -27,13 +27,14 @@ public class Question
     private String title;
 
     private Integer view;
+    private Integer likesNum;
 
     //占比待定
-    //问题的影响力 推荐 impact=user.donation*0.4+question.view*0.2+question.comment.count*0.2+question.comment.likes*0.2
-    //user.donation=user.comment2.count*4+user.comment2.likes*4
+    //问题的影响力 推荐 impact=user.donation*4+question.view*2+question.comment.count*2+question.comment.maxLikes*2
+    //user.donation=user.comment2.count*3++user.comment2.likes*3+user.question.count*2+user.question.likes*2
     private Integer impact;
     //显式的点赞数
-    private Integer likesNum;
+    //private Integer likesNum;
 
     //不通过数据库与前端交互 直接在service层转化为tags
     @Transient
@@ -93,13 +94,20 @@ public class Question
         this.title = title;
     }
 
-
     public Integer getView() {
         return view;
     }
 
     public void setView(Integer view) {
         this.view = view;
+    }
+
+    public Integer getLikesNum() {
+        return likesNum;
+    }
+
+    public void setLikesNum(Integer likesNum) {
+        this.likesNum = likesNum;
     }
 
     public Date getCreateTime() {
@@ -166,14 +174,6 @@ public class Question
         this.tagIds = tagIds;
     }
 
-    public Integer getLikesNum() {
-        return likesNum;
-    }
-
-    public void setLikesNum(Integer likesNum) {
-        this.likesNum = likesNum;
-    }
-
     //真正起setTagIds作用的是这个方法
     //Tag集合转为String对象
     public void init() {
@@ -206,9 +206,9 @@ public class Question
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 ", view=" + view +
+                ", likesNum" + likesNum +
                 ", impact=" + impact +
                 ", tagIds='" + tagIds + '\'' +
-                ", likesNum=" + likesNum +
                 ", createTime=" + createTime +
                 ", newCommentedTime=" + newCommentedTime +
                 ", tags=" + tags +

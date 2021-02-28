@@ -1,10 +1,17 @@
 package com.lrm.web;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.lrm.po.Likes;
 import com.lrm.po.Question;
+import com.lrm.po.User;
+import com.lrm.service.LikesService;
 import com.lrm.service.QuestionService;
-import com.lrm.service.TagService;
+import com.lrm.service.UserService;
+import com.lrm.util.JWTUtils;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -13,7 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -23,15 +33,35 @@ public class IndexController
     private QuestionService questionService;
 
     @Autowired
-    private TagService tagService;
+    private UserService userService;
+
+    @Autowired
+    private LikesService likesService;
 
     //首页返回推荐问题、全部问题
+        //怎么显示有没有点过赞呢？现在不太明白...只能用计算力代替了
     @GetMapping("/")
-    public Result<Map<String, Object>> index(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable)
+    public Result<Map<String, Object>> index(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                             HttpServletRequest request) throws JWTVerificationException
     {
+
         Map<String,Object> hashMap = new HashMap<>();
+        Page<Question> page = questionService.listQuestion(pageable);
+        String token = request.getHeader("token");
+        DecodedJWT decodedJWT = JWTUtils.getToken(token);
+        Long userId = decodedJWT.getClaim("userId").asLong();
+        List<Boolean> approved = new ArrayList<>();
+        for(Question question : page)
+        {
+            if(likesService.getLikes(userService.getUser(userId), question) !=null)
+            {
+                approved.add(true);
+            } else {
+                approved.add(false);
+            }
+        }
         hashMap.put("pages",questionService.listQuestion(pageable));
-        hashMap.put("tags", tagService.listTagTop(10));
+        hashMap.put("approved", approved);
         hashMap.put("impactQuestions", questionService.listImpactQuestionTop(8));
         return new Result<>(hashMap, true, "");
     }
@@ -57,9 +87,39 @@ public class IndexController
         //返回markdown格式
         //hashMap.put("question", questionService.getAndConvert(id));
         Question question = questionService.getQuestion(questionId);
+        //每多1次浏览，问题影响力+2
         question.setView(question.getView()+1);
-        question.setImpact(question.getImpact()+question.getView()*2);
+        question.setImpact(question.getImpact()+2);
         return new Result<>(hashMap, true, "");
     }
+
+    //点赞
+    @GetMapping("/question/{questionId}/approve")
+    public void approve(@PathVariable Long questionId, HttpServletRequest request) throws JWTVerificationException
+    {
+        String token = request.getHeader("token");
+        DecodedJWT decodedJWT = JWTUtils.getToken(token);
+        Long postUserId = decodedJWT.getClaim("userId").asLong();
+        Question question = questionService.getQuestion(questionId);
+        User postUser = userService.getUser(postUserId);
+        User receiveUser = question.getUser();
+        Likes likes = likesService.getLikes(postUser, question);
+        if(likes != null)
+        {
+            likesService.deleteLikes(likes);
+        }
+        else {
+            Likes likes1 = new Likes();
+            likes1.setLikeQuestion(true);
+            likes1.setLikeComment(false);
+            question.setLikesNum(question.getLikesNum() + 1);
+            likesService.saveLikes(likes1, postUser, receiveUser);
+            //问题被点赞 提问者贡献值+2
+            receiveUser.setDonation(receiveUser.getDonation() + 2);
+            //提问者贡献值对问题影响力+8 点赞本身+2
+            question.setImpact(question.getImpact() + 2 + 8);
+        }
+    }
+
 
 }

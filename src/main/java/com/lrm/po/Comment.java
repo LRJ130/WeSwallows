@@ -17,6 +17,8 @@ public class Comment
     //如果标识为1 即question.user是发布这个comment的人 那么它应该有一个标识
     private Boolean adminComment;
     private Boolean isRead;
+    Integer likesNum;
+    private Boolean isAnswer;
 
     @Lob
     @NotBlank
@@ -63,8 +65,24 @@ public class Comment
         return isRead;
     }
 
+    public Boolean getAnswer() {
+        return isAnswer;
+    }
+
+    public void setAnswer(Boolean answer) {
+        isAnswer = answer;
+    }
+
     public void setRead(Boolean read) {
         isRead = read;
+    }
+
+    public Integer getLikesNum() {
+        return likesNum;
+    }
+
+    public void setLikesNum(Integer likesNum) {
+        this.likesNum = likesNum;
     }
 
     public String getContent() {
@@ -137,6 +155,8 @@ public class Comment
                 "id=" + id +
                 ", adminComment=" + adminComment +
                 ", isRead=" + isRead +
+                ", isAnswer=" + isAnswer +
+                ", likesNum=" + likesNum +
                 ", content='" + content + '\'' +
                 ", createTime=" + createTime +
                 ", question=" + question +

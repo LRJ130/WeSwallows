@@ -2,6 +2,7 @@ package com.lrm.service;
 
 import com.lrm.dao.QuestionRepository;
 import com.lrm.po.Question;
+import com.lrm.po.User;
 import com.lrm.util.MyBeanUtils;
 import com.lrm.vo.QuestionQuery;
 import org.springframework.beans.BeanUtils;
@@ -22,23 +23,26 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-
 public class QuestionServiceImpl implements QuestionService{
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired UserService userService;
+
     //一个数据库事务由一条或者多条sql语句构成，它们形成一个逻辑的工作单元。这些sql语句要么全部执行成功，要么全部执行失败 。
     @Transactional
     @Override
-    public Question saveQuestion(Question question) {
+    public Question saveQuestion(Question question, User user) {
         //时间是date对象所以新增的时候需要初始化 否则为null;
         question.setCreateTime(new Date());
         question.setNewCommentedTime(new Date());
         question.setView(0);
-        //初始化点赞数为0
         question.setLikesNum(0);
+        //初始化点赞数为0
+        //question.setLikesNum(0);
         //根据发布问题人的贡献初始化问题的影响力
-        question.setImpact(question.getUser().getDonation()*4);
+        user.setDonation(user.getDonation()+2);
+        question.setImpact(question.getImpact()+8);
         return questionRepository.save(question);
     }
 
@@ -155,6 +159,4 @@ public class QuestionServiceImpl implements QuestionService{
         }
         return questions;
         }
-
-
 }

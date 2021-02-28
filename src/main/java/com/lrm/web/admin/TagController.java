@@ -89,6 +89,7 @@ public class TagController {
         {
             throw new NotFoundException("该问题不存在");
         }
+
         tagService.deleteTag(tagId);
         tag = tagService.getTag(tagId);
         if(tag != null)

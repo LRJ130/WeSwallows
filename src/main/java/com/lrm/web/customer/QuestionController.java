@@ -4,6 +4,7 @@ import com.lrm.Exception.NoPermissionException;
 import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Question;
 import com.lrm.po.Tag;
+import com.lrm.po.User;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
 import com.lrm.service.UserService;
@@ -21,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//应该有一个拦截session中userid和url中userid不符的manage并抛出异常 这里是它俩相等的前提 在这样的前提下 不用考虑用户是否存在的异常
 @RequestMapping("/customer/{userId}")
 @RestController
 public class QuestionController
@@ -83,14 +83,15 @@ public class QuestionController
             hashMap.put("questions", question);
             return new Result<>(hashMap, false, "标题、内容、概述均不能为空");
         }
-        question.setUser(userService.getUser(userId));
+        User user = userService.getUser(userId);
+        question.setUser(user);
         //令前端只传回tagIds而不是tag对象 将它转换为List<Tag> 在service层找到对应的Tag保存到数据库
         question.setTags(tagService.listTag(question.getTagIds()));
         Question q;
 
         if(question.getId() == null)
         {
-            q = questionService.saveQuestion(question);
+            q = questionService.saveQuestion(question, user);
         }else
         {
             hashMap.put("questions", question);

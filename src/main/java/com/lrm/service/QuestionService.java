@@ -1,6 +1,7 @@
 package com.lrm.service;
 
 import com.lrm.po.Question;
+import com.lrm.po.User;
 import com.lrm.vo.QuestionQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface QuestionService {
     //简单的增删改查
-    Question saveQuestion(Question question);
+    Question saveQuestion(Question question, User user);
     void deleteQuestion(Long id);
     Question updateQuestionTime(Question question);
     Question updateQuestion(Question question);

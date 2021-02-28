@@ -6,13 +6,15 @@ import java.util.Date;
 @Entity
 @Table(name = "t_likes")
 public class Likes {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     //标识是bd问题还是支持评论
     Boolean likeComment;
     Boolean likeQuestion;
     Boolean isRead;
-    @Id
-    @GeneratedValue
-    private Long id;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
@@ -48,6 +50,14 @@ public class Likes {
 
     public void setLikeQuestion(Boolean likeQuestion) {
         this.likeQuestion = likeQuestion;
+    }
+
+    public Boolean getRead() {
+        return isRead;
+    }
+
+    public void setRead(Boolean read) {
+        isRead = read;
     }
 
     public Date getCreateTime() {
@@ -90,4 +100,18 @@ public class Likes {
         this.receiveUser = receiveUser;
     }
 
+    @Override
+    public String toString() {
+        return "Likes{" +
+                "likeComment=" + likeComment +
+                ", likeQuestion=" + likeQuestion +
+                ", isRead=" + isRead +
+                ", id=" + id +
+                ", createTime=" + createTime +
+                ", comment=" + comment +
+                ", question=" + question +
+                ", postUser=" + postUser +
+                ", receiveUser=" + receiveUser +
+                '}';
+    }
 }
