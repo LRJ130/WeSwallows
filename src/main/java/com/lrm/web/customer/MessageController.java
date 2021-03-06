@@ -1,9 +1,11 @@
 package com.lrm.web.customer;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.lrm.po.Comment;
 import com.lrm.po.Likes;
 import com.lrm.service.CommentService;
 import com.lrm.service.LikesService;
+import com.lrm.util.Methods;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping("/customer/{userId}/messages")
+@RequestMapping("/customer/messages")
 @RestController
 public class MessageController {
 
@@ -26,9 +29,10 @@ public class MessageController {
     private LikesService likesService;
 
     //返回所有通知
-    public Result<Map<String, Object>> messages(@PathVariable Long userId)
+    public Result<Map<String, Object>> messages(HttpServletRequest request) throws JWTVerificationException
     {
         Map<String, Object> hashMap = new HashMap<>();
+        Long userId = Methods.getCustomUserId(request);
         List<Comment> comments = commentService.listAllNotReadComment(userId);
         List<Likes> likes = likesService.listAllNotReadComment(userId);
         hashMap.put("Comments", comments);

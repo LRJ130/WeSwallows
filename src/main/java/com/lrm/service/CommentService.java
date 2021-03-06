@@ -17,4 +17,6 @@ public interface CommentService {
 
     List<Comment> listAllNotReadComment(Long userId);
 
+    void deleteComment(Long commentId);
+
 }

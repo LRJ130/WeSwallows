@@ -3,9 +3,13 @@ package com.lrm.web.customer;
 import com.lrm.po.User;
 import com.lrm.service.UserService;
 import com.lrm.util.FileControl;
+import com.lrm.util.Methods;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@RequestMapping("/customer/{userId}")
+@RequestMapping("/customer")
 @RestController
 public class CustomerController {
     @Autowired
@@ -25,10 +29,10 @@ public class CustomerController {
 
     //返回个人信息
     @GetMapping("/personal")
-    public Result<Map<String, Object>> showMe(@PathVariable Long userId)
+    public Result<Map<String, Object>> showMe(HttpServletRequest request)
     {
         Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("user", userService.getUser(userId));
+        hashMap.put("user", userService.getUser(Methods.getCustomUserId(request)));
         return new Result<>(hashMap, true, "");
     }
 

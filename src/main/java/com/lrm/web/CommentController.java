@@ -1,7 +1,8 @@
 package com.lrm.web;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import com.lrm.Exception.NoPermissionException;
+import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Comment;
 import com.lrm.po.Likes;
 import com.lrm.po.Question;
@@ -10,7 +11,7 @@ import com.lrm.service.CommentService;
 import com.lrm.service.LikesService;
 import com.lrm.service.QuestionService;
 import com.lrm.service.UserService;
-import com.lrm.util.JWTUtils;
+import com.lrm.util.Methods;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,9 +54,7 @@ public class CommentController
     public Result<Map<String, Object>> post(Comment comment, HttpServletRequest request) throws JWTVerificationException
     {
         Map<String, Object> hashMap= new HashMap<>();
-        String token = request.getHeader("token");
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        Long userId = decodedJWT.getClaim("userId").asLong();
+        Long userId = Methods.getCustomUserId(request);
         User postUser = userService.getUser(userId);
         Long questionId = comment.getQuestion().getId();
 
@@ -71,15 +70,40 @@ public class CommentController
         }
     }
 
+    //删除评论
+    @GetMapping("/comment/{commentId}/delete")
+    public Result<Map<String, Object>> deleteComment(@PathVariable Long commentId, HttpServletRequest request)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        User customUser = userService.getUser(Methods.getCustomUserId(request));
+        Boolean admin = Methods.isAdmin(request);
+        Comment comment = commentService.getComment(commentId);
+        if(comment == null)
+        {
+            throw new NotFoundException("该评论不存在");
+        }
+        if((comment.getPostUser() != customUser) && (!admin))
+        {
+            throw new NoPermissionException("您无权限删除该评论");
+        }
+        commentService.deleteComment(commentId);
+        comment = commentService.getComment(commentId);
+        if(comment != null)
+        {
+            hashMap.put("comments", comment);
+            return new Result<>(hashMap, false, "删除失败");
+        } else {
+            return new Result<>(null, true, "删除成功");
+        }
+    }
+
     //点赞
     @GetMapping("/comment/{commentId}/approve")
-    public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request) throws JWTVerificationException
+    public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request)
     {
         Comment comment = commentService.getComment(commentId);
         if(comment.getAnswer()) {
-            String token = request.getHeader("token");
-            DecodedJWT decodedJWT = JWTUtils.getToken(token);
-            Long postUserId = decodedJWT.getClaim("userId").asLong();
+            Long postUserId = Methods.getCustomUserId(request);
             User postUser = userService.getUser(postUserId);
             User receiveUser = comment.getReceiveUser();
             Likes likes = likesService.getLikes(postUser, comment);

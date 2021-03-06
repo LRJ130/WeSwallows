@@ -24,13 +24,19 @@ public class LoginController {
                          @RequestParam String nickname)
     {
         //先检查是否已经注册过。注册过报错；没注册过注册，注册成功跳转到登录。
-        User user = userService.checkUser(username, nickname);
+            //封装成游离态的User对象 不要返回密码到前端
+        User user0 = new User();
+        user0.setUsername(username);
+        user0.setNickname(nickname);
+        User user = userService.checkRegister(username, nickname);
         if(user !=null)
         {
             //跳转到注册页面
-            return new Result<>(user, false, "该用户名或昵称已被注册过");
+            return new Result<>(user0, false, "该用户名或昵称已被注册过");
         } else {
             user = userService.saveUser(username, password, nickname);
+                //不要返回密码到前端
+            user.setPassword(null);
             //跳转到登录页面
             return new Result<>(user, true, "注册成功");
         }

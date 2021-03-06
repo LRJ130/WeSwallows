@@ -129,4 +129,8 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
+    public void deleteComment(Long commentId)
+    {
+        commentRepository.delete(commentId);
+    }
 }

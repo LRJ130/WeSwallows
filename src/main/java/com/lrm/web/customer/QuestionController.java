@@ -8,6 +8,7 @@ import com.lrm.po.User;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
 import com.lrm.service.UserService;
+import com.lrm.util.Methods;
 import com.lrm.vo.QuestionQuery;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping("/customer/{userId}")
+@RequestMapping("/customer")
 @RestController
-public class QuestionController
-{
+public class QuestionController {
     @Autowired
     private TagService tagService;
 
@@ -39,9 +40,9 @@ public class QuestionController
     @GetMapping("/questions")
     //因为有一堆数据，所以查询条件封装成QuestionQuery了
     public Result<Map<String, Object>> Questions(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-                                         QuestionQuery question, @PathVariable Long userId)
-    {
+                                                 QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>();
+        Long userId = Methods.getCustomUserId(request);
         //这个页面的查找功能 得给前端所有的tag
         hashMap.put("tags", tagService.listTag());
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
@@ -51,9 +52,9 @@ public class QuestionController
     //个人主页搜索 根据分级标签 标题 返回个人发出的问题
     @PostMapping("/questions/search")
     public Result<Map<String, Object>> search(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-                         QuestionQuery question, @PathVariable Long userId)
-    {
+                                              QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>();
+        Long userId = Methods.getCustomUserId(request);
         hashMap.put("tags", tagService.listTag());
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
         return new Result<>(hashMap, true, "搜索完成");
@@ -62,9 +63,8 @@ public class QuestionController
 
     //有初始化的作用 所有属性都是null
     @GetMapping("/questions/input")
-    public Result<Map<String, Object>> input()
-    {
-        Map<String, Object> hashMap= new HashMap<>();
+    public Result<Map<String, Object>> input() {
+        Map<String, Object> hashMap = new HashMap<>();
         Question question = new Question();
         List<Tag> tags = tagService.listTag();
         hashMap.put("questions", question);
@@ -74,9 +74,10 @@ public class QuestionController
 
     //新增问题 初始化各部分属性
     @PostMapping("/questions")
-    public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, @PathVariable Long userId)
+    public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, HttpServletRequest request)
     {
         Map<String, Object> hashMap= new HashMap<>();
+        Long userId = Methods.getCustomUserId(request);
         //后端检验valid 如果校验失败 返回input页面
         if(bindingResult.hasErrors())
         {
@@ -122,9 +123,10 @@ public class QuestionController
 
     //删除问题
     @GetMapping("/questions/{questionId}/delete")
-    public Result<Map<String, Object>> delete(@PathVariable Long questionId, @PathVariable Long userId)
+    public Result<Map<String, Object>> delete(@PathVariable Long questionId, HttpServletRequest request)
     {
         Map<String, Object> hashMap = new HashMap<>();
+        Long userId = Methods.getCustomUserId(request);
         Question question = questionService.getQuestion(questionId);
         if(question == null)
         {
@@ -132,8 +134,10 @@ public class QuestionController
         }
         if(!question.getUser().getId().equals(userId))
         {
-            throw new NoPermissionException("无权限访问该资源");
+            throw new NoPermissionException("您无权限删除该问题");
         }
         return getMapResult(questionId, hashMap, questionService);
     }
+
+
 }
