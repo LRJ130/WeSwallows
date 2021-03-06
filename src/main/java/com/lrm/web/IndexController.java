@@ -1,14 +1,12 @@
 package com.lrm.web;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.lrm.po.Likes;
 import com.lrm.po.Question;
 import com.lrm.po.User;
 import com.lrm.service.LikesService;
 import com.lrm.service.QuestionService;
 import com.lrm.service.UserService;
-import com.lrm.util.JWTUtils;
+import com.lrm.util.Methods;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,14 +40,12 @@ public class IndexController
         //怎么显示有没有点过赞呢？现在不太明白...只能用计算力代替了
     @GetMapping("/")
     public Result<Map<String, Object>> index(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-                                             HttpServletRequest request) throws JWTVerificationException
+                                             HttpServletRequest request)
     {
 
         Map<String,Object> hashMap = new HashMap<>();
         Page<Question> page = questionService.listQuestion(pageable);
-        String token = request.getHeader("token");
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        Long userId = decodedJWT.getClaim("userId").asLong();
+        Long userId = Methods.getCustomUserId(request);
         List<Boolean> approved = new ArrayList<>();
         for(Question question : page)
         {
@@ -95,11 +91,9 @@ public class IndexController
 
     //点赞
     @GetMapping("/question/{questionId}/approve")
-    public void approve(@PathVariable Long questionId, HttpServletRequest request) throws JWTVerificationException
+    public void approve(@PathVariable Long questionId, HttpServletRequest request)
     {
-        String token = request.getHeader("token");
-        DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        Long postUserId = decodedJWT.getClaim("userId").asLong();
+        Long postUserId = Methods.getCustomUserId(request);
         Question question = questionService.getQuestion(questionId);
         User postUser = userService.getUser(postUserId);
         User receiveUser = question.getUser();
