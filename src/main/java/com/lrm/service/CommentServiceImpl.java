@@ -27,28 +27,19 @@ public class CommentServiceImpl implements CommentService {
     //存放迭代找出的所有子代的集合
     private List<Comment> tempReplys = new ArrayList<>();
 
-    //得到问题下所有评论
-    @Override
-    public List<Comment> listCommentByQuestionId(Long questionId, Boolean isAnswer) {
-        Sort sort = new Sort(Sort.Direction.ASC,"createTime");
-        //得到所有第一级评论
-        List<Comment> comments = commentRepository.findByQuestionIdAndParentCommentNullAndAnswer(questionId, sort, isAnswer);
-        return eachComment(comments);
-    }
-
-    @Override
-    public List<Comment> listAllCommentByQuestionId(Long questionId) {
-        return commentRepository.findByQuestionId(questionId);
-    }
-
     @Override
     public Comment getComment(Long commentId) {
         return commentRepository.findOne(commentId);
     }
 
+    //得到问题下分级评论（两级）
     @Override
-    public List<Comment> listAllNotReadComment(Long userId) {
-        return commentRepository.findByReceiveUserIdAndIsRead(userId, false);
+    public List<Comment> listCommentByQuestionId(Long questionId, Boolean isAnswer) {
+        Sort sort = new Sort(Sort.Direction.ASC,"createTime");
+        //得到所有第一级评论
+        List<Comment> comments = commentRepository.findByQuestionIdAndParentCommentNullAndAnswer(questionId, sort, isAnswer);
+        //遍历第一级
+        return eachComment(comments);
     }
 
     //遍历所有第一级评论
@@ -97,27 +88,50 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    //得到所有评论 计算赞数
+    @Override
+    public List<Comment> listAllCommentByQuestionId(Long questionId) {
+        return commentRepository.findByQuestionId(questionId);
+    }
+
+    //获得未读评论通知
+    @Override
+    public List<Comment> listAllNotReadComment(Long userId) {
+        return commentRepository.findByReceiveUserIdAndIsRead(userId, false);
+    }
+
     //保存评论 如果不是通过回复的方式 那么前端传回parentCommentId默认设置为1
     @Transactional
     @Override
     public Comment saveComment(Comment comment, Long questionId, User postUser) {
+
         Long parentCommentId = comment.getParentComment().getId();
+        Comment parentComment = getComment(parentCommentId);
         comment.setPostUser(postUser);
         Question question = questionService.getQuestion(questionId);
         //有父评论 则获得通知的人是父评论的发出者 否则为question的发出者
         if (parentCommentId != -1) {
-            comment.setParentComment(commentRepository.findOne(parentCommentId));
-            comment.setQuestion(question);
+            //父问题评论数增加
+            parentComment.setCommentsNum(parentComment.getCommentsNum()+1);
+            //需要手动设，不然是游离态
+            comment.setParentComment(parentComment);
             comment.setReceiveUser(getComment(parentCommentId).getPostUser());
         } else {
+            //所属问题评论数增加 不包含评论下的子评论了（待定）
+            question.setCommentsNum(question.getCommentsNum()+1);
             //在第一行comment.getParentComment中实际上new了一个parentComment对象(初始化id为-1了) 但id不能为-1 没有将p...持久化所以会报错 要设成null
             comment.setParentComment(null);
-            comment.setQuestion(question);
             comment.setReceiveUser(questionService.getQuestion(questionId).getUser());
         }
+
+        //初始化
+        comment.setQuestion(question);
         comment.setRead(false);
         comment.setCreateTime(new Date());
         comment.setLikesNum(0);
+        comment.setDisLikesNum(0);
+        comment.setHidden(false);
+
         //如果是有效回答 回答者贡献+3 问题影响力+2
         if(comment.getAnswer())
         {
@@ -126,6 +140,11 @@ public class CommentServiceImpl implements CommentService {
         } else {
             question.setImpact(question.getImpact()+2);
         }
+        if(postUser == question.getUser())
+        {
+            comment.setAdminComment(true);
+        }
+
         return commentRepository.save(comment);
     }
 

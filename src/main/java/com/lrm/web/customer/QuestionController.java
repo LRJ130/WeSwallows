@@ -108,18 +108,6 @@ public class QuestionController {
         }
     }
 
-    public static Result<Map<String, Object>> getMapResult(@PathVariable Long questionId, Map<String, Object> hashMap, QuestionService questionService) {
-        Question question;
-        questionService.deleteQuestion(questionId);
-        question = questionService.getQuestion(questionId);
-        if(question != null)
-        {
-            hashMap.put("questions", question);
-            return new Result<>(hashMap, false, "删除失败");
-        } else {
-            return new Result<>(null, true, "删除成功");
-        }
-    }
 
     //删除问题
     @GetMapping("/questions/{questionId}/delete")
@@ -139,5 +127,16 @@ public class QuestionController {
         return getMapResult(questionId, hashMap, questionService);
     }
 
-
+    public static Result<Map<String, Object>> getMapResult(@PathVariable Long questionId, Map<String, Object> hashMap, QuestionService questionService) {
+        Question question;
+        questionService.deleteQuestion(questionId);
+        question = questionService.getQuestion(questionId);
+        if(question != null)
+        {
+            hashMap.put("questions", question);
+            return new Result<>(hashMap, false, "删除失败");
+        } else {
+            return new Result<>(null, true, "删除成功");
+        }
+    }
 }

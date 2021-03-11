@@ -25,9 +25,16 @@ public class Question
     private String description;
     @NotBlank(message = "请输入标题")
     private String title;
-
+    //浏览次数
     private Integer view;
+    //获得点赞数量
     private Integer likesNum;
+    //被评论数
+    private Integer commentsNum;
+    //点踩
+    private Integer disLikesNum;
+    //是否被隐藏
+    private Boolean isHidden;
 
     //占比待定
     //问题的影响力 推荐 impact=user.donation*4+question.view*2+question.comment.count*2+question.comment.maxLikes*2
@@ -100,6 +107,30 @@ public class Question
 
     public void setView(Integer view) {
         this.view = view;
+    }
+
+    public Integer getCommentsNum() {
+        return commentsNum;
+    }
+
+    public void setCommentsNum(Integer commentsNum) {
+        this.commentsNum = commentsNum;
+    }
+
+    public Integer getDisLikesNum() {
+        return disLikesNum;
+    }
+
+    public void setDisLikesNum(Integer disLikesNum) {
+        this.disLikesNum = disLikesNum;
+    }
+
+    public Boolean getHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
     }
 
     public Integer getLikesNum() {
@@ -206,7 +237,10 @@ public class Question
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 ", view=" + view +
-                ", likesNum" + likesNum +
+                ", likesNum=" + likesNum +
+                ", commentsNum=" + commentsNum +
+                ", disLikesNum=" + disLikesNum +
+                ", isHidden=" + isHidden +
                 ", impact=" + impact +
                 ", tagIds='" + tagIds + '\'' +
                 ", createTime=" + createTime +

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="Swallows@localhost">
-  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.19">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.20">
     <root id="1">
       <ServerVersion>5.7.11</ServerVersion>
       <DefaultEngine>InnoDB</DefaultEngine>
@@ -738,8 +738,8 @@
     </collation>
     <user id="231" parent="1" name="mysql.sys">
       <Host>localhost</Host>
-      <ObjectGrants>TRIGGER|sys:null
-SELECT|sys.sys_config:null
+      <ObjectGrants>TRIGGER|sys
+SELECT|sys.sys_config
 </ObjectGrants>
     </user>
     <user id="232" parent="1" name="root">
@@ -796,289 +796,317 @@ SELECT|sys.sys_config:null
       <Position>10</Position>
       <DataType>bit(1)|0s</DataType>
     </column>
-    <index id="249" parent="233" name="FK4jj284r3pb7japogvo6h72q95">
+    <column id="249" parent="233" name="is_answer">
+      <Position>11</Position>
+      <DataType>bit(1)|0s</DataType>
+    </column>
+    <column id="250" parent="233" name="likes_num">
+      <Position>12</Position>
+      <DataType>int(11)|0s</DataType>
+    </column>
+    <index id="251" parent="233" name="FK4jj284r3pb7japogvo6h72q95">
       <ColNames>parent_comment_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="250" parent="233" name="FKlecx52q99oj4gbj1okt9dcbi6">
+    <index id="252" parent="233" name="FKlecx52q99oj4gbj1okt9dcbi6">
       <ColNames>question_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="251" parent="233" name="FKtamaoacctq4qpko6bvtv0ke1p">
+    <index id="253" parent="233" name="FKtamaoacctq4qpko6bvtv0ke1p">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="252" parent="233" name="FKiiy8au6bksmhi65qh9vldp60i">
+    <index id="254" parent="233" name="FKiiy8au6bksmhi65qh9vldp60i">
       <ColNames>post_user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="253" parent="233" name="FKgo6x3p29ldk743f6l5tvvaw84">
+    <index id="255" parent="233" name="FKgo6x3p29ldk743f6l5tvvaw84">
       <ColNames>receive_user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="254" parent="233" name="PRIMARY">
+    <key id="256" parent="233" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="255" parent="233" name="FK4jj284r3pb7japogvo6h72q95">
+    <foreign-key id="257" parent="233" name="FK4jj284r3pb7japogvo6h72q95">
       <ColNames>parent_comment_id</ColNames>
       <RefTableName>t_comment</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="256" parent="233" name="FKlecx52q99oj4gbj1okt9dcbi6">
+    <foreign-key id="258" parent="233" name="FKlecx52q99oj4gbj1okt9dcbi6">
       <ColNames>question_id</ColNames>
       <RefTableName>t_question</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="257" parent="233" name="FKtamaoacctq4qpko6bvtv0ke1p">
+    <foreign-key id="259" parent="233" name="FKtamaoacctq4qpko6bvtv0ke1p">
       <ColNames>user_id</ColNames>
       <RefTableName>t_user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="258" parent="233" name="FKiiy8au6bksmhi65qh9vldp60i">
+    <foreign-key id="260" parent="233" name="FKiiy8au6bksmhi65qh9vldp60i">
       <ColNames>post_user_id</ColNames>
       <RefTableName>t_user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="259" parent="233" name="FKgo6x3p29ldk743f6l5tvvaw84">
+    <foreign-key id="261" parent="233" name="FKgo6x3p29ldk743f6l5tvvaw84">
       <ColNames>receive_user_id</ColNames>
       <RefTableName>t_user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="260" parent="234" name="id">
+    <column id="262" parent="234" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="261" parent="234" name="create_time">
+    <column id="263" parent="234" name="create_time">
       <Position>2</Position>
       <DataType>datetime|0s</DataType>
     </column>
-    <column id="262" parent="234" name="like_comment">
+    <column id="264" parent="234" name="like_comment">
       <Position>3</Position>
       <DataType>bit(1)|0s</DataType>
     </column>
-    <column id="263" parent="234" name="like_question">
+    <column id="265" parent="234" name="like_question">
       <Position>4</Position>
       <DataType>bit(1)|0s</DataType>
     </column>
-    <column id="264" parent="234" name="comment_id">
+    <column id="266" parent="234" name="comment_id">
       <Position>5</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="265" parent="234" name="post_user_id">
+    <column id="267" parent="234" name="post_user_id">
       <Position>6</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="266" parent="234" name="question_id">
+    <column id="268" parent="234" name="question_id">
       <Position>7</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="267" parent="234" name="receive_user_id">
+    <column id="269" parent="234" name="receive_user_id">
       <Position>8</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="268" parent="234" name="is_read">
+    <column id="270" parent="234" name="is_read">
       <Position>9</Position>
       <DataType>bit(1)|0s</DataType>
     </column>
-    <index id="269" parent="234" name="FKba9uoso9lwhdci0edxqslm16c">
+    <index id="271" parent="234" name="FKba9uoso9lwhdci0edxqslm16c">
       <ColNames>comment_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="270" parent="234" name="FKoc6cbuwfe0bnj9vqpsl40p1nb">
+    <index id="272" parent="234" name="FKoc6cbuwfe0bnj9vqpsl40p1nb">
       <ColNames>post_user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="271" parent="234" name="FKi81xtsho7ek6pplusvc6c5g0i">
+    <index id="273" parent="234" name="FKi81xtsho7ek6pplusvc6c5g0i">
       <ColNames>question_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="272" parent="234" name="FK166h1dd30yg6hqmfx1o1k24b1">
+    <index id="274" parent="234" name="FK166h1dd30yg6hqmfx1o1k24b1">
       <ColNames>receive_user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="273" parent="234" name="PRIMARY">
+    <key id="275" parent="234" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="274" parent="234" name="FKba9uoso9lwhdci0edxqslm16c">
+    <foreign-key id="276" parent="234" name="FKba9uoso9lwhdci0edxqslm16c">
       <ColNames>comment_id</ColNames>
       <RefTableName>t_comment</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="275" parent="234" name="FKoc6cbuwfe0bnj9vqpsl40p1nb">
+    <foreign-key id="277" parent="234" name="FKoc6cbuwfe0bnj9vqpsl40p1nb">
       <ColNames>post_user_id</ColNames>
       <RefTableName>t_user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="276" parent="234" name="FKi81xtsho7ek6pplusvc6c5g0i">
+    <foreign-key id="278" parent="234" name="FKi81xtsho7ek6pplusvc6c5g0i">
       <ColNames>question_id</ColNames>
       <RefTableName>t_question</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="277" parent="234" name="FK166h1dd30yg6hqmfx1o1k24b1">
+    <foreign-key id="279" parent="234" name="FK166h1dd30yg6hqmfx1o1k24b1">
       <ColNames>receive_user_id</ColNames>
       <RefTableName>t_user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="278" parent="235" name="id">
+    <column id="280" parent="235" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="279" parent="235" name="content">
+    <column id="281" parent="235" name="content">
       <Position>2</Position>
       <DataType>longtext|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="280" parent="235" name="create_time">
+    <column id="282" parent="235" name="create_time">
       <Position>3</Position>
       <DataType>datetime|0s</DataType>
     </column>
-    <column id="281" parent="235" name="description">
+    <column id="283" parent="235" name="description">
       <Position>4</Position>
       <DataType>longtext|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="282" parent="235" name="title">
+    <column id="284" parent="235" name="title">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="283" parent="235" name="dislike">
+    <column id="285" parent="235" name="dislike">
       <Position>6</Position>
       <DataType>int(11)|0s</DataType>
     </column>
-    <column id="284" parent="235" name="dislikes">
+    <column id="286" parent="235" name="dislikes">
       <Position>7</Position>
       <DataType>int(11)|0s</DataType>
     </column>
-    <column id="285" parent="235" name="likes">
+    <column id="287" parent="235" name="likes">
       <Position>8</Position>
       <DataType>int(11)|0s</DataType>
     </column>
-    <column id="286" parent="235" name="view">
+    <column id="288" parent="235" name="view">
       <Position>9</Position>
       <DataType>int(11)|0s</DataType>
     </column>
-    <column id="287" parent="235" name="user_id">
+    <column id="289" parent="235" name="user_id">
       <Position>10</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <index id="288" parent="235" name="FKb4148nfyugr3fl6ftb2blbts4">
+    <column id="290" parent="235" name="impact">
+      <Position>11</Position>
+      <DataType>int(11)|0s</DataType>
+    </column>
+    <column id="291" parent="235" name="likes_num">
+      <Position>12</Position>
+      <DataType>int(11)|0s</DataType>
+    </column>
+    <column id="292" parent="235" name="new_commented_time">
+      <Position>13</Position>
+      <DataType>datetime|0s</DataType>
+    </column>
+    <index id="293" parent="235" name="FKb4148nfyugr3fl6ftb2blbts4">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="289" parent="235" name="PRIMARY">
+    <key id="294" parent="235" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="290" parent="235" name="FKb4148nfyugr3fl6ftb2blbts4">
+    <foreign-key id="295" parent="235" name="FKb4148nfyugr3fl6ftb2blbts4">
       <ColNames>user_id</ColNames>
       <RefTableName>t_user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="291" parent="236" name="questions_id">
+    <column id="296" parent="236" name="questions_id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="292" parent="236" name="tags_id">
+    <column id="297" parent="236" name="tags_id">
       <Position>2</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="293" parent="236" name="FK2ro1j85i50o0f0j8yyi5ij84d">
+    <index id="298" parent="236" name="FK2ro1j85i50o0f0j8yyi5ij84d">
       <ColNames>questions_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="294" parent="236" name="FK6wvrlbkys2y4c03dxbb4oagnc">
+    <index id="299" parent="236" name="FK6wvrlbkys2y4c03dxbb4oagnc">
       <ColNames>tags_id</ColNames>
       <Type>btree</Type>
     </index>
-    <foreign-key id="295" parent="236" name="FK2ro1j85i50o0f0j8yyi5ij84d">
+    <foreign-key id="300" parent="236" name="FK2ro1j85i50o0f0j8yyi5ij84d">
       <ColNames>questions_id</ColNames>
       <RefTableName>t_question</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="296" parent="236" name="FK6wvrlbkys2y4c03dxbb4oagnc">
+    <foreign-key id="301" parent="236" name="FK6wvrlbkys2y4c03dxbb4oagnc">
       <ColNames>tags_id</ColNames>
       <RefTableName>t_tag</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="297" parent="237" name="id">
+    <column id="302" parent="237" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="298" parent="237" name="name">
+    <column id="303" parent="237" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="299" parent="237" name="PRIMARY">
+    <key id="304" parent="237" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="300" parent="238" name="id">
+    <column id="305" parent="238" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="301" parent="238" name="admin">
+    <column id="306" parent="238" name="admin">
       <Position>2</Position>
       <DataType>bit(1)|0s</DataType>
     </column>
-    <column id="302" parent="238" name="avatar">
+    <column id="307" parent="238" name="avatar">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="303" parent="238" name="create_time">
+    <column id="308" parent="238" name="create_time">
       <Position>4</Position>
       <DataType>datetime|0s</DataType>
     </column>
-    <column id="304" parent="238" name="email">
+    <column id="309" parent="238" name="email">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="305" parent="238" name="nickname">
+    <column id="310" parent="238" name="nickname">
       <Position>6</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="306" parent="238" name="password">
+    <column id="311" parent="238" name="password">
       <Position>7</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="307" parent="238" name="update_time">
+    <column id="312" parent="238" name="update_time">
       <Position>8</Position>
       <DataType>datetime|0s</DataType>
     </column>
-    <column id="308" parent="238" name="username">
+    <column id="313" parent="238" name="username">
       <Position>9</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="309" parent="238" name="qqid">
+    <column id="314" parent="238" name="qqid">
       <Position>10</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="310" parent="238" name="donation">
+    <column id="315" parent="238" name="donation">
       <Position>11</Position>
       <DataType>int(11)|0s</DataType>
     </column>
-    <column id="311" parent="238" name="register_time">
+    <column id="316" parent="238" name="register_time">
       <Position>12</Position>
       <DataType>datetime|0s</DataType>
     </column>
-    <key id="312" parent="238" name="PRIMARY">
+    <column id="317" parent="238" name="can_speak">
+      <Position>13</Position>
+      <DataType>bit(1)|0s</DataType>
+    </column>
+    <column id="318" parent="238" name="is_admin">
+      <Position>14</Position>
+      <DataType>bit(1)|0s</DataType>
+    </column>
+    <key id="319" parent="238" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

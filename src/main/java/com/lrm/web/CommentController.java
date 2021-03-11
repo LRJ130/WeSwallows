@@ -1,6 +1,5 @@
 package com.lrm.web;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.lrm.Exception.NoPermissionException;
 import com.lrm.Exception.NotFoundException;
 import com.lrm.po.Comment;
@@ -14,13 +13,12 @@ import com.lrm.service.UserService;
 import com.lrm.util.Methods;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.Valid;
+import java.util.*;
 
 @RestController
 @RequestMapping("/{questionId}")
@@ -40,24 +38,53 @@ public class CommentController
 
     //ajax
     @GetMapping("/comments")
-    public Result<Map<String, Object>> comments(@PathVariable Long questionId)
+    public Result<Map<String, Object>> comments(@PathVariable Long questionId,  HttpServletRequest request)
     {
         Map<String,Object> hashMap = new HashMap<>();
-        //分别返回两类评论
-        hashMap.put("comments1", commentService.listCommentByQuestionId(questionId, false));
+        Long userId = Methods.getCustomUserId(request);
+        //分别返回两类评论和对应点赞
+        List<Comment> comments1 = commentService.listCommentByQuestionId(questionId, false);
+        List<Boolean> approved1 = new ArrayList<>();
+        for(Comment comment : comments1)
+        {
+            if(likesService.getLikes(userService.getUser(userId), comment) != null)
+            {
+                approved1.add(true);
+            } else {
+                approved1.add(false);
+            }
+        }
+        hashMap.put("approved1", approved1);
+        hashMap.put("comments1", comments1);
+        List<Comment> comments2 = commentService.listCommentByQuestionId(questionId, true);
+        List<Boolean> approved2 = new ArrayList<>();
+        for(Comment comment : comments2)
+        {
+            if(likesService.getLikes(userService.getUser(userId), comment) != null)
+            {
+                approved2.add(true);
+            } else {
+                approved2.add(false);
+            }
+        }
+        hashMap.put("approved2", approved2);
         hashMap.put("comments2", commentService.listCommentByQuestionId(questionId, true));
         return new Result<>(hashMap, true, "");
     }
 
     //提交表单后 到这里 然后得到id 然后刷新评论
     @PostMapping("/comments")
-    public Result<Map<String, Object>> post(Comment comment, HttpServletRequest request) throws JWTVerificationException
+    public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult)
     {
         Map<String, Object> hashMap= new HashMap<>();
         Long userId = Methods.getCustomUserId(request);
         User postUser = userService.getUser(userId);
         Long questionId = comment.getQuestion().getId();
-
+        if(bindingResult.hasErrors())
+        {
+            hashMap.put("comments", comment);
+            return new Result<>(hashMap, false, "内容不能为空");
+        }
         commentService.saveComment(comment, questionId, postUser);
         questionService.getQuestion(questionId).setNewCommentedTime(new Date());
         if(commentService.getComment(comment.getId()) != null)
@@ -82,7 +109,7 @@ public class CommentController
         {
             throw new NotFoundException("该评论不存在");
         }
-        if((comment.getPostUser() != customUser) && (!admin))
+        if((comment.getPostUser() != customUser) & (!admin))
         {
             throw new NoPermissionException("您无权限删除该评论");
         }
@@ -123,8 +150,20 @@ public class CommentController
                     //点赞后的最高赞数
                 Integer maxNum1 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
                 Question question = questionService.getQuestion(questionId);
-                question.setImpact(question.getImpact() + 2*(maxNum1-maxNum0) + 12);
+                question.setImpact(question.getImpact() + 2 * (maxNum1-maxNum0) + 12);
             }
+        }
+    }
+
+    //点踩
+    @GetMapping("/comment/{commentId}/disapprove/")
+    public void  disapproved(@PathVariable Long commentId)
+    {
+        Comment comment = commentService.getComment(commentId);
+        comment.setDisLikesNum(comment.getDisLikesNum()+1);
+        if(comment.getDisLikesNum() >= 6 & (comment.getLikesNum() <= 2 * comment.getDisLikesNum()))
+        {
+            comment.setHidden(true);
         }
     }
 

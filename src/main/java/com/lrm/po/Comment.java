@@ -16,9 +16,19 @@ public class Comment
     private Long id;
     //如果标识为1 即question.user是发布这个comment的人 那么它应该有一个标识
     private Boolean adminComment;
+    //通知是否已读
     private Boolean isRead;
-    Integer likesNum;
+    //是否是第二类回答
     private Boolean isAnswer;
+    //点赞数
+    private Integer likesNum;
+    //被评论数
+    private Integer commentsNum;
+    //点踩数
+    private Integer disLikesNum;
+    //是否被隐藏 后端只做属性设置的处理 仍然返回全部数据 前端做hidden判断
+    private Boolean isHidden;
+
 
     @Lob
     @NotBlank
@@ -75,6 +85,30 @@ public class Comment
 
     public void setRead(Boolean read) {
         isRead = read;
+    }
+
+    public Integer getCommentsNum() {
+        return commentsNum;
+    }
+
+    public void setCommentsNum(Integer commentsNum) {
+        this.commentsNum = commentsNum;
+    }
+
+    public Integer getDisLikesNum() {
+        return disLikesNum;
+    }
+
+    public void setDisLikesNum(Integer disLikesNum) {
+        this.disLikesNum = disLikesNum;
+    }
+
+    public Boolean getHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
     }
 
     public Integer getLikesNum() {
@@ -157,6 +191,9 @@ public class Comment
                 ", isRead=" + isRead +
                 ", isAnswer=" + isAnswer +
                 ", likesNum=" + likesNum +
+                ", commentsNum=" + commentsNum +
+                ", disLikesNum=" + disLikesNum +
+                ", isHidden=" + isHidden +
                 ", content='" + content + '\'' +
                 ", createTime=" + createTime +
                 ", question=" + question +

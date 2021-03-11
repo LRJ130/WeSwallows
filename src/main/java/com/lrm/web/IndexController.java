@@ -49,7 +49,7 @@ public class IndexController
         List<Boolean> approved = new ArrayList<>();
         for(Question question : page)
         {
-            if(likesService.getLikes(userService.getUser(userId), question) !=null)
+            if(likesService.getLikes(userService.getUser(userId), question) != null)
             {
                 approved.add(true);
             } else {
@@ -64,7 +64,7 @@ public class IndexController
 
     //按输入搜索标题/内容
     @PostMapping("/search")
-    public Result<Map<String, Object>> search(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+    public Result<Map<String, Object>> search(@PageableDefault(size = 1000, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                          String query)
     {
         //mysql语句 模糊查询的格式 jpa不会帮处理string前后有没有%的
@@ -86,6 +86,7 @@ public class IndexController
         //每多1次浏览，问题影响力+2
         question.setView(question.getView()+1);
         question.setImpact(question.getImpact()+2);
+        hashMap.put("questions", question);
         return new Result<>(hashMap, true, "");
     }
 
@@ -115,5 +116,15 @@ public class IndexController
         }
     }
 
-
+    //点踩
+    @GetMapping("/question/{questionId}/disapprove/")
+    public void  disapproved(@PathVariable Long questionId)
+    {
+        Question question = questionService.getQuestion(questionId);
+        question.setDisLikesNum(question.getDisLikesNum()+1);
+        if(question.getDisLikesNum() >= 6 & (question.getLikesNum() <= 2 * question.getDisLikesNum()))
+        {
+            question.setHidden(true);
+        }
+    }
 }

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static com.lrm.web.customer.QuestionController.getMapResult;
 
-@RequestMapping("/admin}")
+@RequestMapping("/admin")
 @RestController
 public class AdminQuestionController
 {

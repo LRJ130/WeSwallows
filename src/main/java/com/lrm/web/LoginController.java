@@ -29,7 +29,7 @@ public class LoginController {
         user0.setUsername(username);
         user0.setNickname(nickname);
         User user = userService.checkRegister(username, nickname);
-        if(user !=null)
+        if(user != null)
         {
             //跳转到注册页面
             return new Result<>(user0, false, "该用户名或昵称已被注册过");
@@ -49,7 +49,7 @@ public class LoginController {
         //先检查用户名和密码在数据库中存在不。(不考虑是否注册过了)。存在登录；不存在报错。
         User user = userService.checkUser(username, password);
 
-        if(user !=null)
+        if(user != null)
         {
             //需要传递到前端的 包含在token内的信息 map用来存放payload
             Map<String, String> map = new HashMap<>();
