@@ -7,6 +7,7 @@ import java.util.List;
 public class QuestionQuery
 {
     private String title;
+
     //最后还是要转成tags 容器类有自带的方法可以调用 比较方便
     private List<Tag> tags;
     private String tagIds;
@@ -44,6 +45,7 @@ public class QuestionQuery
     public void init() {
         this.tagIds = tagsToIds(this.getTags());
     }
+
     //前端Tag对象的格式是以,分割的 tagIds作为一个媒介
     private String tagsToIds(List<Tag> tags) {
         if (!tags.isEmpty()) {

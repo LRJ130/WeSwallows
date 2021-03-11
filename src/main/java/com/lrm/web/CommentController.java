@@ -56,6 +56,7 @@ public class CommentController
         }
         hashMap.put("approved1", approved1);
         hashMap.put("comments1", comments1);
+
         List<Comment> comments2 = commentService.listCommentByQuestionId(questionId, true);
         List<Boolean> approved2 = new ArrayList<>();
         for(Comment comment : comments2)
@@ -69,6 +70,7 @@ public class CommentController
         }
         hashMap.put("approved2", approved2);
         hashMap.put("comments2", commentService.listCommentByQuestionId(questionId, true));
+
         return new Result<>(hashMap, true, "");
     }
 
@@ -80,6 +82,7 @@ public class CommentController
         Long userId = Methods.getCustomUserId(request);
         User postUser = userService.getUser(userId);
         Long questionId = comment.getQuestion().getId();
+        //如果是空报错
         if(bindingResult.hasErrors())
         {
             hashMap.put("comments", comment);
@@ -87,8 +90,10 @@ public class CommentController
         }
         commentService.saveComment(comment, questionId, postUser);
         questionService.getQuestion(questionId).setNewCommentedTime(new Date());
+        //如果有了，更新发布时间。
         if(commentService.getComment(comment.getId()) != null)
         {
+            questionService.getQuestion(questionId).setNewCommentedTime(new Date());
             hashMap.put("comments",comment);
             return new Result<>(hashMap, true,"发布成功");
         } else
@@ -105,6 +110,7 @@ public class CommentController
         User customUser = userService.getUser(Methods.getCustomUserId(request));
         Boolean admin = Methods.isAdmin(request);
         Comment comment = commentService.getComment(commentId);
+        //如果评论不存在&没权限删除评论报错
         if(comment == null)
         {
             throw new NotFoundException("该评论不存在");
@@ -129,11 +135,13 @@ public class CommentController
     public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request)
     {
         Comment comment = commentService.getComment(commentId);
+        //只能给有效问题点赞
         if(comment.getAnswer()) {
             Long postUserId = Methods.getCustomUserId(request);
             User postUser = userService.getUser(postUserId);
             User receiveUser = comment.getReceiveUser();
             Likes likes = likesService.getLikes(postUser, comment);
+            //有则删除，无则增加
             if (likes != null) {
                 likesService.deleteLikes(likes);
             } else {
@@ -141,6 +149,7 @@ public class CommentController
                 likes1.setLikeQuestion(false);
                 likes1.setLikeComment(true);
                 comment.setLikesNum(comment.getLikesNum() + 1);
+
                 //点赞前的最高赞数
                 Integer maxNum0 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
                 likesService.saveLikes(likes1, postUser, receiveUser);
@@ -161,6 +170,7 @@ public class CommentController
     {
         Comment comment = commentService.getComment(commentId);
         comment.setDisLikesNum(comment.getDisLikesNum()+1);
+        //符合规则就隐藏
         if(comment.getDisLikesNum() >= 6 & (comment.getLikesNum() <= 2 * comment.getDisLikesNum()))
         {
             comment.setHidden(true);
