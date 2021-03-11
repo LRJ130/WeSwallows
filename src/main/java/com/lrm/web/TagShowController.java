@@ -1,0 +1,71 @@
+package com.lrm.web;
+
+import com.lrm.po.Question;
+import com.lrm.po.Tag;
+import com.lrm.service.QuestionService;
+import com.lrm.service.TagService;
+import com.lrm.util.DividePage;
+import com.lrm.vo.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+
+@RestController
+@RequestMapping("/tags")
+public class TagShowController {
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    //返回第一级标签
+    @GetMapping("/")
+    public Result<Map<String, Object>> tags() {
+        Map<String, Object> hashMap = new HashMap<>();
+        hashMap.put("tags",tagService.listTagTop());
+        return new Result<>(hashMap, true, "");
+    }
+
+    //获取下一级标签
+    @GetMapping("/{parentTagId}/nextTag")
+    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
+        return new Result<>(hashMap, true, "");
+    }
+
+    //按标签查询
+    @PostMapping("/search")
+    public Result<Map<String, Object>> showQuestions(@RequestParam String tagIds)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        //需要查询的初始标签
+        List<Tag> tags = tagService.listTag(tagIds);
+        //需要查询的所有标签
+        Set<Tag> tagSet = new HashSet<>();
+        for (Tag tag : tags)
+        {
+            tagSet.addAll(tagService.listTags(tag));
+        }
+        //将标签下的所有问题全塞进去
+        Set<Question> questions = new HashSet<>();
+        for (Tag tag : tagSet)
+        {
+            questions.addAll(questionService.listQuestion(tag.getId()));
+        }
+        //每页十条
+        Pageable pageRequest = new PageRequest(1, 10);
+        //将set转换为list
+        hashMap.put("pages", DividePage.listConvertToPage(new ArrayList<>(questions), pageRequest));
+
+        return new Result<>(hashMap, true, "搜索成功");
+    }
+
+
+
+}

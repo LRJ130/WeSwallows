@@ -5,9 +5,6 @@ import com.lrm.po.Tag;
 import com.lrm.service.TagService;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,39 +13,59 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/tags")
 public class TagController {
 
     @Autowired
     private TagService tagService;
 
-    //返回所有标签的分页
-    @GetMapping("/tags")
-    public Result<Map<String, Object>> tags(@PageableDefault(size = 10,sort = {"id"},direction = Sort.Direction.DESC)
-                               Pageable pageable) {
+    //返回所有第一级标签
+    @GetMapping("/")
+    public Result<Map<String, Object>> tags() {
         Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags",tagService.listTag(pageable));
+        hashMap.put("tags", tagService.listTagTop());
         return new Result<>(hashMap, true, "");
     }
 
-    //新增标签
-    @GetMapping("/tags/input")
-    public Result<Map<String, Object>> input() {
+    //获取下一级标签
+    @GetMapping("/{parentTagId}/nextTag")
+    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
+    {
         Map<String, Object> hashMap = new HashMap<>();
-        Tag tag = new Tag();
-        hashMap.put("tags", tag);
+        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
         return new Result<>(hashMap, true, "");
     }
+
+    //采用评论区的js方法
+    //新增第一级标签
+//    @GetMapping("/tags/input")
+//    public Result<Map<String, Object>> input() {
+//        Map<String, Object> hashMap = new HashMap<>();
+//        Tag tag = new Tag();
+//        hashMap.put("tags", tag);
+//        return new Result<>(hashMap, true, "");
+//    }
+
+    //如果我这里不使用类似评论区的js功能——直接在本页面修改封装成form表单 而是通过getMapping获得返回的新的Tag 是不是必须要在这里直接设置parentTag？
+    //否则会丢失这个parentCommentId
+    //新增下级标签
+//    @GetMapping("/tags/{tagId}/add")
+//    public Result<Map<String, Object>> add() {
+//        Map<String, Object> hashMap = new HashMap<>();
+//        Tag tag = new Tag();
+//        hashMap.put("tags", tag);
+//        return new Result<>(hashMap, true, "");
+//    }
 
     //修改标签
-    @GetMapping("/tags/{tagId}/input")
-    public Result<Map<String, Object>> editInput(@PathVariable Long tagId) {
-        Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags", tagService.getTag(tagId));
-        return new Result<>(hashMap, true, "");
-    }
+//    @GetMapping("/tags/{tagId}/input")
+//    public Result<Map<String, Object>> editInput(@PathVariable Long tagId) {
+//        Map<String, Object> hashMap = new HashMap<>();
+//        hashMap.put("tags", tagService.getTag(tagId));
+//        return new Result<>(hashMap, true, "");
+//    }
 
-    @PostMapping("/tags")
+    @PostMapping("/")
     public Result<Map<String, Object>> post(@Valid Tag tag, BindingResult result) {
         Map<String, Object> hashMap = new HashMap<>();
         //返回input页面的错误提示
@@ -80,14 +97,15 @@ public class TagController {
         }
     }
 
-    @GetMapping("/tags/{tagId}/delete")
+    //删除标签
+    @GetMapping("/{tagId}/delete")
     public Result<Map<String, Object>> delete(@PathVariable Long tagId)
     {
         Map<String, Object> hashMap = new HashMap<>();
         Tag tag = tagService.getTag(tagId);
         if(tag == null)
         {
-            throw new NotFoundException("该问题不存在");
+            throw new NotFoundException("该标签不存在");
         }
 
         tagService.deleteTag(tagId);

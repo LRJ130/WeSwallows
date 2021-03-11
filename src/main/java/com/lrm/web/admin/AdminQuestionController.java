@@ -31,38 +31,48 @@ public class AdminQuestionController
     @Autowired
     private QuestionService questionService;
 
+    //其实没必要，因为管理员进入管理页一定是有目标的，没必要先返回一大堆
     //后台返回所有问题列表
-    @GetMapping("/questions")
-    public Result<Map<String, Object>> Questions(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-                                                 QuestionQuery question)
-    {
-        Map<String, Object> hashMap = new HashMap<>();
-        //这个页面的查找功能 得给前端所有的tag
-        hashMap.put("tags", tagService.listTag());
-        hashMap.put("pages", questionService.listQuestion(pageable, question));
-        return new Result<>(hashMap, true, "");
-    }
+//    @GetMapping("/questions")
+//    public Result<Map<String, Object>> Questions(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+//                                                 QuestionQuery question)
+//    {
+//        Map<String, Object> hashMap = new HashMap<>();
+//        hashMap.put("pages", questionService.listQuestion(, pageable));
+//        return new Result<>(hashMap, true, "");
+//    }
 
-    //管理页根据userid、标题、标签搜索 前端传入questionquery对象和userid
+    //管理页根据userid、标题（标签查询未作）搜索 前端传入questionquery对象和userid
     @PostMapping("/questions/search")
     public Result<Map<String, Object>> searchQuestion(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                               QuestionQuery question, Long userId)
     {
         Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags", tagService.listTag());
+        //先返回第一级的标签
+        hashMap.put("tags", tagService.listTagTop());
+        //通过标题、userId查找
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
         return new Result<>(hashMap, true, "搜索完成");
     }
 
-    @GetMapping("/question/{id}/edit")
-    public Result<Map<String, Object>> editInput(@PathVariable Long id)
+    @GetMapping("/question/{questionId}/edit")
+    public Result<Map<String, Object>> editInput(@PathVariable Long questionId)
     {
         Map<String, Object> hashMap= new HashMap<>();
-        Question question = questionService.getQuestion(id);
+        Question question = questionService.getQuestion(questionId);
         question.init();
-        List<Tag> tags = tagService.listTag();
+        List<Tag> tags = tagService.listTagTop();
         hashMap.put("questions", question);
         hashMap.put("tags", tags);
+        return new Result<>(hashMap, true, "");
+    }
+
+    //获取下一级标签
+    @GetMapping("/questions/{parentTagId}/nextTag")
+    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
         return new Result<>(hashMap, true, "");
     }
 

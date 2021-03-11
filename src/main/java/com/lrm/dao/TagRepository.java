@@ -13,4 +13,8 @@ public interface TagRepository extends JpaRepository<Tag,Long> {
 
     @Query("select t from Tag t")
     List<Tag> findTop(Pageable pageable);
+
+    //返回首级标签
+    List<Tag> findByParentTagNull();
+
 }

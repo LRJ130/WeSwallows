@@ -17,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class QuestionServiceImpl implements QuestionService{
@@ -46,13 +43,8 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.save(question);
     }
 
-    @Transactional
-    @Override
-    public Question updateQuestionTime(Question question) {
-        question.setNewCommentedTime(new Date());
-        return questionRepository.save(question);
-    }
 
+    //管理页更新问题
     public Question updateQuestion(Question question)
     {
         Question q = questionRepository.findOne(question.getId());
@@ -70,30 +62,19 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.findOne(id);
     }
 
+    //所有问题总数
     @Override
     public Long countQuestion() {
         return questionRepository.count();
     }
 
-
+    //某用户发布的问题
     @Override
-    public Page<Question> listQuestion(Pageable pageable, QuestionQuery question) {
-        return questionRepository.findAll((root, cq, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            //""是空字节，而不是null 下面这种写法 而不是Question.getTitle().equals("")是防止它是null 从而造成空指针异常
-            if( question.getTitle() !=null && !"".equals(question.getTitle()) )
-            {
-                predicates.add(cb.like(root.get("title"), "%"+question.getTitle()+"%"));
-            }
-            if( question.getTagIds() !=null)
-            {
-                predicates.add(cb.like(root.get("tagIds"), "%"+question.getTagIds()+"%"));
-            }
-            cq.where(predicates.toArray(new Predicate[0]));
-            return null;
-        }, pageable);
+    public Long countQuestionByUser(Long userId) {
+        return questionRepository.countAllByUserId(userId);
     }
 
+    //根据标题和用户id查询（目前普通用户和管理页默认使用）
     @Override
     public Page<Question> listQuestionPlusUserId(Pageable pageable, QuestionQuery question, Long userId) {
         return questionRepository.findAll((root, cq, cb) -> {
@@ -103,11 +84,6 @@ public class QuestionServiceImpl implements QuestionService{
             {
                 predicates.add(cb.like(root.get("title"), "%"+question.getTitle()+"%"));
             }
-            if( question.getTagIds() !=null)
-            {
-                //这里应该怎么写呢
-                predicates.add(cb.like(root.get("tagIds"), "%"+question.getTagIds()+"%"));
-            }
             Join join = root.join("user");
             predicates.add(cb.equal(join.get("id"), userId));
 
@@ -116,19 +92,28 @@ public class QuestionServiceImpl implements QuestionService{
         }, pageable);
     }
 
+    //通过直接搜索标题查询
     @Override
     public Page<Question> listQuestion(String query, Pageable pageable) {
         return questionRepository.findByQuery(query, pageable);
     }
 
+    //返回所有问题
     @Override
     public Page<Question> listQuestion(Pageable pageable) {
         return questionRepository.findAll(pageable);
     }
 
+    //返回某个tagId对应的问题集合
     @Override
-    public Page<Question> listQuestion(Long tagId, Pageable pageable) {
-        return null;
+    public Set<Question> listQuestion(Long tagId) {
+        return new HashSet<>(questionRepository.findAll(new Specification<Question>() {
+            @Override
+            public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+                Join join = root.join("tags");
+                return cb.equal(join.get("id"), tagId);
+            }
+        }));
     }
 
     //返回最新评论在三天之内的 影响力为前size个的问题
@@ -159,4 +144,15 @@ public class QuestionServiceImpl implements QuestionService{
         }
         return questions;
         }
+
+    @Override
+    public Map<String, List<Question>> archivesQuestion(Long userId) {
+        List<String> years = questionRepository.findGroupYear(userId);
+        Map<String, List<Question>> map = new HashMap<>();
+        for(String year : years)
+        {
+            map.put(year, questionRepository.findByYear(year));
+        }
+        return map;
+    }
 }

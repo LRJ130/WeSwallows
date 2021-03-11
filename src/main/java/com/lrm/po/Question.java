@@ -210,6 +210,7 @@ public class Question
     public void init() {
         this.tagIds = tagsToIds(this.getTags());
     }
+
     //前端Tag对象的格式是以,分割的 tagIds作为一个媒介
     private String tagsToIds(List<Tag> tags) {
         if (!tags.isEmpty()) {

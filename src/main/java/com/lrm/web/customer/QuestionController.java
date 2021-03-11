@@ -43,19 +43,28 @@ public class QuestionController {
                                                  QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>();
         Long userId = Methods.getCustomUserId(request);
-        //这个页面的查找功能 得给前端所有的tag
-        hashMap.put("tags", tagService.listTag());
+        //这个方法只抽取title属性比较
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
         return new Result<>(hashMap, true, "");
     }
 
-    //个人主页搜索 根据分级标签 标题 返回个人发出的问题
+    //获取下一级标签
+    @GetMapping("/questions/{parentTagId}/nextTag")
+    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
+        return new Result<>(hashMap, true, "");
+    }
+
+
+    //个人主页搜索 根据标题 返回个人发出的问题
+    //跟上面那个get方法的不同就是 一个是空的 一个不是空的
     @PostMapping("/questions/search")
     public Result<Map<String, Object>> search(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-                                              QuestionQuery question, HttpServletRequest request) {
+                                               QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>();
         Long userId = Methods.getCustomUserId(request);
-        hashMap.put("tags", tagService.listTag());
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
         return new Result<>(hashMap, true, "搜索完成");
     }
@@ -66,7 +75,7 @@ public class QuestionController {
     public Result<Map<String, Object>> input() {
         Map<String, Object> hashMap = new HashMap<>();
         Question question = new Question();
-        List<Tag> tags = tagService.listTag();
+        List<Tag> tags = tagService.listTagTop();
         hashMap.put("questions", question);
         hashMap.put("tags", tags);
         return new Result<>(hashMap, true, "");

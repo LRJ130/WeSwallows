@@ -1,10 +1,9 @@
 package com.lrm.service;
 
 import com.lrm.po.Tag;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TagService {
 
@@ -14,14 +13,11 @@ public interface TagService {
 
     Tag getTagByName(String name);
 
-    //根据分页查询
-    Page<Tag> listTag(Pageable pageable);
-
-    List<Tag> listTag();
-
-    List<Tag> listTagTop(Integer size);
+    List<Tag> listTagTop();
 
     List<Tag> listTag(String ids);
+
+    Set<Tag> listTags(Tag tag);
 
     Tag updateTag(Tag tag);
 
