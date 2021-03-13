@@ -15,9 +15,13 @@ import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -187,5 +191,41 @@ public class CommentController
             }
         }
         return max;
+    }
+
+    /**
+     * @param files 多文件上传
+     * @param questionId 发布问题的Id
+     * @return 多文件在本地的路径
+     * @throws IOException 文件大小溢出
+     */
+    @PostMapping("/uploadPhotos")
+    public Result<Map<String, Object>> uploadPhotos(MultipartFile[] files, HttpServletRequest req, @PathVariable Long questionId, @RequestParam Long commentId) throws IOException {
+        Map<String, Object> hashMap= new HashMap<>();
+        //创建存放文件的文件夹的流程
+        Long userId = Methods.getCustomUserId(req);
+        SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
+        String format = sdf.format(new Date());
+        String path = "/upload/" + userId + "/questions/" + questionId + "/comments/" + format;
+        //新文件夹目录绝对路径
+        String realPath = req.getServletContext().getRealPath(path);
+        List<String> pathList = new ArrayList<String>();
+        for (MultipartFile uploadFile : files)
+        {
+            File folder = new File(realPath);
+            if (!folder.isDirectory()){
+                folder.mkdirs();
+            }
+            //保存文件到文件夹中
+            //所上传的文件原名
+            String oldName = uploadFile.getOriginalFilename();
+            //新文件名
+            String newName = UUID.randomUUID().toString()+oldName.substring(oldName.lastIndexOf("."));
+            uploadFile.transferTo(new File(folder, newName));
+            pathList.add(realPath + newName);
+        }
+
+        hashMap.put("photos", pathList);
+        return new Result<>(hashMap, true, "上传成功");
     }
 }
