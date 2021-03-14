@@ -21,6 +21,9 @@ import java.util.Map;
 
 import static com.lrm.web.customer.QuestionController.getMapResult;
 
+/**
+ * @author 山水夜止.
+ */
 @RequestMapping("/admin")
 @RestController
 public class AdminQuestionController
@@ -42,12 +45,18 @@ public class AdminQuestionController
 //        return new Result<>(hashMap, true, "");
 //    }
 
-    //管理页根据userid、标题（标签查询未作）搜索 前端传入questionquery对象和userid
+    /**
+     * 管理页根据userid、标题（标签查询未做）搜索 前端传入QuestionQuery对象和userId.
+     * @param pageable 分页对象
+     * @param question 查询条件
+     * @param userId 查询的用户Id.
+     * @return 查询结果.
+     */
     @PostMapping("/questions/search")
     public Result<Map<String, Object>> searchQuestion(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                               QuestionQuery question, Long userId)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(2);
         //先返回第一级的标签
         hashMap.put("tags", tagService.listTagTop());
         //通过标题、userId查找
@@ -58,7 +67,7 @@ public class AdminQuestionController
     @GetMapping("/question/{questionId}/edit")
     public Result<Map<String, Object>> editInput(@PathVariable Long questionId)
     {
-        Map<String, Object> hashMap= new HashMap<>();
+        Map<String, Object> hashMap= new HashMap<>(2);
         Question question = questionService.getQuestion(questionId);
         question.init();
         List<Tag> tags = tagService.listTagTop();
@@ -67,20 +76,18 @@ public class AdminQuestionController
         return new Result<>(hashMap, true, "");
     }
 
-    //获取下一级标签
     @GetMapping("/questions/{parentTagId}/nextTag")
     public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
         return new Result<>(hashMap, true, "");
     }
 
-    //修改问题
     @PostMapping("/questions")
     public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult)
     {
-        Map<String, Object> hashMap= new HashMap<>();
+        Map<String, Object> hashMap= new HashMap<>(1);
         //后端检验valid
         if(bindingResult.hasErrors())
         {
@@ -108,11 +115,10 @@ public class AdminQuestionController
         }
     }
 
-    //删除问题
     @GetMapping("/questions/{questionId}/delete")
     public Result<Map<String, Object>> delete(@PathVariable Long questionId)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         Question question = questionService.getQuestion(questionId);
         if(question == null)
         {

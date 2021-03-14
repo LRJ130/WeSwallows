@@ -8,14 +8,20 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Calendar;
 import java.util.Map;
 
+/**
+ * @author 网络
+ */
 public class JWTUtils {
 
 
-    private static final String TOKEN = "token!Q@W3e4r";
+    /**
+     * 随机盐
+     */
+    private static final String TOKEN = "t~1o33k2en!Q@W3e4r";
 
     /**
      * 生成token
-     * @param map  //传入payload
+     * @param map  传入payload
      * @return 返回token
      */
     public static String getToken(Map<String, String> map){
@@ -33,17 +39,15 @@ public class JWTUtils {
 
     /**
      * 验证token
-     * @param token
-     * @return
+     * @param token 令牌
      */
     public static void verify(String token){
         JWT.require(Algorithm.HMAC256(TOKEN)).build().verify(token);
     }
 
     /**
-     * 获取token中payload
-     * @param token
-     * @return
+     * @param token 令牌
+     * @return 获取token中payload
      */
     public static DecodedJWT getToken(String token){
         return JWT.require(Algorithm.HMAC256(TOKEN)).build().verify(token);

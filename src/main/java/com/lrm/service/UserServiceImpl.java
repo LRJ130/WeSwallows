@@ -11,15 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+/**
+ * @author 山水夜止
+ */
 @Service
 public class UserServiceImpl implements UserService
 {
-    //依赖注入 在某类中应用其他类的方法 需要调用这个类的对象 这就是依赖
+    /**
+     *  依赖注入 在某类中应用其他类的方法 需要调用这个类的对象 这就是依赖
+     */
     @Autowired
     private UserRepository userRepository;
 
-    //注册
-        //检查
+    //验证该用户是否已经注册
+    //注册了的不能再注册（用户名或昵称是否已经存在）
+    //注册了的可以直接登录
+
+    /**
+     * 检查
+     */
     @Override
     public User checkRegister(String username, String nickname) {
         User user1 = userRepository.findByUsername(username);
@@ -28,9 +38,18 @@ public class UserServiceImpl implements UserService
         if(user1 != null)
         {
             return user1;
-        } else return user2;
+        } else {
+            return user2;
+        }
     }
-        //记录在数据库
+
+
+    /**
+     * 保存到数据库
+     * @param username 账号
+     * @param password 密码
+     * @param nickname 用户名
+     */
     @Override
     @Transactional
     public User saveUser(String username, String password, String nickname) {
@@ -45,13 +64,17 @@ public class UserServiceImpl implements UserService
         return userRepository.save(user);
     }
 
-    //登录
+    /**
+     * 登录
+     */
     @Override
     public User checkUser(String username, String password) {
         return userRepository.findByUsernameAndPassword(username,MD5Utils.code(password));
     }
 
-    //更新用户
+    /**
+     * 更新用户
+     */
     @Override
     @Transactional
     public User updateUser(User user) {

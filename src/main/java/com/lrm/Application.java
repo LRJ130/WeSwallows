@@ -3,6 +3,9 @@ package com.lrm;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author 山水夜止.
+ */
 @SpringBootApplication
 public class Application {
 

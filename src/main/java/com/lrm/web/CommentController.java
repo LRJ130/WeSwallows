@@ -11,6 +11,7 @@ import com.lrm.service.LikesService;
 import com.lrm.service.QuestionService;
 import com.lrm.service.UserService;
 import com.lrm.util.Methods;
+import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * @author 山水夜止.
+ */
 @RestController
 @RequestMapping("/{questionId}")
 public class CommentController
@@ -40,11 +44,14 @@ public class CommentController
     @Autowired
     private LikesService likesService;
 
-    //ajax
+    /**
+     * 展示所有评论.
+     * @return 第一类评论+对应在线用户是否点过赞、第二类评论+对应在线用户是否点过赞.
+     */
     @GetMapping("/comments")
     public Result<Map<String, Object>> comments(@PathVariable Long questionId,  HttpServletRequest request)
     {
-        Map<String,Object> hashMap = new HashMap<>();
+        Map<String,Object> hashMap = new HashMap<>(4);
         Long userId = Methods.getCustomUserId(request);
         //分别返回两类评论和对应点赞
         List<Comment> comments1 = commentService.listCommentByQuestionId(questionId, false);
@@ -78,11 +85,14 @@ public class CommentController
         return new Result<>(hashMap, true, "");
     }
 
-    //提交表单后 到这里 然后得到id 然后刷新评论
+    /**
+     * 提交表单后 到这里 然后得到id 然后刷新评论.
+     * @return 新增的评论.
+     */
     @PostMapping("/comments")
     public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult)
     {
-        Map<String, Object> hashMap= new HashMap<>();
+        Map<String, Object> hashMap= new HashMap<>(1);
         Long userId = Methods.getCustomUserId(request);
         User postUser = userService.getUser(userId);
         Long questionId = comment.getQuestion().getId();
@@ -106,11 +116,14 @@ public class CommentController
         }
     }
 
-    //删除评论
+    /**
+     * 删除评论.
+     * @return 报错信息.
+     */
     @GetMapping("/comment/{commentId}/delete")
     public Result<Map<String, Object>> deleteComment(@PathVariable Long commentId, HttpServletRequest request)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         User customUser = userService.getUser(Methods.getCustomUserId(request));
         Boolean admin = Methods.isAdmin(request);
         Comment comment = commentService.getComment(commentId);
@@ -134,7 +147,9 @@ public class CommentController
         }
     }
 
-    //点赞
+    /**
+     * 点赞.
+     */
     @GetMapping("/comment/{commentId}/approve")
     public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request)
     {
@@ -168,19 +183,10 @@ public class CommentController
         }
     }
 
-    //点踩
-    @GetMapping("/comment/{commentId}/disapprove/")
-    public void  disapproved(@PathVariable Long commentId)
-    {
-        Comment comment = commentService.getComment(commentId);
-        comment.setDisLikesNum(comment.getDisLikesNum()+1);
-        //符合规则就隐藏
-        if(comment.getDisLikesNum() >= 6 & (comment.getLikesNum() <= 2 * comment.getDisLikesNum()))
-        {
-            comment.setHidden(true);
-        }
-    }
-
+    /**
+     * @param comments 评论集合.
+     * @return 集合中评论被点赞最多的这个点赞数.
+     */
     Integer getMaxLikesNum(List<Comment> comments) {
         Integer max = 0;
         for (Comment comment : comments) {
@@ -194,14 +200,30 @@ public class CommentController
     }
 
     /**
+     * 点踩 到标准就隐藏.
+     * @param commentId 评论Id.
+     */
+    @GetMapping("/comment/{commentId}/disapprove/")
+    public void  disapproved(@PathVariable Long commentId)
+    {
+        Comment comment = commentService.getComment(commentId);
+        comment.setDisLikesNum(comment.getDisLikesNum()+1);
+        //符合规则就隐藏
+        if((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum()))
+        {
+            comment.setHidden(true);
+        }
+    }
+
+    /**
      * @param files 多文件上传
-     * @param questionId 发布问题的Id
-     * @return 多文件在本地的路径
-     * @throws IOException 文件大小溢出
+     * @param questionId 发布问题的Id.
+     * @return 多文件在本地的路径.
+     * @throws IOException 文件大小溢出.
      */
     @PostMapping("/uploadPhotos")
     public Result<Map<String, Object>> uploadPhotos(MultipartFile[] files, HttpServletRequest req, @PathVariable Long questionId, @RequestParam Long commentId) throws IOException {
-        Map<String, Object> hashMap= new HashMap<>();
+        Map<String, Object> hashMap= new HashMap<>(1);
         //创建存放文件的文件夹的流程
         Long userId = Methods.getCustomUserId(req);
         SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
@@ -209,7 +231,7 @@ public class CommentController
         String path = "/upload/" + userId + "/questions/" + questionId + "/comments/" + format;
         //新文件夹目录绝对路径
         String realPath = req.getServletContext().getRealPath(path);
-        List<String> pathList = new ArrayList<String>();
+        List<String> pathList = new ArrayList<>();
         for (MultipartFile uploadFile : files)
         {
             File folder = new File(realPath);

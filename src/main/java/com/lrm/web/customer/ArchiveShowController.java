@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 山水夜止.
+ */
 @RestController
 @RequestMapping("/customer")
 public class ArchiveShowController {
@@ -19,10 +22,14 @@ public class ArchiveShowController {
     @Autowired
     private QuestionService questionService;
 
+    /**
+     * 按年份归档 时间逆序.
+     * @return 已经分类的问题。
+     */
     @GetMapping("/archives")
     public Result<Map<String, Object>> archives (HttpServletRequest request)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(2);
         Long userId = Methods.getCustomUserId(request);
         hashMap.put("archiveMap", questionService.archivesQuestion(userId));
         hashMap.put("QuestionCount", questionService.countQuestionByUser(userId));

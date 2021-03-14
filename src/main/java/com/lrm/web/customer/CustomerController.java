@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * @author 山水夜止
+ * @author 山水夜止.
  */
 @RequestMapping("/customer")
 @RestController
@@ -31,8 +31,8 @@ public class CustomerController {
     private UserService userService;
 
     /**
-     * 返回个人信息
-     * @return user: 当前用户对象
+     * 返回个人信息.
+     * @return user: 当前用户对象.
      */
     @GetMapping("/personal")
     public Result<Map<String, Object>> showMe(HttpServletRequest request)
@@ -45,10 +45,10 @@ public class CustomerController {
     //下面两个资料修改最好分开
 
     /**
-     * 上传头像到本地 获取path返回
-     * @param file 被上传的文件
-     * @return avatar 文件在服务器端的路径
-     * @throws IOException 文件大小溢出
+     * 上传头像到本地 获取path返回.
+     * @param file 被上传的文件.
+     * @return avatar 文件在服务器端的路径.
+     * @throws IOException 文件大小溢出.
      */
     @PostMapping("/uploadAvatar")
     public Result<Map<String, Object>> uploadAvatar(MultipartFile file, HttpServletRequest req) throws IOException {
@@ -83,8 +83,8 @@ public class CustomerController {
 
     /**
      * 修改所有信息 封装成User返回.
-     * @param user 旧用户对象
-     * @return user：新用户对象
+     * @param user 旧用户对象.
+     * @return user：新用户对象.
      */
     @PostMapping("/modifyAll")
     public Result<Map<String, Object>> modifyUserInformation(User user)

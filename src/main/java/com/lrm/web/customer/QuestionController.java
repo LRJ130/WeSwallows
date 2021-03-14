@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * @author 山水夜止.
+ */
 @RequestMapping("/customer")
 @RestController
 public class QuestionController {
@@ -39,10 +42,13 @@ public class QuestionController {
     @Autowired
     private UserService userService;
 
-    //后台返回个人所发问题的列表
+    /**
+     * @param pageable  分页对象
+     * @param question  因为有一堆数据，所以查询条件封装成QuestionQuery了.
+     * @return 个人所发问题的列表.
+     */
     @GetMapping("/questions")
-    //因为有一堆数据，所以查询条件封装成QuestionQuery了
-    public Result<Map<String, Object>> Questions(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+    public Result<Map<String, Object>> showQuestions(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                                  QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>();
         Long userId = Methods.getCustomUserId(request);
@@ -51,7 +57,10 @@ public class QuestionController {
         return new Result<>(hashMap, true, "");
     }
 
-    //获取下一级标签
+    /**
+     * @param parentTagId 上一级标签Id.
+     * @return 下一级标签集合.
+     */
     @GetMapping("/questions/{parentTagId}/nextTag")
     public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
     {
@@ -61,8 +70,13 @@ public class QuestionController {
     }
 
 
-    //个人主页搜索 根据标题 返回个人发出的问题
-    //跟上面那个get方法的不同就是 一个是空的 一个不是空的
+    /**
+     * 个人主页搜索 根据标题 返回个人发出的问题
+     * 跟上面那个get方法的不同就是 一个是空的 一个不是空的.
+     * @param pageable 分页标准
+     * @param question 封装的query对象.
+     * @return pages:查询所得问题分页.
+     */
     @PostMapping("/questions/search")
     public Result<Map<String, Object>> search(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                                QuestionQuery question, HttpServletRequest request) {
@@ -73,10 +87,13 @@ public class QuestionController {
     }
 
 
-    //有初始化的作用 所有属性都是null
+    /**
+     * 有初始化的作用 所有属性都是null.
+     * @return questions:新question对象 tags:第一级标签.
+     */
     @GetMapping("/questions/input")
     public Result<Map<String, Object>> input() {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(2);
         Question question = new Question();
         List<Tag> tags = tagService.listTagTop();
         hashMap.put("questions", question);
@@ -84,11 +101,16 @@ public class QuestionController {
         return new Result<>(hashMap, true, "");
     }
 
-    //新增问题 初始化各部分属性
+    /**
+     * 新增问题 初始化各部分属性.
+     * @param question 前端封装的question对象
+     * @param bindingResult 配合@Valid检测是否为空.
+     * @return 报错信息/成功信息.
+     */
     @PostMapping("/questions")
     public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, HttpServletRequest request)
     {
-        Map<String, Object> hashMap= new HashMap<>();
+        Map<String, Object> hashMap= new HashMap<>(1);
         Long userId = Methods.getCustomUserId(request);
         //后端检验valid 如果校验失败 返回input页面
         if(bindingResult.hasErrors())
@@ -121,11 +143,14 @@ public class QuestionController {
     }
 
 
-    //删除问题
+    /**
+     * @param questionId 问题Id.
+     * @return 报错信息/成功信息.
+     */
     @GetMapping("/questions/{questionId}/delete")
     public Result<Map<String, Object>> delete(@PathVariable Long questionId, HttpServletRequest request)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         Long userId = Methods.getCustomUserId(request);
         Question question = questionService.getQuestion(questionId);
         if(question == null)
@@ -154,13 +179,13 @@ public class QuestionController {
 
     /**
      * @param files 多文件上传
-     * @param questionId 发布问题的Id
-     * @return 多文件在本地的路径
-     * @throws IOException 文件大小溢出
+     * @param questionId 发布问题的Id.
+     * @return 多文件在本地的路径.
+     * @throws IOException 文件大小溢出.
      */
-    @PostMapping("/uploadphotos")
+    @PostMapping("/uploadPhotos")
     public Result<Map<String, Object>> uploadPhotos(MultipartFile[] files, HttpServletRequest req, @RequestParam Long questionId) throws IOException {
-        Map<String, Object> hashMap= new HashMap<>();
+        Map<String, Object> hashMap= new HashMap<>(files.length);
         //创建存放文件的文件夹的流程
         Long userId = Methods.getCustomUserId(req);
         SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
@@ -174,7 +199,7 @@ public class QuestionController {
         {
             FileControl.deleteFile(folder);
         }
-        List<String> pathList = new ArrayList<String>();
+        List<String> pathList = new ArrayList<>();
         for (MultipartFile uploadFile : files)
         {
             folder = new File(realPath);

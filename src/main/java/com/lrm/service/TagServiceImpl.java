@@ -12,15 +12,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author 山水夜止
+ */
 @Service
 public class TagServiceImpl implements TagService {
     @Autowired
     TagRepository tagRepository;
 
-    //临时存放标签
+    /**
+     * 临时存放标签
+     */
     public Set<Tag> tagSet = new HashSet<>();
 
     //简单的增删改查
+
     @Transactional
     @Override
     public Tag saveTag(Tag tag) {
@@ -52,19 +58,27 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findOne(id);
     }
 
-    //通过名字找标签 查询是否重复
+    /**
+     * 通过用户名找标签 查询是否重复
+     */
     @Override
     public Tag getTagByName(String name) {
         return tagRepository.findByName(name);
     }
 
-    //首级标签展示
+    /**
+     * 首级标签展示
+     */
     @Override
     public List<Tag> listTagTop() {
         return tagRepository.findByParentTagNull();
     }
 
-    //将String对象转为Tag集合
+    /**
+     * 将String对象转为Tag集合
+     * @param ids 前端以,分割的tagId
+     * @return 标签集合
+     */
     @Override
     public List<Tag> listTag(String ids) { //1,2,3
         return tagRepository.findAll(convertToList(ids));
@@ -73,15 +87,18 @@ public class TagServiceImpl implements TagService {
     private List<Long> convertToList(String ids) {
         List<Long> list = new ArrayList<>();
         if (!"".equals(ids) && ids != null) {
-            String[] idarray = ids.split(",");
-            for (int i=0; i < idarray.length;i++) {
-                list.add(new Long(idarray[i]));
+            String[] idArray = ids.split(",");
+            for (String s : idArray) {
+                list.add(new Long(s));
             }
         }
         return list;
     }
 
-    //由某标签列出其下所有标签
+    /**
+     * 由某标签列出其下所有标签
+     */
+    @Override
     public Set<Tag> listTags (Tag tag)
     {
         tagSet.add(tag);

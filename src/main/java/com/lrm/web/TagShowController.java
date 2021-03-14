@@ -5,6 +5,7 @@ import com.lrm.po.Tag;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
 import com.lrm.util.DividePage;
+import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+
+/**
+ * @author 山水夜止.
+ */
 @RestController
 @RequestMapping("/tags")
 public class TagShowController {
@@ -22,7 +27,9 @@ public class TagShowController {
     @Autowired
     private QuestionService questionService;
 
-    //返回第一级标签
+    /**
+     * @return 返回第一级标签.
+     */
     @GetMapping("/")
     public Result<Map<String, Object>> tags() {
         Map<String, Object> hashMap = new HashMap<>();
@@ -30,7 +37,10 @@ public class TagShowController {
         return new Result<>(hashMap, true, "");
     }
 
-    //获取下一级标签
+    /**
+     * @param parentTagId 父级标签Id.
+     * @return 获取下一级标签.
+     */
     @GetMapping("/{parentTagId}/nextTag")
     public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
     {
@@ -39,11 +49,15 @@ public class TagShowController {
         return new Result<>(hashMap, true, "");
     }
 
-    //按标签查询
+    /**
+     * 按标签查询.
+     * @param tagIds 以,分割的标签Id.
+     * @return 所有标签及其子集下的所有问题分页.
+     */
     @PostMapping("/search")
     public Result<Map<String, Object>> showQuestions(@RequestParam String tagIds)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         //需要查询的初始标签
         List<Tag> tags = tagService.listTag(tagIds);
         //需要查询的所有标签
@@ -59,7 +73,7 @@ public class TagShowController {
             questions.addAll(questionService.listQuestion(tag.getId()));
         }
         //每页十条
-        Pageable pageRequest = new PageRequest(1, 10);
+        Pageable pageRequest = new PageRequest(1, Magic.PAGE_SIZE);
         //将set转换为list
         hashMap.put("pages", DividePage.listConvertToPage(new ArrayList<>(questions), pageRequest));
 

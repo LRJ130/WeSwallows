@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author 山水夜止.
+ */
 @RequestMapping("/customer/messages")
 @RestController
 public class MessageController {
@@ -28,10 +31,14 @@ public class MessageController {
     @Autowired
     private LikesService likesService;
 
-    //返回所有通知
+    /**
+     * 返回所有通知.
+     * @return 未读评论和点赞.
+     * @throws JWTVerificationException JWT鉴权错误.
+     */
     public Result<Map<String, Object>> messages(HttpServletRequest request) throws JWTVerificationException
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(2);
         Long userId = Methods.getCustomUserId(request);
         List<Comment> comments = commentService.listAllNotReadComment(userId);
         List<Likes> likes = likesService.listAllNotReadComment(userId);
@@ -40,25 +47,32 @@ public class MessageController {
         return new Result<>(hashMap, true, "");
     }
 
-    //两个单独已读
+    /**
+     *两个单独已读.
+     */
     @GetMapping("/{commentId}/read")
     public void readComment(@PathVariable Long commentId) {
         Comment comment = commentService.getComment(commentId);
         comment.setRead(true);
     }
+
     @GetMapping("/{likesId}/read")
     public void readLikes(@PathVariable Long likesId) {
         Likes likes = likesService.getLikes(likesId);
         likes.setRead(true);
     }
 
-    //两个全部已读
+    /**
+     * 两个全部已读.
+     */
     @GetMapping("/readAllComments")
     public void readAllComments(List<Comment> comments) {
         for(Comment comment : comments) {
             comment.setRead(true);
         }
     }
+
+
     @GetMapping("/readAllLikes")
     public void readAllLikes(List<Likes> likes){
         for(Likes likes1 : likes)

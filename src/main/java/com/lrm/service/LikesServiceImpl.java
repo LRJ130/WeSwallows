@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author 山水夜止
+ */
 @Service
 public class LikesServiceImpl implements LikesService{
 

@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author 山水夜止
+ */
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -24,7 +27,9 @@ public class CommentServiceImpl implements CommentService {
     private QuestionService questionService;
 
 
-    //存放迭代找出的所有子代的集合
+    /**
+     * 存放迭代找出的所有子代的集合
+     */
     private List<Comment> tempReplys = new ArrayList<>();
 
     @Override
@@ -32,7 +37,11 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findOne(commentId);
     }
 
-    //得到问题下分级评论（两级）
+    /**
+     * 得到问题下分级评论（两级）
+     * @param isAnswer 是哪一类评论
+     * @return comment集合
+     */
     @Override
     public List<Comment> listCommentByQuestionId(Long questionId, Boolean isAnswer) {
         Sort sort = new Sort(Sort.Direction.ASC,"createTime");
@@ -42,7 +51,9 @@ public class CommentServiceImpl implements CommentService {
         return eachComment(comments);
     }
 
-    //遍历所有第一级评论
+    /**
+     * 遍历所有第一级评论
+     */
     private List<Comment> eachComment(List<Comment> comments) {
         //将所有第一级评论保存到commentsView里
         List<Comment> commentsView = new ArrayList<>();
@@ -74,7 +85,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void recursively(Comment comment) {
-        tempReplys.add(comment);//第二级评论添加到临时存放集合
+        //第二级评论添加到临时存放集合
+        tempReplys.add(comment);
         //如果第二级评论有子评论
         if (comment.getReplyComments().size()>0) {
             List<Comment> replys = comment.getReplyComments();
@@ -88,19 +100,28 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    //得到所有评论 计算赞数
+    /**
+     * 得到所有评论 计算赞数
+     */
     @Override
     public List<Comment> listAllCommentByQuestionId(Long questionId) {
         return commentRepository.findByQuestionId(questionId);
     }
 
-    //获得未读评论通知
+    /**
+     * 获得未读评论通知
+     */
     @Override
     public List<Comment> listAllNotReadComment(Long userId) {
         return commentRepository.findByReceiveUserIdAndIsRead(userId, false);
     }
 
-    //保存评论 如果不是通过回复的方式 那么前端传回parentCommentId默认设置为1
+    /**
+     * 保存评论 如果不是通过回复的方式 那么前端传回parentCommentId默认设置为1
+     * @param comment 前端封装好了的Comment对象
+     * @param questionId 问题Id
+     * @param postUser 发布评论的人
+     */
     @Transactional
     @Override
     public Comment saveComment(Comment comment, Long questionId, User postUser) {
@@ -148,6 +169,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
+    @Override
     public void deleteComment(Long commentId)
     {
         commentRepository.delete(commentId);

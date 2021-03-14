@@ -12,6 +12,9 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 山水夜止.
+ */
 @RestController
 @RequestMapping("/admin/tags")
 public class TagController {
@@ -19,19 +22,24 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
-    //返回所有第一级标签
+    /**
+     * @return 返回所有第一级标签.
+     */
     @GetMapping("/")
     public Result<Map<String, Object>> tags() {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         hashMap.put("tags", tagService.listTagTop());
         return new Result<>(hashMap, true, "");
     }
 
-    //获取下一级标签
+    /**
+     * @param parentTagId 上一级标签Id.
+     * @return 返回下一级标签.
+     */
     @GetMapping("/{parentTagId}/nextTag")
     public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
         return new Result<>(hashMap, true, "");
     }
@@ -65,6 +73,10 @@ public class TagController {
 //        return new Result<>(hashMap, true, "");
 //    }
 
+    /**
+     * @param tag 前端封装好的Tag对象.
+     * @return 返回报错信息; 已保存的Tag对象.
+     */
     @PostMapping("/")
     public Result<Map<String, Object>> post(@Valid Tag tag, BindingResult result) {
         Map<String, Object> hashMap = new HashMap<>();
@@ -97,7 +109,9 @@ public class TagController {
         }
     }
 
-    //删除标签
+    /**
+     * 删除标签.
+     */
     @GetMapping("/{tagId}/delete")
     public Result<Map<String, Object>> delete(@PathVariable Long tagId)
     {
