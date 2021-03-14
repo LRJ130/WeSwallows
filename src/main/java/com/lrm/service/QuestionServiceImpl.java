@@ -207,7 +207,7 @@ public class QuestionServiceImpl implements QuestionService{
         Map<String, List<Question>> map = new HashMap<>(years.size());
         for(String year : years)
         {
-            map.put(year, questionRepository.findByYear(year));
+            map.put(year, questionRepository.findByYear(year, userId));
         }
         return map;
     }
