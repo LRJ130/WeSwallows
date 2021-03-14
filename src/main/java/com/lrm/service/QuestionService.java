@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author 山水夜止
+ */
 public interface QuestionService {
     //简单的增删改查
     Question saveQuestion(Question question, User user);
@@ -31,8 +34,8 @@ public interface QuestionService {
     //返回用户自己的博客&管理页搜索
     Page<Question> listQuestionPlusUserId(Pageable pageable, QuestionQuery question, Long userId);
 
-    //markdown转换
-    //Question getAndConvert(Long id);
+
+    Question getAndConvert(Long questionId);
 
     //返回影响力最高的size个Question
     List<Question> listImpactQuestionTop(Integer size);
