@@ -12,6 +12,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment,Long> {
 
     /**
+     * 查询问题下的第一级评论
      * @param questionId 问题id
      * @param sort 排序顺序
      * @param answer 哪类回答

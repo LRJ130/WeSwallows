@@ -202,12 +202,18 @@ public class QuestionServiceImpl implements QuestionService{
      * 归档 按日期顺序返回自己的问题
      */
     @Override
-    public Map<String, List<Question>> archivesQuestion(Long userId) {
+    public Map<String, Map<String, List<Question>>> archivesQuestion(Long userId) {
         List<String> years = questionRepository.findGroupYear(userId);
-        Map<String, List<Question>> map = new HashMap<>(years.size());
+        Map<String, Map<String, List<Question>>> map = new HashMap<>(years.size());
         for(String year : years)
         {
-            map.put(year, questionRepository.findByYear(year, userId));
+            List<String> months = questionRepository.findGroupMonthByYear(year, userId);
+            Map<String, List<Question>> hashMap = new HashMap<>(months.size());
+            for (String month : months)
+            {
+                hashMap.put(month, questionRepository.findByYearAndMonth(year, month, userId));
+            }
+            map.put(year, hashMap);
         }
         return map;
     }

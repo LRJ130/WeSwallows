@@ -41,5 +41,6 @@ public interface QuestionService {
     List<Question> listImpactQuestionTop(Integer size);
 
     //归档 按日期顺序返回自己的问题
-    Map<String, List<Question>> archivesQuestion(Long userId);
+    Map<String, Map<String, List<Question>>> archivesQuestion(Long userId);
+
 }
