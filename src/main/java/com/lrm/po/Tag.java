@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 //注解大多写在了User类
 
@@ -66,6 +67,23 @@ public class Tag
 
     public void setParentTag(Tag parentTag) {
         this.parentTag = parentTag;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Tag)) {
+            return false;
+        }
+        Tag tag = (Tag) o;
+        return getId().equals(tag.getId()) && getName().equals(tag.getName()) && getSonTags().equals(tag.getSonTags()) && getParentTag().equals(tag.getParentTag()) && getQuestions().equals(tag.getQuestions());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getSonTags(), getParentTag(), getQuestions());
     }
 
     @Override

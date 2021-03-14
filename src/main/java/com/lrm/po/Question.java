@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "t_question")
@@ -228,6 +229,23 @@ public class Question
         } else {
             return tagIds;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Question)) {
+            return false;
+        }
+        Question question = (Question) o;
+        return getId().equals(question.getId()) && getContent().equals(question.getContent()) && getDescription().equals(question.getDescription()) && getTitle().equals(question.getTitle()) && getView().equals(question.getView()) && getLikesNum().equals(question.getLikesNum()) && getCommentsNum().equals(question.getCommentsNum()) && getDisLikesNum().equals(question.getDisLikesNum()) && isHidden.equals(question.isHidden) && getImpact().equals(question.getImpact()) && getTagIds().equals(question.getTagIds()) && getCreateTime().equals(question.getCreateTime()) && getNewCommentedTime().equals(question.getNewCommentedTime()) && getTags().equals(question.getTags()) && getUser().equals(question.getUser()) && getLikes().equals(question.getLikes()) && getComments().equals(question.getComments());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getContent(), getDescription(), getTitle(), getView(), getLikesNum(), getCommentsNum(), getDisLikesNum(), isHidden, getImpact(), getTagIds(), getCreateTime(), getNewCommentedTime(), getTags(), getUser(), getLikes(), getComments());
     }
 
     @Override
