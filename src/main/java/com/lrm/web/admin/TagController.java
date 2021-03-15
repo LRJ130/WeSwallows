@@ -77,7 +77,7 @@ public class TagController {
      * @param tag 前端封装好的Tag对象.
      * @return 返回报错信息; 已保存的Tag对象.
      */
-    @PostMapping("/")
+    @PostMapping("/input")
     public Result<Map<String, Object>> post(@Valid Tag tag, BindingResult result) {
         Map<String, Object> hashMap = new HashMap<>();
         //返回input页面的错误提示

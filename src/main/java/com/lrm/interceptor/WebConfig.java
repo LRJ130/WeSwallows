@@ -14,7 +14,8 @@ public class WebConfig extends WebMvcConfigurerAdapter
                 .addPathPatterns("/**")
                 //允许游客访问登录页、注册页 (对应的路径url)
                 .excludePathPatterns("/register")
-                .excludePathPatterns("/login");
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/aa");
         registry.addInterceptor(new AuthorityInterceptor())
                 .addPathPatterns("/admin/**");
     }

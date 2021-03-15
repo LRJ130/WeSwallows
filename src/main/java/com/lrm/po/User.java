@@ -32,7 +32,13 @@ public class User
     //非必填 可以在前端显示默认值
     private String avatar;
     private String email;
-    private String QQid;
+    private String qqId;
+    private String wechatId;
+        //男true 女false
+    private Boolean sex;
+    private String personalSignature;
+    private String academy;
+    private String major;
     //贡献值
     private Integer donation;
     //自动生成时间
@@ -114,12 +120,68 @@ public class User
         this.email = email;
     }
 
-    public String getQQid() {
-        return QQid;
+    public String getQQId() {
+        return qqId;
     }
 
-    public void setQQid(String QQid) {
-        this.QQid = QQid;
+    public void setQQId(String qqId) {
+        this.qqId = qqId;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+    public String getQqId() {
+        return qqId;
+    }
+
+    public void setQqId(String qqId) {
+        this.qqId = qqId;
+    }
+
+    public String getWechatId() {
+        return wechatId;
+    }
+
+    public void setWechatId(String wechatId) {
+        this.wechatId = wechatId;
+    }
+
+    public Boolean getSex() {
+        return sex;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
+
+    public String getPersonalSignature() {
+        return personalSignature;
+    }
+
+    public void setPersonalSignature(String personalSignature) {
+        this.personalSignature = personalSignature;
+    }
+
+    public String getAcademy() {
+        return academy;
+    }
+
+    public void setAcademy(String academy) {
+        this.academy = academy;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
     }
 
     public Integer getDonation() {
@@ -191,12 +253,18 @@ public class User
         return "User{" +
                 "id=" + id +
                 ", isAdmin=" + isAdmin +
+                ", canSpeak=" + canSpeak +
                 ", nickname='" + nickname + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", email='" + email + '\'' +
-                ", QQid='" + QQid + '\'' +
+                ", qqId='" + qqId + '\'' +
+                ", wechatId='" + wechatId + '\'' +
+                ", sex=" + sex +
+                ", personalSignature='" + personalSignature + '\'' +
+                ", academy='" + academy + '\'' +
+                ", major='" + major + '\'' +
                 ", donation=" + donation +
                 ", registerTime=" + registerTime +
                 ", questions=" + questions +

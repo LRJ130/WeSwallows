@@ -4,6 +4,7 @@ import com.lrm.po.User;
 import com.lrm.service.UserService;
 import com.lrm.util.FileControl;
 import com.lrm.util.Methods;
+import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class CustomerController {
     {
         Map<String, Object> hashMap = new HashMap<>();
         hashMap.put("user", userService.getUser(Methods.getCustomUserId(request)));
+        hashMap.put("ACADEMIES", Magic.ACADEMIES);
         return new Result<>(hashMap, true, "");
     }
 
