@@ -27,18 +27,22 @@ public class ControllerExceptionHandler
         logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), noPermissionException);
         return Result.returnNoPermissionException(noPermissionException, request.getRequestURL());
     }
+
     //访问不存在的资源
     @ExceptionHandler(NotFoundException.class)
     public Result NotFoundExceptionHandler(HttpServletRequest request, NotFoundException notFoundException) {
         logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), notFoundException);
         return Result.returnNotFoundException(notFoundException, request.getRequestURL());
     }
+
     //上传文件过大
     @ExceptionHandler(IOException.class)
     public Result IOEHandler(HttpServletRequest request, IOException ioException) {
         logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), ioException);
         return Result.returnIOException(ioException, request.getRequestURL());
     }
+
+    //JWT鉴权
     @ExceptionHandler(JWTVerificationException.class)
     public Result JWTHandler(HttpServletRequest request, JWTVerificationException jwtVerificationException) {
         logger.error("Request URL: {}, Exception : {}", request.getRequestURL(), jwtVerificationException);

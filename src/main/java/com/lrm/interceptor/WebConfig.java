@@ -12,8 +12,7 @@ public class WebConfig extends WebMvcConfigurerAdapter
     {
         registry.addInterceptor(new JWTInterceptor())
                 .addPathPatterns("/**")
-                //允许游客访问首页、登录页、注册页 (对应的路径url)
-                .excludePathPatterns("/")
+                //允许游客访问登录页、注册页 (对应的路径url)
                 .excludePathPatterns("/register")
                 .excludePathPatterns("/login");
         registry.addInterceptor(new AuthorityInterceptor())
