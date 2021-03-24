@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>分类</title>
+    <link href="layui-v2.5.7/layui/css/layui.css" rel="stylesheet" />
+    <link href="css/classify.css" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="semantic.css" /> -->
+    <link href="css/hhh.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/icon.min.css" rel="stylesheet prefetch" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js" type="text/javascript"></script>
+    <script src="layui-v2.5.7/layui/layui.js"></script>
+    <script src="js/template-web.js"></script>
+    <script src="js/classify.js"></script>
+</head>
+
+<body style="background-color: rgb(251, 251, 251)">
+    <div class="ui container">
+        <div class="headerr w">
+            <div class="logo"></div>
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a href="#" onclick="showaboutus()">关于我们</a>
+                        <div class="ui first basic modal">
+                            <div class="s1">
+                                <h2 class="s2">We are swallows</h2>
+                            </div>
+                            <div class="s3">
+                                <img class="ui small circular image" class="s4" src="images/youxiang.jpg" style="float: left; margin-left: 20px" />
+                                <img class="ui small circular image" class="s4" src="images/youxiang1.jpg" style="float: left; margin-left: 20px" />
+                                <img class="ui small circular image" class="s4" src="images/youxiang2.jpg" style="float: left; margin-left: 20px" />
+                                <img class="ui small circular image" class="s4" src="images/youxiang4.jpg" style="float: left; margin-left: 20px" />
+                                <img class="ui small circular image" class="s4" src="images/fuliye.jpg" style="float: left; margin-left: 20px" />
+                            </div>
+                        </div>
+                    </li>
+                    <li><a href="homepage.html">主页</a></li>
+                    <li><a href="classify.html">分类</a></li>
+                    <li><a href="homepage.html">问题</a></li>
+                    <li><a href="">广场</a></li>
+                    <li><a href="">发现</a></li>
+                    <li><a href="">树洞</a></li>
+                    <li><a href="#" onclick="turnmine()">我的</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="s5">
+            <div class="s6">
+                <div class="s7"></div>
+                <div class="s8">
+                    <div class="s9">
+                        <div class="ui first dimmer">
+                            <div class="s10 ui labeled input" style="width: 80%; margin-top: 50px">
+                                <div class="ui label">关键词</div>
+                                <input class="s11 shurukuang" placeholder="" style="width: 70%" type="text" />
+                            </div>
+                            <div class="s12 ui disabled floating labeled icon dropdown button" style="width: 80%; margin-top: 30px">
+                                <i class="filter icon"></i>
+                                <span class="text">一级标签</span>
+                                <div class="menu">
+                                    <div class="item">重要</div>
+                                    <div class="item">公告</div>
+                                    <div class="item">讨论</div>
+                                </div>
+                            </div>
+                            <div class="s13 ui disabled floating labeled icon dropdown button" style="width: 80%; margin-top: 30px">
+                                <i class="filter icon"></i>
+                                <span class="text">二级标签</span>
+                                <div class="menu">
+                                    <div class="item">重要</div>
+                                    <div class="item">公告</div>
+                                    <div class="item">讨论</div>
+                                </div>
+                            </div>
+                            <button class="s14 positive ui button" onclick="find()" style="width: 80%; margin-top: 30px">
+                  确定
+                </button>
+                        </div>
+                        <button class="s15 circular massive ui icon button" onclick="showfirstdimmer() " style="
+                  width: 150px;
+                  height: 150px;
+                  margin-left: 22%;
+                  margin-top: 30%;
+                ">
+                <i class="big icon search"></i>
+              </button>
+                    </div>
+                </div>
+            </div>
+            <div class="s16"></div>
+            <h4 class="ui horizontal divider header">
+                <i class="tags icon"></i> 分类
+            </h4>
+
+            <div class="s17">
+                <div class="layui-carousel" id="test1">
+                    <div carousel-item>
+                        <div>
+                            <div class="ui six special cards">
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/信通.jpg " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui xintong inverted button" onclick="xintong()">
+                                                    信通
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/计算机院.png " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="jisuanji()">
+                                                    计算机
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/电子.jpg " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="dianzi()">
+                                                    电子
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/自邮.png " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="ziyou()">
+                                                    自邮
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/经管.jpg " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="jingguan()">
+                                                    经管
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/果园.jpg " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="guoyuan()">
+                                                    国院
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/理院.jpg " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="lixueyuan()">
+                                                    理学院
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/ai.jpg " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="ai()">
+                                                    AI
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/树莓.jpg " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" id="shumei()" onclick="shumei()">
+                                                    数媒
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <img src="images/网安.png " />
+                                    </div>
+                                    <div class="ui second dimmer">
+                                        <div class="content">
+                                            <div class="center">
+                                                <div class="ui inverted button" onclick="wangan()">
+                                                    网安
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="s18 tages" style="height: 87%">
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                                <a class="s19 ui tag label" style="margin-top: 1%">新的</a>
+                            </div>
+                            <button class="fluid ui button" onclick="getback()">
+                  返回
+                </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s20">
+            <div class="s21"></div>
+            <div class="s22">
+                <div class="s23">
+                    <div class="results">
+                        <div class="s24 ui card" style="width: 100%; height: 220px">
+                            <div class="main content">
+                                <a class="header" onclick="showarticle()">
+                                    <h2>Cute Dog</h2>
+                                </a>
+                                <div class="meta">
+                                    <span class="left floated time">2 days ago</span>
+                                </div>
+                                <div class="description">
+                                    <p>
+                                        <img class="ui small right floated image" src="images/test (1).jpg " /> aaaaaaaaaaaaaaaaaa
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <a class="left floated author" onclick="turn()">
+                                    <img class="ui avatar image" src="images/3.jpg " /> Matt
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="s25 ui right floated button" onclick="loading()" style="margin-top: 10px">
+              加载更多
+            </button>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%; height: 200px; float: left; margin-top: 20px">
+            <div style="
+            width: 100%;
+            height: 70%;
+            background-color: rgb(224, 225, 226);
+            margin-top: 1%;
+          ">
+                <div style="width: 42%; height: 100%; float: left; margin-left: 1%">
+                    <div style="margin-top: 7%">
+                        <h4 style="text-align: center; color: rgb(90, 90, 90)">
+                            <i class="rss icon"></i
+                >联系我们：如果您对网站的界面或者功能有什么建议，可以通过右边的输入框告诉我们，
+                我们会在第一时间内给您答复；或者您对网站的创建管理，前后端的开发比较感兴趣，我们也邀请您加入我们。通过扫描右边的二维码联系我们，咱们一起做点有趣的事！
+              </h4>
+            </div>
+          </div>
+          <div style="width: 27%; height: 70%; float: left; margin-left: 1%">
+            <div
+              class="ui fluid action input"
+              style="height: 100%; margin-top: 7%"
+            >
+              <input type="text" />
+              <div class="ui button">确定</div>
+            </div>
+          </div>
+          <div style="width: 27%; height: 100%; float: left; margin-left: 1%">
+            <div style="width: 33%; float: left; margin-top: 7%">
+              <div class="ui fluid image">
+                <img alt="" src="images/6.png" />
+              </div>
+            </div>
+            <div style="width: 33%; float: left; margin-top: 7%">
+              <div class="ui fluid image">
+                <img alt="" src="images/6.png" />
+              </div>
+            </div>
+            <div style="width: 33%; float: left; margin-top: 7%">
+              <div class="ui fluid image">
+                <img alt="" src="images/6.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script id="templateone" type="text/html">
+      <a class="s19 ui tag label" stylke="margin-top:1%" onclick="showresults()"
+        >hahah
+      </a>
+    </script>
+    <script id="templatetwo" type="text/html">
+      <div class="s24 ui card " style="width: 100%;height: 220px; ">
+        <div class="main content ">
+          <a class="header " onclick="showarticle()">
+            <h2>Cute Dog</h2>
+          </a>
+          <div class="meta ">
+            <span class="left floated time ">2 days ago</span>
+          </div>
+          <div class="description ">
+            <p>
+              <img
+                class="ui small right floated image "
+                src="images/test (1).jpg "
+              />
+              aaaaaaaaaaaaaaaaaa
+            </p>
+          </div>
+        </div>
+        <div class="extra content ">
+          <a class="left floated author " onclick="turn()">
+            <img class="ui avatar image " src="images/3.jpg " /> Matt
+          </a>
+        </div>
+      </div>
+    </script>
+    <script>
+      layui.use("carousel", function () {
+        var carousel = layui.carousel;
+        //建造实例
+        var ins = carousel.render({
+          elem: "#test1",
+          width: "100%",
+          arrow: "none",
+          autoplay: false,
+          indicator: "none",
+        });
+        $(".fluid.ui.button").click(function () {
+          ins.slide("sub");
+        });
+
+        $(".ui.inverted.button").click(function () {
+          ins.slide("add");
+        });
+      });
+    </script>
+    <script>
+      function showaboutus() {
+        $(".ui.first.modal").modal("show ");
+      }
+
+      function showfirstdimmer() {
+        $(".ui.first.dimmer").dimmer("show");
+      }
+
+      function specific() {
+        window.location.href = "comment.html";
+      }
+
+      function find() {
+        var substance = $(".shurukuang ").val();
+        location.href = "search.html";
+        window.localStorage.setItem("substance", substance);
+      }
+
+      function xintong() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function jisuanji() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function dianzi() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function ziyou() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function jingguan() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function guoyuan() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function liyuan() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function ai() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function shumei() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function wangan() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templateone", data.item);
+              console.log(result);
+              $(".tages").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+
+      function showresults() {
+        $.ajax({
+          url: "",
+          data: {},
+          success: function (data) {
+            console.log(data);
+            for (var i = 0; i < 6; i++) {
+              var result = template("templatetwo", data.item);
+              console.log(result);
+              $(".results").append(result);
+            }
+          },
+          error: function () {
+            alert("请求失败");
+          },
+        });
+      }
+      $(".ui.dropdown").dropdown();
+
+      $(".ui.second.dimmer").dimmer({
+        on: "hover",
+      });
+      $(".ui.third.dimmer").dimmer({
+        on: "hover",
+      });
+    </script>
+  </body>
+</html>

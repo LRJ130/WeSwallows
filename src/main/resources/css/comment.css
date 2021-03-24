@@ -1,0 +1,38 @@
+.s1 {
+    width: 70%;
+    height: 100%;
+    margin: auto;
+    margin-top: 5%;
+}
+
+.s2 {
+    width: 69%;
+    height: 100%;
+    float: left;
+}
+
+.s3 {
+    width: 80%;
+    margin: auto;
+}
+
+.s4 {
+    width: 1%;
+    height: 100%;
+    float: left;
+}
+
+.s5 {
+    width: 30%;
+    height: 100%;
+    float: left;
+}
+
+.s6 {
+    height: 112px;
+}
+
+.s7 {
+    resize: none;
+    height: 10px;
+}

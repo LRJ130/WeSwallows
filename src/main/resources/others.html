@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="css/hhh.css" rel="stylesheet" />
+    <link href="css/others.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/icon.min.css" rel="stylesheet prefetch" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js" type="text/javascript"></script>
+    <script src="js/template-web.js"></script>
+    <script src="js/others.js"></script>
+    <title>大蒜的个人页面</title>
+</head>
+
+<body style="background-color: rgb(251, 251, 251)">
+    <div class="ui container" style="width: 50%; height: 100%; margin: auto">
+        <div>
+            <div class="s1" style="background-image: url(images/2.jpg)">
+                <div class="s2"></div>
+                <div class="s3">
+                    <img class="s4 ui small circular image" id="avatar" src="images/3.jpg" />
+                </div>
+            </div>
+            <div class="s5"></div>
+        </div>
+        <div class="s6">
+            <div class="ui card" style="width: 65%; margin: auto">
+                <div class="content">
+                    <a class="header" onclick="specific()">Cute Dog</a>
+                    <div class="meta">
+                        <span class="category">Animals</span>
+                    </div>
+                    <div class="description">
+                        <p>这是在干甚么</p>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="right floated author">
+                        <img class="ui avatar image" src="images/3.jpg" /> Matt
+                    </div>
+                </div>
+                <div class="ui dimmer">
+                    <div class="content">
+                        <div class="center">
+                            <div class="ui medium inverted button" onclick="specific()">
+                                查看
+                            </div>
+                            <div class="ui medium inverted button" onclick="specific()">
+                                编辑
+                            </div>
+                            <div class="ui medium inverted button" onclick="specific()">
+                                删除
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script id="template" type="text/html">
+    <div class="ui card" style="width: 65%; margin: auto">
+        <div class="content">
+            <a class="header" onclick="specific()">Cute Dog</a>
+            <div class="meta">
+                <span class="category">Animals</span>
+            </div>
+            <div class="description">
+                <p>这是在干甚么</p>
+            </div>
+        </div>
+        <div class="extra content">
+            <div class="right floated author">
+                <img class="ui avatar image" src="images/3.jpg" /> Matt
+            </div>
+        </div>
+        <div class="ui dimmer">
+            <div class="content">
+                <div class="center">
+                    <div class="ui medium inverted button" onclick="specific()">
+                        查看
+                    </div>
+                    <div class="ui medium inverted button" onclick="specific()">
+                        编辑
+                    </div>
+                    <div class="ui medium inverted button" onclick="specific()">
+                        删除
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+</html>

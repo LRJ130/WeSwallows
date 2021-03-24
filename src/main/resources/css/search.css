@@ -1,0 +1,63 @@
+.nav {
+    float: left;
+    margin-left: 50px;
+}
+
+.nav ul li {
+    float: left;
+    margin: 0 25px;
+}
+
+.nav ul li a {
+    display: block;
+    height: 42px;
+    padding: 0 10px;
+    line-height: 42px;
+    font-size: 18px;
+    color: rgb(90, 90, 90);
+    font-weight: 600;
+}
+
+.nav ul a:hover {
+    border-bottom: 2px solid rgb(90, 90, 90);
+    color: rgb(90, 90, 90);
+}
+
+a {
+    text-decoration: none;
+}
+
+.w {
+    width: 100%;
+    margin: auto;
+}
+
+.headerr {
+    width: 100%;
+    height: 43px;
+    background-color: rgb(224, 225, 226);
+    margin: 30px auto;
+}
+
+.logo {
+    margin-left: 30px;
+    float: left;
+    width: 100px;
+    height: 42px;
+    background: url("物模型.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+li {
+    list-style: none;
+}
+
+body {
+    height: 1000px;
+    background-image: url();
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-attachment: fixed;
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="css/search.css" rel="stylesheet" />
+    <link href="css/hhh.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/icon.min.css" rel="stylesheet prefetch" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js" type="text/javascript"></script>
+    <script src="js/template-web.js"></script>
+    <script src="js/search.js"></script>
+    <title>搜索结果</title>
+</head>
+
+<body style="background-color: rgb(251, 251, 251)">
+    <div class="ui container" style="margin-top: 10%">
+        <h1 class="ui horizontal divider header">
+            <i class="tag massive icon"></i> 搜索结果
+        </h1>
+        <div class="ui placeholder segment">
+            <div class="ui two column very relaxed stackable grid">
+                <div class="first column" id="firstcolumn">
+                    <div class="ui card" style="width: 100%; height: 100%">
+                        <div class="content">
+                            <a class="header" onclick="showarticle()">Cute Dog</a>
+                            <div class="meta">
+                                <span class="category">Animals</span>
+                            </div>
+                            <div class="description">
+                                <p>
+                                    <img class="ui small right floated image" src="images/test (1).jpg " />scnlsnclbsc
+                                </p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <a class="right floated author" onclick="turn()">
+                                <img class="ui avatar image" src="images/3.jpg" /> Matt
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="middle aligned column">
+                    <div class="ui big button" onclick="history.go(-1)" style="margin: auto" value="back">
+                        <i class="reply icon"></i> 返回
+                    </div>
+                </div>
+            </div>
+            <div class="ui vertical divider">Or</div>
+        </div>
+    </div>
+</body>
+
+<script id="template" type="text/html">
+    <div class="ui card" style="width: 100%; height: 100%" onclick="specific()">
+        <div class="content">
+            <a class="header" onclick="showarticle()">Cute Dog</a>
+            <div class="meta">
+                <span class="category">Animals</span>
+            </div>
+            <div class="description">
+                <p>
+                    <img class="ui small right floated image" src="images/test (1).jpg " />scnlsnclbsc
+                </p>
+            </div>
+        </div>
+        <div class="extra content">
+            <a class="right floated author" onclick="turn()">
+                <img class="ui avatar image" src="images/3.jpg" /> Matt
+            </a>
+        </div>
+    </div>
+</script>
+<!-- <script>
+    var a =
+        '<div style="background-color: rgb(224, 225, 226); width: 100%"><h1 style="text-align: center; color: rgb(90, 90, 90)">啥也没找到~</h1></div>';
+    $("#firstcolumn").append(a);
+</script> -->
+
+</html>

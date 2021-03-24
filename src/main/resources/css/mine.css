@@ -1,0 +1,157 @@
+    .nav {
+        float: left;
+        margin-left: 50px;
+    }
+    
+    .nav ul li {
+        float: left;
+        margin: 0 25px;
+    }
+    
+    .nav ul li a {
+        display: block;
+        height: 42px;
+        padding: 0 10px;
+        line-height: 42px;
+        font-size: 18px;
+        color: rgb(90, 90, 90);
+        font-weight: 600;
+    }
+    
+    .nav ul a:hover {
+        border-bottom: 2px solid rgb(90, 90, 90);
+        color: rgb(90, 90, 90);
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    .w {
+        width: 100%;
+        margin: auto;
+    }
+    
+    .headerr {
+        width: 100%;
+        height: 43px;
+        background-color: rgb(224, 225, 226);
+        margin: 30px auto;
+    }
+    
+    .logo {
+        margin-left: 30px;
+        float: left;
+        width: 100px;
+        height: 42px;
+        background: url("物模型.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    
+    li {
+        list-style: none;
+    }
+    
+    .s1 {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-attachment: fixed;
+        width: 100%;
+        height: 300px;
+    }
+    
+    .s2 {
+        height: 60%;
+        width: 100%;
+    }
+    
+    .s4 {
+        border-style: solid;
+        border-width: 8px;
+        border-color: white;
+        margin-left: 75%;
+        /* z-index: 9999; */
+    }
+    
+    .s5 {
+        background-color: rgb(224, 225, 226);
+        width: 100%;
+        height: 35px
+    }
+    
+    .s6 {
+        margin-top: 10px;
+        width: 100%
+    }
+    
+    .s7 {
+        float: left;
+        width: 21%;
+        height: 600px
+    }
+    
+    .s8 {
+        width: 90%;
+        margin: auto;
+        /* background-color: rgb(224, 225, 226); */
+    }
+    
+    .s8t1 {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .s8t1u2 {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .s8t2 {
+        width: 100%;
+        margin-top: 50px;
+    }
+    
+    .s8t2u2 {
+        margin-top: 3px;
+    }
+    
+    .s8t3 {
+        width: 100%;
+        margin-top: 50px;
+    }
+    
+    .s8t3u2 {
+        margin-top: 3px;
+    }
+    
+    .s9 {
+        float: left;
+        width: 59%;
+        height: 600px;
+    }
+    
+    .s10 {
+        width: 90%;
+        height: 100%;
+        margin: auto;
+    }
+    
+    .s11 {
+        float: left;
+        width: 20%;
+        height: 600px
+    }
+    
+    .s12 {
+        width: 90%;
+        margin: auto;
+        margin-top: 30px;
+    }
+    
+    .s13 {
+        float: left;
+        width: 100%;
+        height: 200px
+    }

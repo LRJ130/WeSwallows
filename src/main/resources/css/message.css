@@ -1,0 +1,12 @@
+.s1.ui.container {
+    width: 50%;
+}
+
+.s2 {
+    height: 50px;
+}
+
+.s3.ui.segment {
+    width: 90%;
+    margin: auto;
+}

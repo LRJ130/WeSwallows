@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Document</title>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/echarts-liquidfill.js"></script>
+</head>
+
+<body>
+    <div id="liquidfill-chart" style="width: 300px; height: 400px"></div>
+
+    <script>
+        var chart = echarts.init(document.getElementById("liquidfill-chart"));
+
+        var option = {
+            series: [{
+                name: "水球图",
+                type: "liquidFill",
+                radius: "90%",
+                center: ["50%", "55%"],
+                waveAnimation: 10, // 动画时长
+                amplitude: 10, // 振幅
+                data: [0.9],
+                color: "rgba(68, 197, 253,1)",
+                label: {
+                    normal: {
+                        color: "#44C5FD",
+                        textStyle: {
+                            fontSize: 50,
+                            fontWeight: "normal",
+                        },
+                    },
+                },
+                outline: {
+                    show: true,
+                    borderDistance: 5,
+                    itemStyle: {
+                        borderColor: "rgba(68, 197, 253,1)",
+                        borderWidth: 5,
+                    },
+                },
+                backgroundStyle: {
+                    color: "rgba(68, 197, 253,.3)",
+                },
+            }, ],
+        };
+        chart.setOption(option);
+    </script>
+</body>
+
+</html>

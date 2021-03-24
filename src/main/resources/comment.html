@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>内容</title>
+    <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js" type="text/javascript"></script>
+    <script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+    <script src="layui-v2.5.7/layui/layui.js"></script>
+    <script src="js/comment.js"></script>
+    <link href="css/hhh.css" rel="stylesheet" />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/icon.min.css' rel='stylesheet prefetch'>
+    <link href="http://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet" />
+    <link href="layui-v2.5.7/layui/css/layui.css" rel="stylesheet" />
+    <link href="css/comment.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" /> -->
+</head>
+
+<body style="background-color: rgb(251, 251, 251);">
+    <div class="s1 ui container">
+
+        <div class="s2">
+            <div class="ui comments">
+                <div class="comment">
+                    <a class="avatar">
+                        <img id="authoravatar" src="images/youxiang.jpg">
+                    </a>
+                    <div class="content">
+                        <a class="author" id="authorname">Stevie Feliciano</a>
+                        <div class="metadata">
+                            <div class="date" id="authordate">2 days ago</div>
+                        </div>
+                        <div class="text" id="authorstyle">
+                            个性签名
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="s3 ui segment" id="authorsays">
+
+            </div>
+        </div>
+        <div class="s4"></div>
+        <div class="s5">
+            <div class="ui comments">
+                <h3 class="ui dividing header" id="h3">评论</h3>
+                <div id="discuss">
+                    <div class="comment">
+                        <!--  这里的id为 -->
+                        <a class="avatar">
+                            <img src="images/youxiang.jpg">
+                        </a>
+                        <div class="content">
+                            <a class="author">Matt</a>
+                            <div class="metadata">
+                                <span class="date">Today at 5:42PM</span>
+                            </div>
+                            <div class="text">
+                                How artistic!
+                            </div>
+                            <div class="actions">
+                                <a class="love reply" id="loveMatt" onclick="love()">赞(3)</a>
+                                <a class="hate reply" id="hateMatt" onclick="hate()">踩(0)</a>
+                                <a class="answer reply" id="answerMatt" onclick="answer()">回复</a>
+                                <a class="cutoff reply" id="cutoffMatt" onclick="cutoff()">删除</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="ui reply form">
+                    <div class="field">
+                        <div class="s6 ui fluid action input">
+                            <textarea class="s7" id="textarea" style="resize:none;height: 10px;"></textarea>
+                            <button class="ui icon button" id="imagesupload"><i class="big image icon"></i></button>
+                        </div>
+                    </div>
+                    <div class="four ui buttons">
+                        <div class="ui button" onclick="like()">赞(3)</div>
+                        <div class="ui button" onclick="dislike()">踩(0)</div>
+                        <div class="ui button" onclick="">收藏</div>
+                        <div class="ui button" onclick="reply()">确定</div>
+                    </div>
+                    <!-- 预览图片框 -->
+                    <div id="viewimages"></div>
+                    <!-- 插入删除按钮 -->
+                    <div id="threeuibuttons"></div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+</body>
+
+</html>

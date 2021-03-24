@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js" type="text/javascript"></script>
+    <script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+    <script src="layui-v2.5.7/layui/layui.js"></script>
+    <link href="css/hhh.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/icon.min.css" rel="stylesheet prefetch" />
+    <link href="http://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet" />
+    <link href="layui-v2.5.7/layui/css/layui.css" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" /> -->
+    <title>编辑</title>
+</head>
+
+<body style="background-color: rgb(251, 251, 251)">
+    <div class="s1" style="width: 65%; height: 50%; margin: auto; margin-top: 10%">
+        <div class="s2" style="height: 100%; width: 70%; float: left">
+            <div id="div1"></div>
+        </div>
+        <div class="s3" style="height: 100%; width: 30%; float: left">
+            <div class="neirong">
+                <div class="s4" style="width: 70%; height: 100%; margin: auto; margin-top: 10%">
+                    <div>
+                        <img class="ui centered small circular image" src="images/youxiang.jpg" />
+                    </div>
+                    <!-- <div class="s5" style="margin: auto; margin-top: 3%">
+                        <h4 class="s6" style="text-align: center">早上好</h4>
+                    </div> -->
+                    <div class="s7" style="width: 100%; margin-top: 3%">
+                        <div class="ui floating labeled icon dropdown button" style="width: 100%; margin-top: 3%">
+                            <i class="filter icon"></i>
+                            <span class="text">选择标签1</span>
+                            <div class="menu">
+                                <div class="item">重要</div>
+                                <div class="item">公告</div>
+                                <div class="item">讨论</div>
+                            </div>
+                        </div>
+                        <div class="ui floating labeled icon dropdown button" style="width: 100%; margin-top: 3%">
+                            <i class="filter icon"></i>
+                            <span class="text">选择标签2</span>
+                            <div class="menu">
+                                <div class="item">重要</div>
+                                <div class="item">公告</div>
+                                <div class="item">讨论</div>
+                            </div>
+                        </div>
+                        <div class="fluid ui buttons" style="margin-top: 3%">
+                            <button class="ui button" onclick="history.go(-1)" value="back">
+                  返回
+                </button>
+                            <div class="or"></div>
+                            <button class="ui button" onclick="sure()">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 引入 wangEditor.min.js -->
+    <script type="text/javascript">
+        const E = window.wangEditor;
+        const editor = new E("#div1");
+        // 或者 const editor = new E( document.getElementById('div1') )
+        editor.config.uploadImgServer = "upload/file";
+        editor.config.uploadVideoServer = "/api/upload-video"; //接口地址;
+        editor.highlight = hljs;
+        editor.create();
+    </script>
+    <script>
+        function sure() {
+            var hh = editor.txt.html();
+            $(".neirong").append(hh);
+            /* 获取发布时间 */
+            var date = new Date();
+            var year = date.getFullYear(); //获取当前年份
+            var mon = date.getMonth() + 1; //获取当前月份
+            var day = date.getDate(); //获取当前日
+            var h = date.getHours(); //获取小时
+            console.log(h);
+            var m = date.getMinutes(); //获取分钟
+            var time =
+                "<p>" +
+                year +
+                "年" +
+                mon +
+                "月" +
+                day +
+                "日" +
+                h +
+                "时" +
+                m +
+                "分</p>";
+            $(".neirong").append(time);
+            /* 判断多少小时前 */
+            /* var nian = date.getFullYear(); //获取当前年份
+                                var yue = date.getMonth() + 1; //获取当前月份
+                                var ri = date.getDate(); //获取当前日
+                                var shi = date.getHours(); //获取小时
+                                if() */
+            // $.ajax({
+            //     url: "",
+            //     data: {
+            //         neirong: "editor.txt.html()",
+            //     }, //此处为发送出去的data
+            //     success: function(data) {
+            //         //此处的data为接收回来的参数
+            //         console.log(data);
+            //     },
+            //     error: function() {
+            //         alert("请求失败");
+            //     },
+            // });
+        }
+        $(".ui.dropdown").dropdown();
+    </script>
+</body>
+
+</html>

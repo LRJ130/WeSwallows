@@ -1,0 +1,43 @@
+.s1 {
+    width: 65%;
+    height: 50%;
+    margin: auto;
+    margin-top: 10%
+}
+
+.s2 {
+    height: 100%;
+    width: 70%;
+    float: left
+}
+
+.s3 {
+    height: 100%;
+    width: 30%;
+    float: left
+}
+
+.s4 {
+    width: 70%;
+    height: 100%;
+    margin: auto;
+    margin-top: 10%
+}
+
+.s5 {
+    margin: auto;
+    margin-top: 3%
+}
+
+.s6 {
+    text-align: center
+}
+
+.s7 {
+    width: 100%;
+    margin-top: 3%
+}
+
+.s8 {
+    margin-top: 3%
+}
