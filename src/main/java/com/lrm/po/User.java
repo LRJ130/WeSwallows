@@ -1,5 +1,7 @@
 package com.lrm.po;
 
+import com.lrm.annotation.AccountInfoFormat;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -25,9 +27,9 @@ public class User
         //@NotBlank需要搭配有@Valid的controller方法使用 且只能用在String上
     @NotBlank(message = "请输入昵称")
     private String nickname;
-    @NotBlank(message = "请输入账号")
+    @AccountInfoFormat(message = "请输入正确账号格式————长度为7至12且不能包含汉字", permit = "true")
     private String username;
-    @NotBlank(message = "请输入密码")
+    @AccountInfoFormat
     private String password;
     //非必填 可以在前端显示默认值
     private String avatar;
