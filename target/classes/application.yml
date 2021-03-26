@@ -13,11 +13,6 @@ spring:
       max-file-size: 10MB
       enabled: true
       max-request-size: 10MB
-#  thymeleaf清除缓存，否则修改只有等重启之后才生效
-#  thymeleaf:
-#    cache=false:#  messages:
-
-#    basename: i18n/messages
 
 server:
   port: 8080
