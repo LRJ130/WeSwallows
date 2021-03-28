@@ -5,6 +5,8 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lrm.util.JWTUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,15 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-//基于路径判断 处理异常
-//拦截有问题的登录行为
+/**
+ * 基于路径判断处理异常,拦截有问题的登录行为
+ * @author 山水夜止
+ */
 public class JWTInterceptor extends HandlerInterceptorAdapter
 {
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
         Map<String, Object> map = new HashMap<>();
         try {
+            String requestURL = request.getRequestURI();
+            logger.info("RequestURL： {} ", requestURL);
+            logger.info("GetMethod: {}", handler);
             JWTUtils.verify(token);
             return true;
         //异常处理

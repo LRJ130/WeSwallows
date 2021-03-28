@@ -54,7 +54,7 @@ public class CustomerController {
      */
     @PostMapping("/uploadAvatar")
     public Result<Map<String, Object>> uploadAvatar(MultipartFile file, HttpServletRequest req) throws IOException {
-        Map<String, Object> hashMap= new HashMap<>();
+        Map<String, Object> hashMap= new HashMap<>(1);
         //创建存放文件的文件夹的流程
         Long userId = Methods.getCustomUserId(req);
         SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
@@ -91,7 +91,7 @@ public class CustomerController {
     @PostMapping("/modifyAll")
     public Result<Map<String, Object>> modifyUserInformation(User user)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         hashMap.put("user", userService.updateUser(user));
         return new Result<>(hashMap, true, "修改成功");
     }
