@@ -17,7 +17,8 @@ public class Methods {
     {
         String token = request.getHeader("token");
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
-        Long userId = decodedJWT.getClaim("userId").asLong();
+        //注意！！！这里登陆时转化为token的map中是什么数据类型，取出来就得是什么类型！！不能直接asLong!
+        Long userId = Long.parseLong(decodedJWT.getClaim("userId").asString());
         return userId;
     }
 

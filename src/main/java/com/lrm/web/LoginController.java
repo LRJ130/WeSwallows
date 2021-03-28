@@ -100,6 +100,7 @@ public class LoginController {
         {
             Map<String, String> map = new HashMap<>(5);
             //把这些字段放在请求头里 其他东西在需要的时候可以另外返回
+            //注意！！！这里放进去map是什么数据类型，取出来就得是什么类型！！
             map.put("userId", user1.getId().toString());
             map.put("nickname", user1.getNickname());
             map.put("avatar", user1.getAvatar());

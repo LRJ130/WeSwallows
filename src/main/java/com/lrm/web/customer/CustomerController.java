@@ -38,7 +38,7 @@ public class CustomerController {
     @GetMapping("/personal")
     public Result<Map<String, Object>> showMe(HttpServletRequest request)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(2);
         hashMap.put("user", userService.getUser(Methods.getCustomUserId(request)));
         hashMap.put("ACADEMIES", Magic.ACADEMIES);
         return new Result<>(hashMap, true, "");
