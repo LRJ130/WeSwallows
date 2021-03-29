@@ -63,7 +63,7 @@ public class CustomerController {
         String path = "/upload/" + userId + "/avatar" + format;
         //新文件夹目录绝对路径
         String realPath = req.getServletContext().getRealPath(path);
-        File folder = new File(req.getServletContext().getRealPath("/upload/" + userId + "avatar"));
+        File folder = new File(req.getServletContext().getRealPath("/upload/" + userId + "/avatar"));
         File folder1 = new File(realPath);
         //如果头像文件夹不存在，创建文件夹 否则删除文件夹
         if (folder.exists())
@@ -79,7 +79,9 @@ public class CustomerController {
         //新文件名
         String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
         file.transferTo(new File(folder,newName));
-        hashMap.put("avatar", realPath + "/" + newName);
+        String absPath = realPath + "/" + newName;
+        hashMap.put("avatar", absPath);
+        userService.getUser(userId).setAvatar(absPath);
         return new Result<>(hashMap, true, "上传成功");
     }
 

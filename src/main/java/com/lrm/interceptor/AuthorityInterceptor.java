@@ -22,8 +22,6 @@ import java.util.Map;
  */
 public class AuthorityInterceptor extends HandlerInterceptorAdapter
 {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             //在请求头中取得token
@@ -31,9 +29,6 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter
             String token = request.getHeader("token");
             Map<String, Object> map = new HashMap<>();
             try {
-                String requestURL = request.getRequestURI();
-                logger.info("RequestURL： {} ", requestURL);
-                logger.info("GetMethod: {}", handler);
                 //这里发生异常需要后面来处理
                 JWTUtils.verify(token);
                 DecodedJWT decodedJWT = JWTUtils.getToken(token);
