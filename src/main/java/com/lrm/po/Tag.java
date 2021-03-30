@@ -20,7 +20,8 @@ public class Tag
     @NotBlank(message = "请输入标签名称")
     private String name;
 
-    @OneToMany(mappedBy = "parentTag")
+
+    @OneToMany(mappedBy = "parentTag", fetch = FetchType.LAZY)
     private List<Tag> sonTags = new ArrayList<>();
     @ManyToOne
     private Tag parentTag;

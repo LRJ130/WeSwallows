@@ -51,16 +51,16 @@ public class User
     //关联关系 Merge Refresh Remove Persist
         //mappedBy="name" name为外键所在的表中关联的字段的名字
         //没必要设置Remove 因为不打算做注销账号功能
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
         //懒加载
-    @OneToMany(mappedBy = "postUser",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
     private List<Comment> postComments = new ArrayList<>();
         //懒加载
-    @OneToMany(mappedBy = "receiveUser",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "receiveUser", fetch = FetchType.LAZY)
     private List<Comment> receiveComments = new ArrayList<>();
         //懒加载
-    @OneToMany(mappedBy = "postUser",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
     private List<Likes> postLikes = new ArrayList<>();
         //懒加载
     @OneToMany(mappedBy = "receiveUser",fetch = FetchType.LAZY)

@@ -67,7 +67,7 @@ public class Question
     private List<Likes> likes;
 
     //允许级联删除 删除问题即删除所有评论
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
     public Long getId() {
