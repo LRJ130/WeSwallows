@@ -1,5 +1,7 @@
 package com.lrm.po;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -54,6 +56,7 @@ public class Tag
         this.questions = questions;
     }
 
+    @JsonManagedReference
     public List<Tag> getSonTags() {
         return sonTags;
     }
@@ -62,6 +65,7 @@ public class Tag
         this.sonTags = sonTags;
     }
 
+    @JsonBackReference
     public Tag getParentTag() {
         return parentTag;
     }

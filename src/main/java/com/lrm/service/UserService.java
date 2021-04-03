@@ -2,6 +2,8 @@ package com.lrm.service;
 
 import com.lrm.po.User;
 
+import java.util.List;
+
 public interface UserService {
 
     User checkRegister(String username, String nickname);
@@ -18,5 +20,5 @@ public interface UserService {
 
     Long countUser();
 
-
+    List<User> listTopUsers(int size);
 }

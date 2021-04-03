@@ -1,15 +1,20 @@
 package com.lrm.service;
 
 import com.lrm.dao.UserRepository;
+import com.lrm.po.Tag;
 import com.lrm.po.User;
 import com.lrm.util.MD5Utils;
 import com.lrm.util.MyBeanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 山水夜止
@@ -100,5 +105,12 @@ public class UserServiceImpl implements UserService
     @Override
     public Long countUser() {
         return userRepository.count();
+    }
+
+    @Override
+    public List<User> listTopUsers(int size) {
+        Sort sort = new Sort(Sort.Direction.DESC, "donation");
+        Pageable pageable = new PageRequest(0, size, sort);
+        return userRepository.findTopByDonation(pageable);
     }
 }

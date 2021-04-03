@@ -58,19 +58,6 @@ public class QuestionController {
     }
 
     /**
-     * @param parentTagId 上一级标签Id.
-     * @return 下一级标签集合.
-     */
-    @GetMapping("/questions/{parentTagId}/nextTag")
-    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
-    {
-        Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
-        return new Result<>(hashMap, true, "");
-    }
-
-
-    /**
      * 个人主页搜索 根据标题 返回个人发出的问题
      * 跟上面那个get方法的不同就是 一个是空的 一个不是空的.
      * @param pageable 分页标准
@@ -98,6 +85,19 @@ public class QuestionController {
         List<Tag> tags = tagService.listTagTop();
         hashMap.put("questions", question);
         hashMap.put("tags", tags);
+        return new Result<>(hashMap, true, "");
+    }
+
+
+    /**
+     * @param parentTagId 上一级标签Id.
+     * @return 下一级标签集合.
+     */
+    @GetMapping("/questions/{parentTagId}/nextTag")
+    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
+    {
+        Map<String, Object> hashMap = new HashMap<>();
+        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
         return new Result<>(hashMap, true, "");
     }
 
