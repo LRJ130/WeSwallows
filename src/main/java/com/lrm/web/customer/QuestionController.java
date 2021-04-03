@@ -80,24 +80,22 @@ public class QuestionController {
      */
     @GetMapping("/questions/input")
     public Result<Map<String, Object>> input() {
-        Map<String, Object> hashMap = new HashMap<>(2);
+        Map<String, Object> hashMap = new HashMap<>(1);
         Question question = new Question();
-        List<Tag> tags = tagService.listTagTop();
         hashMap.put("questions", question);
-        hashMap.put("tags", tags);
         return new Result<>(hashMap, true, "");
     }
 
 
     /**
-     * @param parentTagId 上一级标签Id.
-     * @return 下一级标签集合.
+     * @return 返回所有第一级标签
      */
-    @GetMapping("/questions/{parentTagId}/nextTag")
-    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
+    @GetMapping("/questions/tags")
+    public Result<Map<String, Object>> showTags()
     {
-        Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
+        Map<String, Object> hashMap = new HashMap<>(1);
+        List<Tag> tags = tagService.listTagTop();
+        hashMap.put("tags", tags);
         return new Result<>(hashMap, true, "");
     }
 
