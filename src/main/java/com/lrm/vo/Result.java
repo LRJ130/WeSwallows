@@ -7,11 +7,19 @@ import com.lrm.Exception.NotFoundException;
 import java.io.IOException;
 
 //包装类
+//404定义为没找到对应资源
+//403定义为无权限访问
+//402定义为文件过大
+//401定义为JWT鉴权失败
+//400定义其他未知错误
+
 public class Result <T> {
 
     T data;
 
     Boolean isSuccess;
+
+    Integer errorCode;
 
     String msg;
 
@@ -39,6 +47,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg(noPermissionException.getErrorMsg());
         result.setUrl(url);
+        result.setErrorCode(403);
         return result;
     }
 
@@ -48,6 +57,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg(notFoundException.getErrorMsg());
         result.setUrl(url);
+        result.setErrorCode(404);
         return result;
     }
 
@@ -57,6 +67,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg("文件超过了1MB");
         result.setUrl(url);
+        result.setErrorCode(402);
         return result;
     }
 
@@ -66,6 +77,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg("用户令牌无效");
         result.setUrl(url);
+        result.setErrorCode(401);
         return result;
     }
 
@@ -76,6 +88,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg("我也不知道发生甚么事了...");
         result.setUrl(url);
+        result.setErrorCode(400);
         return result;
     }
 
@@ -111,11 +124,20 @@ public class Result <T> {
         this.url = url;
     }
 
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
+
     @Override
     public String toString() {
         return "Result{" +
                 "data=" + data +
                 ", isSuccess=" + isSuccess +
+                ", errorCode=" + errorCode +
                 ", msg='" + msg + '\'' +
                 ", url=" + url +
                 '}';

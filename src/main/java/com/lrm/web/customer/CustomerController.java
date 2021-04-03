@@ -6,6 +6,7 @@ import com.lrm.util.FileControl;
 import com.lrm.util.Methods;
 import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,10 @@ public class CustomerController {
     public Result<Map<String, Object>> showMe(HttpServletRequest request)
     {
         Map<String, Object> hashMap = new HashMap<>(2);
-        hashMap.put("user", userService.getUser(Methods.getCustomUserId(request)));
+        User user = new User();
+        BeanUtils.copyProperties(userService.getUser(Methods.getCustomUserId(request)), user);
+
+        hashMap.put("user", user);
         hashMap.put("ACADEMIES", Magic.ACADEMIES);
         return new Result<>(hashMap, true, "");
     }
