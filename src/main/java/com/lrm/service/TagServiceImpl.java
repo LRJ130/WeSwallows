@@ -33,9 +33,11 @@ public class TagServiceImpl implements TagService {
         Long parentTagId = tag.getParentTag().getId();
         if (parentTagId != -1) {
             tag.setParentTag(tagRepository.findOne(parentTagId));
+            tag.setParentTagId0(parentTagId);
         } else {
             //对象new了(初始化id为-1了) 但没有持久化会报错 所以设成null
             tag.setParentTag(null);
+            tag.setParentTagId0(-1L);
         }
         return tagRepository.save(tag);
     }

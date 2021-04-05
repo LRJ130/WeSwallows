@@ -32,18 +32,6 @@ public class TagController {
         return new Result<>(hashMap, true, "");
     }
 
-    /**
-     * @param parentTagId 上一级标签Id.
-     * @return 返回下一级标签.
-     */
-    @GetMapping("/{parentTagId}/nextTag")
-    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
-    {
-        Map<String, Object> hashMap = new HashMap<>(1);
-        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
-        return new Result<>(hashMap, true, "");
-    }
-
     //采用评论区的js方法
     //新增第一级标签
 //    @GetMapping("/tags/input")

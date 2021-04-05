@@ -49,7 +49,7 @@ public class QuestionServiceImpl implements QuestionService{
         question.setLikesNum(0);
         //根据发布问题人的贡献初始化问题的影响力
         user.setDonation(user.getDonation()+2);
-        question.setImpact(question.getImpact()+8);
+        question.setImpact(user.getDonation());
         return questionRepository.save(question);
     }
 

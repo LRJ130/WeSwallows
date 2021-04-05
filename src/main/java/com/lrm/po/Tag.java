@@ -1,5 +1,6 @@
 package com.lrm.po;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotBlank;
@@ -22,13 +23,17 @@ public class Tag
     @NotBlank(message = "请输入标签名称")
     private String name;
 
-
-    @OneToMany(mappedBy = "parentTag", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "parentTag")
     private List<Tag> sonTags = new ArrayList<>();
+    @JsonBackReference
     @ManyToOne
     private Tag parentTag;
+    //避免json序列无限递归 只好出此下策 真拙劣啊...
+    Long parentTagId0;
 
     //不用级联删除 这块需要返回错误页面 告知管理员标签下有博客的情况下不能删除标签
+    @JsonBackReference
     @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
 
@@ -48,10 +53,11 @@ public class Tag
         this.name = name;
     }
 
+    @JsonBackReference
     public List<Question> getQuestions() {
         return questions;
     }
-
+    @JsonBackReference
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
@@ -60,7 +66,7 @@ public class Tag
     public List<Tag> getSonTags() {
         return sonTags;
     }
-
+    @JsonManagedReference
     public void setSonTags(List<Tag> sonTags) {
         this.sonTags = sonTags;
     }
@@ -69,9 +75,17 @@ public class Tag
     public Tag getParentTag() {
         return parentTag;
     }
-
+    @JsonBackReference
     public void setParentTag(Tag parentTag) {
         this.parentTag = parentTag;
+    }
+
+    public Long getParentTagId0() {
+        return parentTagId0;
+    }
+
+    public void setParentTagId0(Long parentTagId0) {
+        this.parentTagId0 = parentTagId0;
     }
 
     @Override
@@ -91,14 +105,14 @@ public class Tag
         return Objects.hash(getId(), getName(), getSonTags(), getParentTag(), getQuestions());
     }
 
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", sonTags=" + sonTags +
-                ", parentTag=" + parentTag +
-                ", questions=" + questions +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Tag{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", sonTags=" + sonTags +
+//                ", parentTag=" + parentTag +
+//                ", questions=" + questions +
+//                '}';
+//    }
 }

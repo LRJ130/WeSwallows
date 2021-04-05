@@ -1,5 +1,7 @@
 package com.lrm.po;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -58,8 +60,10 @@ public class Question
 
     //无级联关系
     @ManyToMany
+    @JsonManagedReference
     private List<Tag> tags = new ArrayList<>();
 
+    @JsonBackReference
     @ManyToOne
     private User user;
 
@@ -166,18 +170,20 @@ public class Question
         this.newCommentedTime = newCommentedTime;
     }
 
+    @JsonManagedReference
     public List<Tag> getTags() {
         return tags;
     }
-
+    @JsonManagedReference
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 
+    @JsonBackReference
     public User getUser() {
         return user;
     }
-
+    @JsonBackReference
     public void setUser(User user) {
         this.user = user;
     }

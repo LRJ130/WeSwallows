@@ -1,7 +1,7 @@
 package com.lrm.po;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lrm.annotation.AccountInfoFormat;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -51,6 +51,7 @@ public class User
     //关联关系 Merge Refresh Remove Persist
         //mappedBy="name" name为外键所在的表中关联的字段的名字
         //没必要设置Remove 因为不打算做注销账号功能
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
         //懒加载
@@ -210,10 +211,11 @@ public class User
         this.canSpeak = canSpeak;
     }
 
+    @JsonManagedReference
     public List<Question> getQuestions() {
         return questions;
     }
-
+    @JsonManagedReference
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
