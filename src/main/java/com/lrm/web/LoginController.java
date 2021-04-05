@@ -33,7 +33,7 @@ public class LoginController {
     @PostMapping("/register")
     public Result<Map<String, Object>> register(@Valid User user, BindingResult result)
     {
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>(1);
         //先检查是否已经注册过。注册过报错；没注册过注册，注册成功跳转到登录。
 
         if(result.hasErrors())

@@ -31,10 +31,10 @@ public class StringVerify {
         return m.find();
     }
     /**
-     * 字符串是否包含中文
+     * 字符串是否包含英文
      *
      * @param str 待校验字符串
-     * @return true 包含中文字符  false 不包含中文字符
+     * @return true 包含中文字符  false 不包含英文
      */
     public static boolean isContainLetter(String str) {
 

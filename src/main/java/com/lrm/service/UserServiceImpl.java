@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService
     public User saveUser(String username, String password, String nickname) {
         User user = new User();
         user.setUsername(username);
-        user.setPassword(MD5Utils.code(password));
+        user.setPassword("M#D5+" + MD5Utils.code(password));
         user.setNickname(nickname);
         user.setDonation(0);
         user.setCanSpeak(true);
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService
      */
     @Override
     public User checkUser(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username,MD5Utils.code(password));
+        return userRepository.findByUsernameAndPassword(username,"M#D5+" + MD5Utils.code(password));
     }
 
     /**

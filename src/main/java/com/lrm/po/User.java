@@ -27,7 +27,7 @@ public class User
         //@NotBlank需要搭配有@Valid的controller方法使用 且只能用在String上
     @NotBlank(message = "请输入昵称")
     private String nickname;
-    @AccountInfoFormat(message = "请输入正确账号格式————长度为7至12且不能包含汉字", permit = "true")
+    @AccountInfoFormat(message = "请输入正确账号格式————长度为7至12且不能包含汉字", need = "false")
     private String username;
     @AccountInfoFormat
     private String password;

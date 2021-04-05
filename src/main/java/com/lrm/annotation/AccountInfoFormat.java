@@ -34,7 +34,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
         String message() default "请输入正确密码格式————长度为7至12且不能包含汉字、至少含有一个英文字母";
 
         // 根据实际需求定的方法
-        String permit() default "false";
+        String need() default "true";
 
         // 约束注解在验证时所属的组别
         Class<?>[] groups() default { };

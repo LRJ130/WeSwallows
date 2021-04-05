@@ -17,7 +17,7 @@ public class AccountInfoValidator implements ConstraintValidator<AccountInfoForm
      * 可以包含字母
      * 结果为false或true true允许有字母 false不允许
      */
-    Boolean letterPemmited;
+    Boolean letterNeeded;
 
     /**
      * 初始化方法， 在(懒加载)创建一个当前类实例后，会马上执行此方法
@@ -26,7 +26,7 @@ public class AccountInfoValidator implements ConstraintValidator<AccountInfoForm
      */
     @Override
     public void initialize(AccountInfoFormat format) {
-        letterPemmited = Boolean.parseBoolean(format.permit());
+        letterNeeded = Boolean.parseBoolean(format.need());
     }
 
     /**
@@ -48,9 +48,14 @@ public class AccountInfoValidator implements ConstraintValidator<AccountInfoForm
         }
 
         String msg = (String) value;
+        String top5 = msg.substring(0,5);
+        if("M#D5+".equals(top5))
+        {
+            return true;
+        }
         //如果有汉字 就直接false 如果有字母且不允许 返回false
-        boolean pass = StringVerify.isContainChinese(msg) || (msg.length() >12 || msg.length() <7) || (StringVerify.isContainLetter(msg) & !letterPemmited);
-        return !pass;
+        boolean notPass = StringVerify.isContainChinese(msg) || (msg.length() >12 || msg.length() <7) || !(!letterNeeded || (StringVerify.isContainLetter(msg)));
+        return !notPass;
     }
 
 }
