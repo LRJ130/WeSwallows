@@ -45,8 +45,12 @@ public class QuestionServiceImpl implements QuestionService{
         question.setCreateTime(new Date());
         question.setNewCommentedTime(new Date());
         question.setView(0);
-        //初始化点赞数为0
+        //初始化点赞数、点踩数、评论数为0
         question.setLikesNum(0);
+        question.setCommentsNum(0);
+        question.setDisLikesNum(0);
+        //默认为不隐藏
+        question.setHidden(false);
         //根据发布问题人的贡献初始化问题的影响力
         user.setDonation(user.getDonation()+2);
         question.setImpact(user.getDonation());

@@ -33,10 +33,11 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter
                 JWTUtils.verify(token);
                 DecodedJWT decodedJWT = JWTUtils.getToken(token);
                 //在token中取得isAdmin
-                Boolean isAdmin = decodedJWT.getClaim("isAdmin").asBoolean();
+                boolean isAdmin = Boolean.parseBoolean(decodedJWT.getClaim("isAdmin").asString());
                 if(!isAdmin) {
                     map.put("isSuccess", false);
                     map.put("msg","无访问权限");
+                    map.put("errorCode", "403");
                 } else {
                     return true;
                 }
@@ -44,15 +45,19 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter
             } catch (TokenExpiredException e) {
                 map.put("isSuccess", false);
                 map.put("msg", "用户令牌已经过期，请重新登陆");
+                map.put("errorCode", "401");
             } catch (SignatureVerificationException e){
                 map.put("isSuccess", false);
                 map.put("msg", "签名错误");
+                map.put("errorCode", "401");
             } catch (AlgorithmMismatchException e){
                 map.put("isSuccess", false);
                 map.put("msg", "加密算法不匹配");
+                map.put("errorCode", "401");
             } catch (Exception e) {
                 map.put("isSuccess", false);
                 map.put("msg", "无效令牌");
+                map.put("errorCode", "401");
             }
             //转化为json返回前端
             //方法声明时的throws Exception是抛出这里的异常
