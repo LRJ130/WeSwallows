@@ -1,6 +1,7 @@
 package com.lrm.po;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lrm.annotation.AccountInfoFormat;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -29,6 +30,8 @@ public class User
     private String nickname;
     @AccountInfoFormat(message = "请输入正确账号格式————长度为7至12且不能包含汉字", need = "false")
     private String username;
+    //返回前端的user对象中不含密码
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @AccountInfoFormat
     private String password;
     //非必填 可以在前端显示默认值
@@ -252,31 +255,31 @@ public class User
         this.receiveLikes = receiveLikes;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", isAdmin=" + isAdmin +
-                ", canSpeak=" + canSpeak +
-                ", nickname='" + nickname + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", email='" + email + '\'' +
-                ", qqId='" + qqId + '\'' +
-                ", wechatId='" + wechatId + '\'' +
-                ", sex=" + sex +
-                ", personalSignature='" + personalSignature + '\'' +
-                ", academy='" + academy + '\'' +
-                ", major='" + major + '\'' +
-                ", donation=" + donation +
-                ", registerTime=" + registerTime +
-                ", questions=" + questions +
-                ", postComments=" + postComments +
-                ", receiveComments=" + receiveComments +
-                ", postLikes=" + postLikes +
-                ", receiveLikes=" + receiveLikes +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", isAdmin=" + isAdmin +
+//                ", canSpeak=" + canSpeak +
+//                ", nickname='" + nickname + '\'' +
+//                ", username='" + username + '\'' +
+//                ", password='" + password + '\'' +
+//                ", avatar='" + avatar + '\'' +
+//                ", email='" + email + '\'' +
+//                ", qqId='" + qqId + '\'' +
+//                ", wechatId='" + wechatId + '\'' +
+//                ", sex=" + sex +
+//                ", personalSignature='" + personalSignature + '\'' +
+//                ", academy='" + academy + '\'' +
+//                ", major='" + major + '\'' +
+//                ", donation=" + donation +
+//                ", registerTime=" + registerTime +
+//                ", questions=" + questions +
+//                ", postComments=" + postComments +
+//                ", receiveComments=" + receiveComments +
+//                ", postLikes=" + postLikes +
+//                ", receiveLikes=" + receiveLikes +
+//                '}';
+//    }
 }
 

@@ -10,15 +10,15 @@ import com.lrm.vo.QuestionQuery;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -180,19 +180,14 @@ public class QuestionServiceImpl implements QuestionService{
      */
     @Override
     public List<Question> listImpactQuestionTop(Integer size) {
-        Sort sort = new Sort(Sort.Direction.DESC, "impact");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar c = df.getCalendar();
-        Calendar c1 = df.getCalendar();
-        c.add(Calendar.DATE, -3);
-        List<Question> questions = questionRepository.findAll((root, cq, cb) -> {
 
-            List<Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.between(root.get("newCommentedTime"), c, c1));
-            //参数是0么
-            cq.where(predicates.toArray(new Predicate[0]));
-            return null;
-        }, sort);
+        List< Order> orders=new ArrayList< Order>();
+        Order order1 = new Order(Sort.Direction.DESC, "createTime");
+        Order order2 = new Order(Sort.Direction.DESC, "impact");
+        orders.add(order1);
+        orders.add(order2);
+        Pageable pageable= new PageRequest(0, size, new Sort(orders));
+        List<Question> questions = questionRepository.findAll(pageable).getContent();
 
         if(questions.size() > size-1)
         {

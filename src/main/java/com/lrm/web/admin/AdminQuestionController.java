@@ -76,14 +76,6 @@ public class AdminQuestionController
         return new Result<>(hashMap, true, "");
     }
 
-    @GetMapping("/questions/{parentTagId}/nextTag")
-    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
-    {
-        Map<String, Object> hashMap = new HashMap<>(1);
-        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
-        return new Result<>(hashMap, true, "");
-    }
-
     @PostMapping("/questions")
     public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult)
     {

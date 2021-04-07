@@ -17,12 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +31,7 @@ import java.util.*;
 /**
  * @author 山水夜止.
  */
-@Controller
+@RestController
 public class IndexController
 {
     @Autowired
@@ -56,10 +52,9 @@ public class IndexController
      * @return 返回推荐问题、全部问题、问题对应用户是否点赞.
      */
     @GetMapping("/")
-    public Result<Map<String, Object>> index(@PageableDefault(size = Magic.PAGE_SIZE, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+    public Result<Map<String, Object>> index(@PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                              HttpServletRequest request)
     {
-
         Map<String,Object> hashMap = new HashMap<>(3);
         Page<Question> page = questionService.listQuestion(pageable);
         Long userId = Methods.getCustomUserId(request);
