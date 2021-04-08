@@ -1,6 +1,7 @@
 package com.lrm.po;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -48,13 +49,22 @@ public class Question
 
     //不通过数据库与前端交互 直接在service层转化为tags
     @Transient
-    private  String tagIds;
+    private String tagIds;
+    //节约空间
+    @Transient
+    private String avatar;
+    @Transient
+    private String username;
+    @Transient
+    private boolean approved;
 
     //被它修饰的时间会封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
-      //首页展示根据发布时间展示
+    //首页展示根据发布时间展示
+    @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
-      //推荐时根据最新被评论时间展示
+    //推荐时根据最新被评论时间展示
+    @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Temporal(TemporalType.TIMESTAMP)
     private Date newCommentedTime;
 
@@ -170,10 +180,35 @@ public class Question
         this.newCommentedTime = newCommentedTime;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
     @JsonManagedReference
     public List<Tag> getTags() {
         return tags;
     }
+
     @JsonManagedReference
     public void setTags(List<Tag> tags) {
         this.tags = tags;
@@ -211,6 +246,7 @@ public class Question
     public void setTagIds(String tagIds) {
         this.tagIds = tagIds;
     }
+
 
     //真正起setTagIds作用的是这个方法
     //Tag集合转为String对象
@@ -268,6 +304,9 @@ public class Question
                 ", isHidden=" + isHidden +
                 ", impact=" + impact +
                 ", tagIds='" + tagIds + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", username='" + username + '\'' +
+                ", approved=" + approved +
                 ", createTime=" + createTime +
                 ", newCommentedTime=" + newCommentedTime +
                 ", tags=" + tags +

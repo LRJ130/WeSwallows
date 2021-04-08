@@ -48,28 +48,29 @@ public class IndexController
 
     /**
      * 怎么显示有没有点过赞呢？现在不太明白...只能用计算力代替了.
+     *
      * @param pageable 分页.
      * @return 返回推荐问题、全部问题、问题对应用户是否点赞.
      */
     @GetMapping("/")
-    public Result<Map<String, Object>> index(@PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-                                             HttpServletRequest request)
-    {
-        Map<String,Object> hashMap = new HashMap<>(3);
+    public Result<Map<String, Object>> index(@PageableDefault(size = 5, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                             HttpServletRequest request) {
+        Map<String, Object> hashMap = new HashMap<>(3);
         Page<Question> page = questionService.listQuestion(pageable);
         Long userId = Methods.getCustomUserId(request);
-        List<Boolean> approved = new ArrayList<>();
-        for(Question question : page)
-        {
-            if(likesService.getLikes(userService.getUser(userId), question) != null)
-            {
-                approved.add(true);
+        User postUser = userService.getUser(userId);
+        for (Question question : page) {   //可简化如下 但为逻辑清晰这样写
+            //question.setApproved(likesService.getLikes(userService.getUser(userId), question) != null);
+            if (likesService.getLikes(userService.getUser(userId), question) != null) {
+                question.setApproved(true);
             } else {
-                approved.add(false);
+                question.setApproved(false);
             }
+            //这里到底要不要用计算力代替空间还要考虑
+            question.setAvatar(postUser.getAvatar());
+            question.setUsername(postUser.getUsername());
         }
-        hashMap.put("pages",questionService.listQuestion(pageable));
-        hashMap.put("approved", approved);
+        hashMap.put("pages", page);
         hashMap.put("impactQuestions", questionService.listImpactQuestionTop(Magic.RECOMMENDED_QUESTIONS_SIZE));
         return new Result<>(hashMap, true, "");
     }
