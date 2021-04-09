@@ -59,9 +59,19 @@ public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpe
 
     /**
      * 一个用户提出了多少个问题
+     *
      * @param userId 用户Id
      * @return 多少个
      */
     Long countAllByUserId(Long userId);
 
+
+    /**
+     * 注意一定要有这个    @Query("select q from Question q") ！！不然找不到对应的bean
+     *
+     * @param pageable 内含分页顺序 其中的size属性与“Top”起限制作用
+     * @return 返回前size个 按时间、影响力排序
+     */
+    @Query("select q from Question q")
+    List<Question> findTop(Pageable pageable);
 }

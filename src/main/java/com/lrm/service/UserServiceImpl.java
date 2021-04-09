@@ -111,6 +111,6 @@ public class UserServiceImpl implements UserService
     public List<User> listTopUsers(int size) {
         Sort sort = new Sort(Sort.Direction.DESC, "donation");
         Pageable pageable = new PageRequest(0, size, sort);
-        return userRepository.findTopByDonation(pageable);
+        return userRepository.findTop(pageable);
     }
 }
