@@ -38,18 +38,6 @@ public class TagShowController {
     }
 
     /**
-     * @param parentTagId 父级标签Id.
-     * @return 获取下一级标签.
-     */
-    @GetMapping("/{parentTagId}/nextTag")
-    public Result<Map<String, Object>> showNext(@PathVariable Long parentTagId)
-    {
-        Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags", tagService.getTag(parentTagId).getSonTags());
-        return new Result<>(hashMap, true, "");
-    }
-
-    /**
      * 按标签查询.
      * @param tagIds 以,分割的标签Id.
      * @return 所有标签及其子集下的所有问题分页.
@@ -79,7 +67,4 @@ public class TagShowController {
 
         return new Result<>(hashMap, true, "搜索成功");
     }
-
-
-
 }

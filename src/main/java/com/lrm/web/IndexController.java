@@ -68,7 +68,7 @@ public class IndexController
             }
             //这里到底要不要用计算力代替空间还要考虑
             question.setAvatar(postUser.getAvatar());
-            question.setUsername(postUser.getUsername());
+            question.setNickname(postUser.getNickname());
         }
         hashMap.put("pages", page);
         hashMap.put("impactQuestions", questionService.listImpactQuestionTop(Magic.RECOMMENDED_QUESTIONS_SIZE));

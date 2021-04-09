@@ -54,7 +54,7 @@ public class Question
     @Transient
     private String avatar;
     @Transient
-    private String username;
+    private String nickname;
     @Transient
     private boolean approved;
 
@@ -188,12 +188,12 @@ public class Question
         this.avatar = avatar;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public boolean isApproved() {
@@ -305,7 +305,7 @@ public class Question
                 ", impact=" + impact +
                 ", tagIds='" + tagIds + '\'' +
                 ", avatar='" + avatar + '\'' +
-                ", username='" + username + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", approved=" + approved +
                 ", createTime=" + createTime +
                 ", newCommentedTime=" + newCommentedTime +
