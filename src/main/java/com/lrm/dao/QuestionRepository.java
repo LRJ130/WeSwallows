@@ -17,7 +17,8 @@ public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpe
 
     /**
      * 查询标题或正文含有query的问题
-     * @param query 查询条件
+     *
+     * @param query    查询条件 按发布时间顺序查询
      * @param pageable 分页对象
      * @return 查询结果
      */
@@ -36,13 +37,15 @@ public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpe
 
     /**
      * 查询该年份下发布过问题的所有月份
-     * @param year 需要查询的年份
+     * 注意sql语句中不能使用%M 因为jpa似乎不能对%M得到的英文的月份进行排序
+     *
+     * @param year   需要查询的年份
      * @param userId 当前用户Id
      * @return 月份的List集合
      */
-    @Query("select function('date_format', q.createTime, '%M') as month " +
-            "from Question q where function('date_format', q.createTime, '%Y') = ?1 and q.user.id = ?2" +
-            " order by month desc ")
+    @Query("select function('date_format', q.createTime, '%c') as month " +
+            "from Question q where q.user.id = ?2 and function('date_format', q.createTime, '%Y') = ?1" +
+            " order by month desc")
     List<String> findGroupMonthByYear(String year, Long userId);
 
 
@@ -54,7 +57,7 @@ public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpe
      * @return 问题的List集合
      */
     @Query("select q from Question q where function('date_format', q.createTime, '%Y') = ?1 and " +
-            "function('date_format', q.createTime, '%M') = ?2 and q.user.id = ?3 order by q desc")
+            "function('date_format', q.createTime, '%c') = ?2 and q.user.id = ?3 order by q desc")
     List<Question> findByYearAndMonth(String year, String month, Long userId);
 
     /**

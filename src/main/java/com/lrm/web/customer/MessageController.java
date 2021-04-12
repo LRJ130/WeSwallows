@@ -5,7 +5,7 @@ import com.lrm.po.Comment;
 import com.lrm.po.Likes;
 import com.lrm.service.CommentService;
 import com.lrm.service.LikesService;
-import com.lrm.util.Methods;
+import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +39,7 @@ public class MessageController {
     public Result<Map<String, Object>> messages(HttpServletRequest request) throws JWTVerificationException
     {
         Map<String, Object> hashMap = new HashMap<>(2);
-        Long userId = Methods.getCustomUserId(request);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         List<Comment> comments = commentService.listAllNotReadComment(userId);
         List<Likes> likes = likesService.listAllNotReadComment(userId);
         hashMap.put("Comments", comments);

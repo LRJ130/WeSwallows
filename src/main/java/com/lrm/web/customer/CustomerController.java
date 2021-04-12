@@ -3,7 +3,7 @@ package com.lrm.web.customer;
 import com.lrm.po.User;
 import com.lrm.service.UserService;
 import com.lrm.util.FileControl;
-import com.lrm.util.Methods;
+import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
 import org.springframework.beans.BeanUtils;
@@ -41,7 +41,7 @@ public class CustomerController {
     {
         Map<String, Object> hashMap = new HashMap<>(2);
         User user = new User();
-        BeanUtils.copyProperties(userService.getUser(Methods.getCustomUserId(request)), user);
+        BeanUtils.copyProperties(userService.getUser(GetTokenInfo.getCustomUserId(request)), user);
 
         hashMap.put("user", user);
         hashMap.put("ACADEMIES", Magic.ACADEMIES);
@@ -60,7 +60,7 @@ public class CustomerController {
     public Result<Map<String, Object>> uploadAvatar(MultipartFile file, HttpServletRequest req) throws IOException {
         Map<String, Object> hashMap= new HashMap<>(1);
         //创建存放文件的文件夹的流程
-        Long userId = Methods.getCustomUserId(req);
+        Long userId = GetTokenInfo.getCustomUserId(req);
         SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
         String format = sdf.format(new Date());
         //相对路径 名字含时间

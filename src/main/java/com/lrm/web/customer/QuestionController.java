@@ -9,7 +9,7 @@ import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
 import com.lrm.service.UserService;
 import com.lrm.util.FileControl;
-import com.lrm.util.Methods;
+import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.QuestionQuery;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class QuestionController {
     public Result<Map<String, Object>> showQuestions(@PageableDefault(size = 6, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                                  QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>();
-        Long userId = Methods.getCustomUserId(request);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         //这个方法只抽取title属性比较
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
         return new Result<>(hashMap, true, "");
@@ -68,7 +68,7 @@ public class QuestionController {
     public Result<Map<String, Object>> search(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                                QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>();
-        Long userId = Methods.getCustomUserId(request);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
         return new Result<>(hashMap, true, "搜索完成");
     }
@@ -108,8 +108,8 @@ public class QuestionController {
     @PostMapping("/questions")
     public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, HttpServletRequest request)
     {
-        Map<String, Object> hashMap= new HashMap<>(1);
-        Long userId = Methods.getCustomUserId(request);
+        Map<String, Object> hashMap = new HashMap<>(1);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         //后端检验valid 如果校验失败 返回input页面
         if(bindingResult.hasErrors())
         {
@@ -149,7 +149,7 @@ public class QuestionController {
     public Result<Map<String, Object>> delete(@PathVariable Long questionId, HttpServletRequest request)
     {
         Map<String, Object> hashMap = new HashMap<>(1);
-        Long userId = Methods.getCustomUserId(request);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         Question question = questionService.getQuestion(questionId);
         if(question == null)
         {
@@ -185,7 +185,7 @@ public class QuestionController {
     public Result<Map<String, Object>> uploadPhotos(MultipartFile[] files, HttpServletRequest req, @RequestParam Long questionId) throws IOException {
         Map<String, Object> hashMap= new HashMap<>(files.length);
         //创建存放文件的文件夹的流程
-        Long userId = Methods.getCustomUserId(req);
+        Long userId = GetTokenInfo.getCustomUserId(req);
         SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
         String format = sdf.format(new Date());
         String path = "/upload/" + userId + "/questions/" + questionId + format;

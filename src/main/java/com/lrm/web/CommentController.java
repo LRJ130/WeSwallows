@@ -10,7 +10,7 @@ import com.lrm.service.CommentService;
 import com.lrm.service.LikesService;
 import com.lrm.service.QuestionService;
 import com.lrm.service.UserService;
-import com.lrm.util.Methods;
+import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +51,8 @@ public class CommentController
     @GetMapping("/comments")
     public Result<Map<String, Object>> comments(@PathVariable Long questionId,  HttpServletRequest request)
     {
-        Map<String,Object> hashMap = new HashMap<>(4);
-        Long userId = Methods.getCustomUserId(request);
+        Map<String, Object> hashMap = new HashMap<>(4);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         //分别返回两类评论和对应点赞
         List<Comment> comments1 = commentService.listCommentByQuestionId(questionId, false);
         List<Boolean> approved1 = new ArrayList<>();
@@ -92,8 +92,8 @@ public class CommentController
     @PostMapping("/comments")
     public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult)
     {
-        Map<String, Object> hashMap= new HashMap<>(1);
-        Long userId = Methods.getCustomUserId(request);
+        Map<String, Object> hashMap = new HashMap<>(1);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         User postUser = userService.getUser(userId);
         Long questionId = comment.getQuestion().getId();
         //如果是空报错
@@ -121,19 +121,16 @@ public class CommentController
      * @return 报错信息.
      */
     @GetMapping("/comment/{commentId}/delete")
-    public Result<Map<String, Object>> deleteComment(@PathVariable Long commentId, HttpServletRequest request)
-    {
+    public Result<Map<String, Object>> deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(1);
-        User customUser = userService.getUser(Methods.getCustomUserId(request));
-        Boolean admin = Methods.isAdmin(request);
+        User customUser = userService.getUser(GetTokenInfo.getCustomUserId(request));
+        Boolean admin = GetTokenInfo.isAdmin(request);
         Comment comment = commentService.getComment(commentId);
         //如果评论不存在&没权限删除评论报错
-        if(comment == null)
-        {
+        if (comment == null) {
             throw new NotFoundException("该评论不存在");
         }
-        if((comment.getPostUser() != customUser) & (!admin))
-        {
+        if ((comment.getPostUser() != customUser) & (!admin)) {
             throw new NoPermissionException("您无权限删除该评论");
         }
         commentService.deleteComment(commentId);
@@ -156,7 +153,7 @@ public class CommentController
         Comment comment = commentService.getComment(commentId);
         //只能给有效问题点赞
         if(comment.getAnswer()) {
-            Long postUserId = Methods.getCustomUserId(request);
+            Long postUserId = GetTokenInfo.getCustomUserId(request);
             User postUser = userService.getUser(postUserId);
             User receiveUser = comment.getReceiveUser();
             Likes likes = likesService.getLikes(postUser, comment);
@@ -225,7 +222,7 @@ public class CommentController
     public Result<Map<String, Object>> uploadPhotos(MultipartFile[] files, HttpServletRequest req, @PathVariable Long questionId, @RequestParam Long commentId) throws IOException {
         Map<String, Object> hashMap= new HashMap<>(1);
         //创建存放文件的文件夹的流程
-        Long userId = Methods.getCustomUserId(req);
+        Long userId = GetTokenInfo.getCustomUserId(req);
         SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
         String format = sdf.format(new Date());
         String path = "/upload/" + userId + "/questions/" + questionId + "/comments/" + format;

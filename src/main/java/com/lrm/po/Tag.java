@@ -102,9 +102,8 @@ public class Tag
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getSonTags(), getParentTag(), getQuestions());
+        return Objects.hash(getId(), getName(), getSonTags(), getQuestions());
     }
-
 //    @Override
 //    public String toString() {
 //        return "Tag{" +

@@ -30,7 +30,7 @@ public class JWTUtils {
         map.forEach(builder::withClaim);
         //1小时之后过期
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.HOUR_OF_DAY,1);
+        instance.add(Calendar.HOUR_OF_DAY, 10);
         //添加到token
         builder.withExpiresAt(instance.getTime());
         //添加标签 返回token

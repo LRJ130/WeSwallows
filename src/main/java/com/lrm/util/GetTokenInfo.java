@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author 山水夜止.
  */
-public class Methods {
+public class GetTokenInfo {
     /**
      * @return 得到当前UserId
      * @throws JWTVerificationException JWT鉴权错误
      */
-    public static Long getCustomUserId(HttpServletRequest request) throws JWTVerificationException
-    {
+    public static Long getCustomUserId(HttpServletRequest request) throws JWTVerificationException {
         String token = request.getHeader("token");
         DecodedJWT decodedJWT = JWTUtils.getToken(token);
         //注意！！！这里登陆时转化为token的map中是什么数据类型，取出来就得是什么类型！！不能直接asLong!
@@ -34,4 +33,5 @@ public class Methods {
         Boolean isAdmin = decodedJWT.getClaim("isAdmin").asBoolean();
         return isAdmin;
     }
+
 }

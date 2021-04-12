@@ -9,7 +9,7 @@ import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
 import com.lrm.service.UserService;
 import com.lrm.util.FileControl;
-import com.lrm.util.Methods;
+import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +53,11 @@ public class IndexController
      * @return 返回推荐问题、全部问题、问题对应用户是否点赞.
      */
     @GetMapping("/")
-    public Result<Map<String, Object>> index(@PageableDefault(size = 5, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+    public Result<Map<String, Object>> index(@PageableDefault(size = 7, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                              HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(3);
         Page<Question> page = questionService.listQuestion(pageable);
-        Long userId = Methods.getCustomUserId(request);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         User postUser = userService.getUser(userId);
         for (Question question : page) {   //可简化如下 但为逻辑清晰这样写
             //question.setApproved(likesService.getLikes(userService.getUser(userId), question) != null);
@@ -77,17 +77,17 @@ public class IndexController
 
     /**
      * 按输入搜索标题/内容.
+     *
      * @param pageable 分页
-     * @param query 查询条件.
+     * @param query    查询条件.
      * @return 查询结果、查询条件.
      */
-    @PostMapping("/search")
-    public Result<Map<String, Object>> search(@PageableDefault(size = 1000, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
-                         String query)
-    {
+    @PostMapping("/searchQuestion")
+    public Result<Map<String, Object>> search(@PageableDefault(size = 1000, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                              String query) {
         //mysql语句 模糊查询的格式 jpa不会帮处理string前后有没有%的
-        Map<String,Object> hashMap = new HashMap<>(2);
-        hashMap.put("pages", questionService.listQuestion("%"+query+"%", pageable));
+        Map<String, Object> hashMap = new HashMap<>(2);
+        hashMap.put("pages", questionService.listQuestion("%" + query + "%", pageable));
         //还要传回 保证在新的查询页面 查询框中也有自己之前查询的条件的内容
         hashMap.put("queries", query);
         return new Result<>(hashMap, true, "");
@@ -113,9 +113,8 @@ public class IndexController
      * @param questionId 问题Id.
      */
     @GetMapping("/question/{questionId}/approve")
-    public void approve(@PathVariable Long questionId, HttpServletRequest request)
-    {
-        Long postUserId = Methods.getCustomUserId(request);
+    public void approve(@PathVariable Long questionId, HttpServletRequest request) {
+        Long postUserId = GetTokenInfo.getCustomUserId(request);
         Question question = questionService.getQuestion(questionId);
         User postUser = userService.getUser(postUserId);
         User receiveUser = question.getUser();
@@ -176,10 +175,9 @@ public class IndexController
      * @return 报错信息/成功信息.
      */
     @PostMapping("/questions")
-    public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, HttpServletRequest request)
-    {
-        Map<String, Object> hashMap= new HashMap<>(1);
-        Long userId = Methods.getCustomUserId(request);
+    public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult, HttpServletRequest request) {
+        Map<String, Object> hashMap = new HashMap<>(1);
+        Long userId = GetTokenInfo.getCustomUserId(request);
         //后端检验valid 如果校验失败 返回input页面
         if(bindingResult.hasErrors())
         {
@@ -232,7 +230,7 @@ public class IndexController
     public Result<Map<String, Object>> uploadPhotos(MultipartFile[] files, HttpServletRequest req, @RequestParam Long questionId) throws IOException {
         Map<String, Object> hashMap= new HashMap<>(files.length);
         //创建存放文件的文件夹的流程
-        Long userId = Methods.getCustomUserId(req);
+        Long userId = GetTokenInfo.getCustomUserId(req);
         SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
         String format = sdf.format(new Date());
         String path = "/upload/" + userId + "/questions/" + questionId + format;

@@ -6,6 +6,7 @@ import com.lrm.po.Question;
 import com.lrm.po.User;
 import com.lrm.util.MarkdownUtils;
 import com.lrm.util.MyBeanUtils;
+import com.lrm.util.ProcessData;
 import com.lrm.vo.QuestionQuery;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,10 +202,12 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public Map<String, Map<String, List<Question>>> archivesQuestion(Long userId) {
         List<String> years = questionRepository.findGroupYear(userId);
+        years = ProcessData.removeDupicateElement(years);
         Map<String, Map<String, List<Question>>> map = new HashMap<>(years.size());
         for(String year : years)
         {
             List<String> months = questionRepository.findGroupMonthByYear(year, userId);
+            months = ProcessData.removeDupicateElement(months);
             Map<String, List<Question>> hashMap = new HashMap<>(months.size());
             for (String month : months)
             {
