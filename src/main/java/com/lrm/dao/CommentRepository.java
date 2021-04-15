@@ -23,6 +23,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select c from Comment c where c.parentComment.id is null and c.question.id = ?1 and c.isAnswer = ?2")
     List<Comment> findByQuestionIdAndAnswer(Long questionId, Boolean answer, Sort sort);
 
+    //原本是这样的 会报错无法识别Answer 应该是jpa的缺陷吧
+    //List<Comment> findByQuestionIdAndParentCommentNullAndAnswer(Long questionId, Sort sort, Boolean answer);
+
 
     /**
      * 得到问题对应的所有评论
