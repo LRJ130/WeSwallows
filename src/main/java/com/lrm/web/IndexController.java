@@ -49,6 +49,7 @@ public class IndexController
     /**
      * 怎么显示有没有点过赞呢？现在不太明白...只能用计算力代替了.
      *
+     * @param request  用于得到当前userId 处理当前用户点没点过赞的
      * @param pageable 分页.
      * @return 返回推荐问题、全部问题、问题对应用户是否点赞.
      */
@@ -56,16 +57,24 @@ public class IndexController
     public Result<Map<String, Object>> index(@PageableDefault(size = 7, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                              HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(3);
+
         Page<Question> page = questionService.listQuestion(pageable);
         Long userId = GetTokenInfo.getCustomUserId(request);
-        User postUser = userService.getUser(userId);
-        for (Question question : page) {   //可简化如下 但为逻辑清晰这样写
+
+        for (Question question : page) {
+
+            //得到发布问题的人
+            User postUser = question.getUser();
+
+            //可简化如下 但为逻辑清晰这样写
             //question.setApproved(likesService.getLikes(userService.getUser(userId), question) != null);
+
             if (likesService.getLikes(userService.getUser(userId), question) != null) {
                 question.setApproved(true);
             } else {
                 question.setApproved(false);
             }
+
             //这里到底要不要用计算力代替空间还要考虑
             question.setAvatar(postUser.getAvatar());
             question.setNickname(postUser.getNickname());

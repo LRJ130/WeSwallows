@@ -104,6 +104,8 @@ public class Tag
     public int hashCode() {
         return Objects.hash(getId(), getName(), getSonTags(), getQuestions());
     }
+
+//    会无限迭代 先不写toString了
 //    @Override
 //    public String toString() {
 //        return "Tag{" +

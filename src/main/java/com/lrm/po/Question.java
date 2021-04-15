@@ -47,7 +47,8 @@ public class Question
     //显式的点赞数
     //private Integer likesNum;
 
-    //不通过数据库与前端交互 直接在service层转化为tags
+    //@Transient 不通过数据库与前端交互
+    // 直接在service层转化为tags
     @Transient
     private String tagIds;
     //节约空间
@@ -209,7 +210,6 @@ public class Question
         return tags;
     }
 
-    @JsonManagedReference
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
@@ -218,11 +218,12 @@ public class Question
     public User getUser() {
         return user;
     }
-    @JsonBackReference
+
     public void setUser(User user) {
         this.user = user;
     }
 
+    @JsonManagedReference
     public List<Comment> getComments() {
         return comments;
     }
@@ -231,6 +232,7 @@ public class Question
         this.comments = comments;
     }
 
+    @JsonManagedReference
     public List<Likes> getLikes() {
         return likes;
     }
@@ -290,29 +292,29 @@ public class Question
         return Objects.hash(getId(), getContent(), getDescription(), getTitle(), getView(), getLikesNum(), getCommentsNum(), getDisLikesNum(), isHidden, getImpact(), getTagIds(), getCreateTime(), getNewCommentedTime(), getTags(), getUser(), getLikes(), getComments());
     }
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "id=" + id +
-                ", content='" + content + '\'' +
-                ", description='" + description + '\'' +
-                ", title='" + title + '\'' +
-                ", view=" + view +
-                ", likesNum=" + likesNum +
-                ", commentsNum=" + commentsNum +
-                ", disLikesNum=" + disLikesNum +
-                ", isHidden=" + isHidden +
-                ", impact=" + impact +
-                ", tagIds='" + tagIds + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", approved=" + approved +
-                ", createTime=" + createTime +
-                ", newCommentedTime=" + newCommentedTime +
-                ", tags=" + tags +
-                ", user=" + user +
-                ", likes=" + likes +
-                ", comments=" + comments +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Question{" +
+//                "id=" + id +
+//                ", content='" + content + '\'' +
+//                ", description='" + description + '\'' +
+//                ", title='" + title + '\'' +
+//                ", view=" + view +
+//                ", likesNum=" + likesNum +
+//                ", commentsNum=" + commentsNum +
+//                ", disLikesNum=" + disLikesNum +
+//                ", isHidden=" + isHidden +
+//                ", impact=" + impact +
+//                ", tagIds='" + tagIds + '\'' +
+//                ", avatar='" + avatar + '\'' +
+//                ", nickname='" + nickname + '\'' +
+//                ", approved=" + approved +
+//                ", createTime=" + createTime +
+//                ", newCommentedTime=" + newCommentedTime +
+//                ", tags=" + tags +
+//                ", user=" + user +
+//                ", likes=" + likes +
+//                ", comments=" + comments +
+//                '}';
+//    }
 }

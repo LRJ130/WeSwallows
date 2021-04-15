@@ -1,5 +1,8 @@
 package com.lrm.po;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -29,11 +32,20 @@ public class Comment
     //是否被隐藏 后端只做属性设置的处理 仍然返回全部数据 前端做hidden判断
     private Boolean isHidden;
 
+    //节约空间
+    @Transient
+    private String avatar;
+    @Transient
+    private String nickname;
+    @Transient
+    private boolean approved;
 
     @Lob
     @NotBlank
     private String content;
 
+    //被它修饰的时间会封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
+    @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
@@ -81,6 +93,30 @@ public class Comment
 
     public void setAnswer(Boolean answer) {
         isAnswer = answer;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 
     public void setRead(Boolean read) {
@@ -135,6 +171,7 @@ public class Comment
         this.createTime = createTime;
     }
 
+    @JsonBackReference
     public Question getQuestion() {
         return question;
     }
@@ -143,6 +180,7 @@ public class Comment
         this.question = question;
     }
 
+    @JsonManagedReference
     public List<Comment> getReplyComments() {
         return replyComments;
     }
@@ -151,6 +189,7 @@ public class Comment
         this.replyComments = replyComments;
     }
 
+    @JsonBackReference
     public Comment getParentComment() {
         return parentComment;
     }
@@ -159,6 +198,7 @@ public class Comment
         this.parentComment = parentComment;
     }
 
+    @JsonBackReference
     public User getReceiveUser() {
         return receiveUser;
     }
@@ -167,6 +207,7 @@ public class Comment
         this.receiveUser = receiveUser;
     }
 
+    @JsonBackReference
     public User getPostUser() {
         return postUser;
     }
@@ -175,6 +216,7 @@ public class Comment
         this.postUser = postUser;
     }
 
+    @JsonManagedReference
     public List<Likes> getLikes() {
         return likes;
     }
@@ -183,25 +225,28 @@ public class Comment
         this.likes = likes;
     }
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", adminComment=" + adminComment +
-                ", isRead=" + isRead +
-                ", isAnswer=" + isAnswer +
-                ", likesNum=" + likesNum +
-                ", commentsNum=" + commentsNum +
-                ", disLikesNum=" + disLikesNum +
-                ", isHidden=" + isHidden +
-                ", content='" + content + '\'' +
-                ", createTime=" + createTime +
-                ", question=" + question +
-                ", replyComments=" + replyComments +
-                ", parentComment=" + parentComment +
-                ", likes=" + likes +
-                ", receiveUser=" + receiveUser +
-                ", postUser=" + postUser +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Comment{" +
+//                "id=" + id +
+//                ", adminComment=" + adminComment +
+//                ", isRead=" + isRead +
+//                ", isAnswer=" + isAnswer +
+//                ", likesNum=" + likesNum +
+//                ", commentsNum=" + commentsNum +
+//                ", disLikesNum=" + disLikesNum +
+//                ", isHidden=" + isHidden +
+//                ", avatar='" + avatar + '\'' +
+//                ", nickname='" + nickname + '\'' +
+//                ", approved=" + approved +
+//                ", content='" + content + '\'' +
+//                ", createTime=" + createTime +
+//                ", question=" + question +
+//                ", replyComments=" + replyComments +
+//                ", parentComment=" + parentComment +
+//                ", likes=" + likes +
+//                ", receiveUser=" + receiveUser +
+//                ", postUser=" + postUser +
+//                '}';
+//    }
 }

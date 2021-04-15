@@ -223,6 +223,7 @@ public class User
         this.questions = questions;
     }
 
+    @JsonManagedReference
     public List<Comment> getPostComments() {
         return postComments;
     }
@@ -231,6 +232,7 @@ public class User
         this.postComments = postComments;
     }
 
+    @JsonManagedReference
     public List<Comment> getReceiveComments() {
         return receiveComments;
     }
