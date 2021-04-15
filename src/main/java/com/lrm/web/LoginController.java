@@ -26,16 +26,17 @@ public class LoginController {
     private UserService userService;
 
     /**
-     * 注册.
+     * 注册
+     *
      * @param user 前端封装好的User对象 包含用户名、密码、昵称
-     * @return 返回<User> 注册成功得到的User对象 需要确定泛型，否则操作无效了; 返回注册失败的报错信息.
+     * @return 返回<User> 注册成功得到的User对象 需要确定泛型，否则操作无效了; 返回注册失败的报错信息
      */
     @PostMapping("/register")
     public Result<Map<String, Object>> register(@Valid User user, BindingResult result)
     {
         Map<String, Object> hashMap = new HashMap<>(1);
-        //先检查是否已经注册过。注册过报错；没注册过注册，注册成功跳转到登录。
 
+        //校验
         if(result.hasErrors())
         {
             List<FieldError> errors = result.getFieldErrors();
@@ -52,43 +53,46 @@ public class LoginController {
         String password = user.getPassword();
         String nickname = user.getNickname();
 
+        //先检查是否已经注册过。注册过报错；没注册过注册，注册成功跳转到登录。
         User user1 = userService.checkRegister(username, nickname);
         if(user1 != null)
         {
             //跳转到注册页面
             return new Result<>(null, false, "该用户名或昵称已被注册过");
         } else {
+
             userService.saveUser(username, password, nickname);
-            //封装成游离态的User对象 不要返回密码到前端
+
+            //封装成游离态的User对象 不要返回密码到前端 其实在JsonIgnore之后就没用了
             user.setPassword(null);
+
             //又给它整回去
             hashMap.put("user", user);
+
             //跳转到登录页面
             return new Result<>(hashMap, true, "注册成功");
         }
     }
 
     /**
-     * 登录.
-     * @return 登录成功的token; 登陆失败的报错信息.
+     * 登录
+     * @return 登录成功的token; 登陆失败的报错信息
      */
     @PostMapping("/login")
-    public Result<Map<String, Object>> login(@RequestParam(required = false) String username, @RequestParam(required = false) String password)
-    {
+    public Result<Map<String, Object>> login(@RequestParam(required = false) String username, @RequestParam(required = false) String password) {
         //需要传递到前端的 包含在token内的信息 map用来存放payload
         //或传递报错信息
         Map<String, Object> hashMap = new HashMap<>(1);
-        StringBuffer errorMsg = new StringBuffer(64);
-        if(username == null & password != null)
-        {
+
+        StringBuilder errorMsg = new StringBuilder(64);
+        if (username == null & password != null) {
             errorMsg.append("请输入用户名；");
             return new Result<>(null, false, new String(errorMsg));
 
-        } else if (username == null & password == null)
-        {
+        } else if (username == null & password == null) {
             errorMsg.append("请输入用户名；");
         }
-        if(password == null)
+        if (password == null)
         {
             errorMsg.append("请输入密码；");
             return new Result<>(null, false, new String(errorMsg));
@@ -99,6 +103,7 @@ public class LoginController {
         if(user1 != null)
         {
             Map<String, String> map = new HashMap<>(5);
+
             //把这些字段放在请求头里 其他东西在需要的时候可以另外返回
             //注意！！！这里放进去map是什么数据类型，取出来就得是什么类型！！
             map.put("userId", user1.getId().toString());
@@ -107,6 +112,7 @@ public class LoginController {
             map.put("isAdmin", user1.getIsAdmin().toString());
             map.put("canSpeak", user1.getCanSpeak().toString());
             String token = JWTUtils.getToken(map);
+
             hashMap.put("token", token);
             //返回首页
             return new Result<>(hashMap, true, "登录成功");

@@ -18,21 +18,23 @@ import java.util.Map;
 @RestController
 @RequestMapping("/customer")
 public class ArchiveShowController {
-
     @Autowired
     private QuestionService questionService;
 
     /**
-     * 按年份归档 时间逆序.
-     * @return 已经分类的问题。
+     * 按年份归档 时间逆序
+     *
+     * @return 已经分类的问题
      */
     @GetMapping("/archives")
-    public Result<Map<String, Object>> archives (HttpServletRequest request)
-    {
+    public Result<Map<String, Object>> archives(HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(2);
+
         Long userId = GetTokenInfo.getCustomUserId(request);
+
         hashMap.put("archiveMap", questionService.archivesQuestion(userId));
         hashMap.put("QuestionCount", questionService.countQuestionByUser(userId));
+
         return new Result<>(hashMap, true, "");
     }
 }

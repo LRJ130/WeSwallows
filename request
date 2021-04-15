@@ -1,2 +1,5 @@
-自定义校验器bug 和校验密码是数据库中密码 似乎所有用到了user类的都会被校验
-Tag的toString问题 Could not write JSON: Infinite recursion (StackOverflowError);
+不必要的类引入
+作者
+去.
+类{}Autowired 和方法中{}第一行
+//隔一行

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author 山水夜止.
+ * @author 山水夜止
  */
 @RestController
 @RequestMapping("/admin")
@@ -19,20 +19,23 @@ public class UserController {
     UserService userService;
 
     /**
-     * @param nickname 用户名.
-     * @return 查询得到的用户.
+     * @param nickname 用户名
+     * @return 查询得到的用户
      */
     @PostMapping("/user/search")
     public Result<Map<String, Object>> searchCustomer(String nickname)
     {
         Map<String, Object> hashMap = new HashMap<>(1);
+
         hashMap.put("user", userService.getUser(nickname));
+
         return new Result<>(hashMap, true, "搜索完成");
     }
 
     /**
-     * 禁言/解禁.
-     * @param userId 用户Id.
+     * 禁言/解禁
+     *
+     * @param userId 用户Id
      */
     @GetMapping("/controlSpeak/{userId}")
     public void controlSpeak(@PathVariable Long userId)

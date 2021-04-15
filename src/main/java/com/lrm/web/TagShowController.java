@@ -16,7 +16,7 @@ import java.util.*;
 
 
 /**
- * @author 山水夜止.
+ * @author 山水夜止
  */
 @RestController
 @RequestMapping("/tags")
@@ -28,40 +28,44 @@ public class TagShowController {
     private QuestionService questionService;
 
     /**
-     * @return 返回第一级标签.
+     * @return 返回第一级标签
      */
     @GetMapping("/")
     public Result<Map<String, Object>> tags() {
-        Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("tags",tagService.listTagTop());
+        Map<String, Object> hashMap = new HashMap<>(1);
+
+        hashMap.put("tags", tagService.listTagTop());
+
         return new Result<>(hashMap, true, "");
     }
 
     /**
-     * 按标签查询.
-     * @param tagIds 以,分割的标签Id.
-     * @return 所有标签及其子集下的所有问题分页.
+     * 按标签查询
+     *
+     * @param tagIds 以,分割的标签Id
+     * @return 所有标签及其子集下的所有问题分页
      */
     @PostMapping("/search")
-    public Result<Map<String, Object>> showQuestions(@RequestParam String tagIds)
-    {
+    public Result<Map<String, Object>> showQuestions(@RequestParam String tagIds) {
         Map<String, Object> hashMap = new HashMap<>(1);
+
         //需要查询的初始标签
         List<Tag> tags = tagService.listTag(tagIds);
-        //需要查询的所有标签
+
         Set<Tag> tagSet = new HashSet<>();
-        for (Tag tag : tags)
-        {
+        for (Tag tag : tags) {
             tagSet.addAll(tagService.listTags(tag));
         }
-        //将标签下的所有问题全塞进去
+
+        //将标签下的所有问题全塞进去 用set去重
         Set<Question> questions = new HashSet<>();
-        for (Tag tag : tagSet)
-        {
+        for (Tag tag : tagSet) {
             questions.addAll(questionService.listQuestion(tag.getId()));
         }
+
         //每页十条
         Pageable pageRequest = new PageRequest(1, Magic.PAGE_SIZE);
+
         //将set转换为list
         hashMap.put("pages", DividePage.listConvertToPage(new ArrayList<>(questions), pageRequest));
 

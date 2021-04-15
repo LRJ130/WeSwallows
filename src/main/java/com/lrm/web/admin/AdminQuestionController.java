@@ -57,8 +57,10 @@ public class AdminQuestionController
                                               QuestionQuery question, Long userId)
     {
         Map<String, Object> hashMap = new HashMap<>(2);
+
         //先返回第一级的标签
         hashMap.put("tags", tagService.listTagTop());
+
         //通过标题、userId查找
         hashMap.put("pages", questionService.listQuestionPlusUserId(pageable, question, userId));
         return new Result<>(hashMap, true, "搜索完成");
@@ -68,11 +70,15 @@ public class AdminQuestionController
     public Result<Map<String, Object>> editInput(@PathVariable Long questionId)
     {
         Map<String, Object> hashMap= new HashMap<>(2);
+
         Question question = questionService.getQuestion(questionId);
         question.init();
+
         List<Tag> tags = tagService.listTagTop();
+
         hashMap.put("questions", question);
         hashMap.put("tags", tags);
+
         return new Result<>(hashMap, true, "");
     }
 
@@ -80,12 +86,14 @@ public class AdminQuestionController
     public Result<Map<String, Object>> post(@Valid Question question, BindingResult bindingResult)
     {
         Map<String, Object> hashMap= new HashMap<>(1);
+
         //后端检验valid
         if(bindingResult.hasErrors())
         {
             hashMap.put("questions", question);
             return new Result<>(hashMap, false, "标题、内容、概述均不能为空");
         }
+
         //令前端只传回tagIds而不是tag对象 将它转换为List<Tag> 在service层找到对应的Tag保存到数据库
         question.setTags(tagService.listTag(question.getTagIds()));
         Question q;
@@ -111,6 +119,7 @@ public class AdminQuestionController
     public Result<Map<String, Object>> delete(@PathVariable Long questionId)
     {
         Map<String, Object> hashMap = new HashMap<>(1);
+
         Question question = questionService.getQuestion(questionId);
         if(question == null)
         {

@@ -45,13 +45,13 @@ public class CommentController
     private LikesService likesService;
 
     /**
-     * 展示所有评论.
+     * 展示所有评论
      *
      * @param request 用于得到当前userId 处理当前用户点没点过赞的
-     * @return 第一类评论+对应在线用户是否点过赞、第二类评论+对应在线用户是否点过赞.
+     * @return 第一类评论+对应在线用户是否点过赞、第二类评论+对应在线用户是否点过赞
      */
     @GetMapping("/comments")
-    public Result<Map<String, Object>> comments(@PathVariable Long questionId,  HttpServletRequest request) {
+    public Result<Map<String, Object>> comments(@PathVariable Long questionId, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(4);
 
         Long userId = GetTokenInfo.getCustomUserId(request);
@@ -70,8 +70,9 @@ public class CommentController
 
     /**
      * 新增评论
-     * 提交表单后 到这里 然后得到id 然后刷新评论.
-     * @return 新增的评论或新增失败报错.
+     * 提交表单后 到这里 然后得到id 然后刷新评论
+     *
+     * @return 新增的评论或新增失败报错
      */
     @PostMapping("/comments")
     public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult) {
@@ -89,10 +90,12 @@ public class CommentController
         //保存
         commentService.saveComment(comment, questionId, postUser);
 
-        //如果有了，更新发布时间。
+        //如果有了，更新发布时间
         if (commentService.getComment(comment.getId()) != null) {
             questionService.getQuestion(questionId).setNewCommentedTime(new Date());
+
             hashMap.put("comments", comment);
+
             return new Result<>(hashMap, true, "发布成功");
         } else {
             return new Result<>(null, false, "发布失败");
@@ -100,8 +103,9 @@ public class CommentController
     }
 
     /**
-     * 删除评论.
-     * @return 报错信息.
+     * 删除评论
+     *
+     * @return 报错信息
      */
     @GetMapping("/comment/{commentId}/delete")
     public Result<Map<String, Object>> deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
@@ -121,8 +125,7 @@ public class CommentController
         commentService.deleteComment(commentId);
         comment = commentService.getComment(commentId);
 
-        if(comment != null)
-        {
+        if (comment != null) {
             hashMap.put("comments", comment);
             return new Result<>(hashMap, false, "删除失败");
         } else {
@@ -134,12 +137,11 @@ public class CommentController
      * 点赞.
      */
     @GetMapping("/comment/{commentId}/approve")
-    public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request)
-    {
+    public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request) {
         Comment comment = commentService.getComment(commentId);
 
         //只能给有效问题点赞
-        if(comment.getAnswer()) {
+        if (comment.getAnswer()) {
             Long postUserId = GetTokenInfo.getCustomUserId(request);
             User postUser = userService.getUser(postUserId);
             User receiveUser = comment.getReceiveUser();
@@ -174,15 +176,14 @@ public class CommentController
     }
 
     /**
-     * @param comments 评论集合.
-     * @return 集合中评论被点赞最多的这个点赞数.
+     * @param comments 评论集合
+     * @return 集合中评论被点赞最多的这个点赞数
      */
     Integer getMaxLikesNum(List<Comment> comments) {
         Integer max = 0;
         for (Comment comment : comments) {
             Integer maxNum = comment.getLikesNum();
-            if(maxNum > max)
-            {
+            if (maxNum > max) {
                 max = maxNum;
             }
         }
@@ -190,31 +191,31 @@ public class CommentController
     }
 
     /**
-     * 点踩 到标准就隐藏.
-     * @param commentId 评论Id.
+     * 点踩 到标准就隐藏
+     * @param commentId 评论Id
      */
     @GetMapping("/comment/{commentId}/disapprove/")
-    public void  disapproved(@PathVariable Long commentId)
-    {
+    public void  disapproved(@PathVariable Long commentId) {
         Comment comment = commentService.getComment(commentId);
         comment.setDisLikesNum(comment.getDisLikesNum()+1);
 
         //符合规则就隐藏
-        if((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum()))
-        {
+        if((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
             comment.setHidden(true);
         }
     }
 
     /**
-     * @param files 多文件上传
-     * @param questionId 发布问题的Id.
-     * @return 多文件在本地的路径.
-     * @throws IOException 文件大小溢出.
+     * 评论上传的图片
+     *
+     * @param files      多文件上传
+     * @param questionId 发布问题的Id
+     * @return 多文件在本地的路径
+     * @throws IOException 文件大小溢出
      */
     @PostMapping("/uploadPhotos")
     public Result<Map<String, Object>> uploadPhotos(MultipartFile[] files, HttpServletRequest req, @PathVariable Long questionId, @RequestParam Long commentId) throws IOException {
-        Map<String, Object> hashMap= new HashMap<>(1);
+        Map<String, Object> hashMap = new HashMap<>(1);
 
         //创建存放文件的文件夹的流程
         Long userId = GetTokenInfo.getCustomUserId(req);
@@ -227,11 +228,12 @@ public class CommentController
         List<String> pathList = new ArrayList<>();
         for (MultipartFile uploadFile : files) {
             File folder = new File(realPath);
-            if (!folder.isDirectory()){
+            if (!folder.isDirectory()) {
                 folder.mkdirs();
             }
 
             //保存文件到文件夹中
+
             //所上传的文件原名
             String oldName = uploadFile.getOriginalFilename();
 

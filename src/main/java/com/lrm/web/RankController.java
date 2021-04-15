@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author 山水夜止
+ */
 @RestController
 public class RankController {
     @Autowired
@@ -21,10 +24,13 @@ public class RankController {
      */
     @GetMapping("/rank")
     Result<Map<String, Object>> donationRank() {
-        Map<String, Object> hashMap = new HashMap<>();
-        //十个用户
+        Map<String, Object> hashMap = new HashMap<>(1);
+
+        //返回十个贡献度最高的用户
         List<User> users = userService.listTopUsers(10);
+
         hashMap.put("users", users);
+
         return new Result<>(hashMap, true, null);
     }
 }
