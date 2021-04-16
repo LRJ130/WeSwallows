@@ -71,7 +71,7 @@ public class QuestionController {
      * @param question 封装的query对象
      * @return pages:查询所得问题分页
      */
-    @PostMapping("/questions/search")
+    @PostMapping("/searchQuestions")
     public Result<Map<String, Object>> search(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                               QuestionQuery question, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(1);
