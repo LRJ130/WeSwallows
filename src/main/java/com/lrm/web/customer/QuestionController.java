@@ -90,24 +90,23 @@ public class QuestionController {
      *
      * @return questions:新question对象 tags:第一级标签
      */
-    @GetMapping("/questions/input")
-    public Result<Map<String, Object>> input() {
-        Map<String, Object> hashMap = new HashMap<>(1);
-
-        Question question = new Question();
-
-        hashMap.put("questions", question);
-
-        return new Result<>(hashMap, true, "");
-    }
+//    @GetMapping("/questions/input")
+//    public Result<Map<String, Object>> input() {
+//        Map<String, Object> hashMap = new HashMap<>(1);
+//
+//        Question question = new Question();
+//
+//        hashMap.put("questions", question);
+//
+//        return new Result<>(hashMap, true, "");
+//    }
 
 
     /**
      * @return 返回所有第一级标签
      */
     @GetMapping("/questions/tags")
-    public Result<Map<String, Object>> showTags()
-    {
+    public Result<Map<String, Object>> showTags() {
         Map<String, Object> hashMap = new HashMap<>(1);
 
         List<Tag> tags = tagService.listTagTop();
@@ -165,7 +164,7 @@ public class QuestionController {
      * @param questionId 问题Id
      * @return 报错信息/成功信息
      */
-    @GetMapping("/questions/{questionId}/delete")
+    @GetMapping("/question/{questionId}/delete")
     public Result<Map<String, Object>> delete(@PathVariable Long questionId, HttpServletRequest request)
     {
         Map<String, Object> hashMap = new HashMap<>(1);
@@ -174,7 +173,7 @@ public class QuestionController {
 
         Question question = questionService.getQuestion(questionId);
 
-        if(question == null) {
+        if (question == null) {
             throw new NotFoundException("该问题不存在");
         }
         if (!question.getUser().getId().equals(userId)) {

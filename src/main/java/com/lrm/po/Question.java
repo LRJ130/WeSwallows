@@ -58,6 +58,8 @@ public class Question
     private String nickname;
     @Transient
     private boolean approved;
+    @Transient
+    private boolean disapproved;
 
     //被它修饰的时间会封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
     //首页展示根据发布时间展示
@@ -80,6 +82,9 @@ public class Question
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Likes> likes;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    private List<DisLikes> dislikes;
 
     //允许级联删除 删除问题即删除所有评论
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -205,6 +210,14 @@ public class Question
         this.approved = approved;
     }
 
+    public boolean isDisapproved() {
+        return disapproved;
+    }
+
+    public void setDisapproved(boolean disapproved) {
+        this.disapproved = disapproved;
+    }
+
     @JsonManagedReference
     public List<Tag> getTags() {
         return tags;
@@ -232,13 +245,22 @@ public class Question
         this.comments = comments;
     }
 
-    @JsonManagedReference
+    @JsonBackReference
     public List<Likes> getLikes() {
         return likes;
     }
 
     public void setLikes(List<Likes> likes) {
         this.likes = likes;
+    }
+
+    @JsonBackReference
+    public List<DisLikes> getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(List<DisLikes> dislikes) {
+        this.dislikes = dislikes;
     }
 
     public String getTagIds() {
@@ -284,15 +306,15 @@ public class Question
             return false;
         }
         Question question = (Question) o;
-        return getId().equals(question.getId()) && getContent().equals(question.getContent()) && getDescription().equals(question.getDescription()) && getTitle().equals(question.getTitle()) && getView().equals(question.getView()) && getLikesNum().equals(question.getLikesNum()) && getCommentsNum().equals(question.getCommentsNum()) && getDisLikesNum().equals(question.getDisLikesNum()) && isHidden.equals(question.isHidden) && getImpact().equals(question.getImpact()) && getTagIds().equals(question.getTagIds()) && getCreateTime().equals(question.getCreateTime()) && getNewCommentedTime().equals(question.getNewCommentedTime()) && getTags().equals(question.getTags()) && getUser().equals(question.getUser()) && getLikes().equals(question.getLikes()) && getComments().equals(question.getComments());
+        return isApproved() == question.isApproved() && isDisapproved() == question.isDisapproved() && getId().equals(question.getId()) && getContent().equals(question.getContent()) && getDescription().equals(question.getDescription()) && getTitle().equals(question.getTitle()) && getView().equals(question.getView()) && getLikesNum().equals(question.getLikesNum()) && getCommentsNum().equals(question.getCommentsNum()) && getDisLikesNum().equals(question.getDisLikesNum()) && Objects.equals(isHidden, question.isHidden) && getImpact().equals(question.getImpact()) && Objects.equals(getTagIds(), question.getTagIds()) && Objects.equals(getAvatar(), question.getAvatar()) && Objects.equals(getNickname(), question.getNickname()) && Objects.equals(getCreateTime(), question.getCreateTime()) && getNewCommentedTime().equals(question.getNewCommentedTime()) && Objects.equals(getTags(), question.getTags()) && Objects.equals(getUser(), question.getUser()) && Objects.equals(getLikes(), question.getLikes()) && Objects.equals(getDislikes(), question.getDislikes()) && Objects.equals(getComments(), question.getComments());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getContent(), getDescription(), getTitle(), getView(), getLikesNum(), getCommentsNum(), getDisLikesNum(), isHidden, getImpact(), getTagIds(), getCreateTime(), getNewCommentedTime(), getTags(), getUser(), getLikes(), getComments());
+        return Objects.hash(getId(), getContent(), getDescription(), getTitle(), getView(), getLikesNum(), getCommentsNum(), getDisLikesNum(), isHidden, getImpact(), getTagIds(), getAvatar(), getNickname(), isApproved(), isDisapproved(), getCreateTime(), getNewCommentedTime(), getTags(), getUser(), getLikes(), getDislikes(), getComments());
     }
 
-//    @Override
+    //    @Override
 //    public String toString() {
 //        return "Question{" +
 //                "id=" + id +

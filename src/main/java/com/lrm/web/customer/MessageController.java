@@ -58,12 +58,14 @@ public class MessageController {
     public void readComment(@PathVariable Long commentId) {
         Comment comment = commentService.getComment(commentId);
         comment.setRead(true);
+        commentService.saveComment(comment);
     }
 
     @GetMapping("/{likesId}/read")
     public void readLikes(@PathVariable Long likesId) {
         Likes likes = likesService.getLikes(likesId);
         likes.setRead(true);
+        likesService.saveLikes(likes);
     }
 
     /**
@@ -73,6 +75,7 @@ public class MessageController {
     public void readAllComments(List<Comment> comments) {
         for (Comment comment : comments) {
             comment.setRead(true);
+            commentService.saveComment(comment);
         }
     }
 
@@ -80,6 +83,7 @@ public class MessageController {
     public void readAllLikes(List<Likes> likes) {
         for (Likes likes1 : likes) {
             likes1.setRead(true);
+            likesService.saveLikes(likes1);
         }
     }
 }

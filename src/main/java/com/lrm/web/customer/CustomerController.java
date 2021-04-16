@@ -43,6 +43,7 @@ public class CustomerController {
 
         User user = new User();
         BeanUtils.copyProperties(userService.getUser(GetTokenInfo.getCustomUserId(request)), user);
+        user.setAvatarFile(new File(user.getAvatar()));
 
         //返回当前用户信息和院系选择
         hashMap.put("user", user);
@@ -93,12 +94,15 @@ public class CustomerController {
 
         //新文件名
         String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
-        file.transferTo(new File(folder,newName));
+        file.transferTo(new File(folder, newName));
         String absPath = realPath + "/" + newName;
 
         hashMap.put("avatar", absPath);
 
-        userService.getUser(userId).setAvatar(absPath);
+        User user = userService.getUser(userId);
+        user.setAvatar(absPath);
+
+        userService.saveUser(user);
 
         return new Result<>(hashMap, true, "上传成功");
     }

@@ -1,5 +1,8 @@
 package com.lrm.po;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -13,6 +16,7 @@ public class Likes {
     //标识是bd问题还是支持评论
     Boolean likeComment;
     Boolean likeQuestion;
+    //是否已读
     Boolean isRead;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,6 +72,7 @@ public class Likes {
         this.createTime = createTime;
     }
 
+    @JsonManagedReference
     public Comment getComment() {
         return comment;
     }
@@ -76,6 +81,7 @@ public class Likes {
         this.comment = comment;
     }
 
+    @JsonManagedReference
     public Question getQuestion() {
         return question;
     }
@@ -84,6 +90,7 @@ public class Likes {
         this.question = question;
     }
 
+    @JsonBackReference
     public User getPostUser() {
         return postUser;
     }
@@ -92,6 +99,7 @@ public class Likes {
         this.postUser = postUser;
     }
 
+    @JsonBackReference
     public User getReceiveUser() {
         return receiveUser;
     }

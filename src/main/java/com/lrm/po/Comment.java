@@ -39,6 +39,8 @@ public class Comment
     private String nickname;
     @Transient
     private boolean approved;
+    @Transient
+    private boolean disapproved;
 
     @Lob
     @NotBlank
@@ -52,6 +54,7 @@ public class Comment
     @ManyToOne
     private Question question;
 
+    //这里可以给个JsonIgnore 然后再放一个只装第二级评论的集合
     @OneToMany(mappedBy = "parentComment")
     private List<Comment> replyComments = new ArrayList<>();
     @ManyToOne
@@ -59,6 +62,9 @@ public class Comment
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<Likes> likes;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<DisLikes> dislikes;
 
     //消息的接收者
     @ManyToOne
@@ -117,6 +123,14 @@ public class Comment
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public boolean isDisapproved() {
+        return disapproved;
+    }
+
+    public void setDisapproved(boolean disapproved) {
+        this.disapproved = disapproved;
     }
 
     public void setRead(Boolean read) {
@@ -216,7 +230,7 @@ public class Comment
         this.postUser = postUser;
     }
 
-    @JsonManagedReference
+    @JsonBackReference
     public List<Likes> getLikes() {
         return likes;
     }
@@ -225,7 +239,16 @@ public class Comment
         this.likes = likes;
     }
 
-//    @Override
+    @JsonBackReference
+    public List<DisLikes> getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(List<DisLikes> dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    //    @Override
 //    public String toString() {
 //        return "Comment{" +
 //                "id=" + id +

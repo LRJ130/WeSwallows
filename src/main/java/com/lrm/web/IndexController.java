@@ -1,8 +1,10 @@
 package com.lrm.web;
 
+import com.lrm.po.DisLikes;
 import com.lrm.po.Likes;
 import com.lrm.po.Question;
 import com.lrm.po.User;
+import com.lrm.service.DisLikesService;
 import com.lrm.service.LikesService;
 import com.lrm.service.QuestionService;
 import com.lrm.service.UserService;
@@ -23,8 +25,7 @@ import java.util.*;
  * @author 山水夜止
  */
 @RestController
-public class IndexController
-{
+public class IndexController {
     @Autowired
     private QuestionService questionService;
 
@@ -33,6 +34,9 @@ public class IndexController
 
     @Autowired
     private LikesService likesService;
+
+    @Autowired
+    private DisLikesService disLikesService;
 
     /**
      * 怎么显示有没有点过赞呢？现在不太明白...只能用计算力代替了
@@ -65,6 +69,12 @@ public class IndexController
                 question.setApproved(false);
             }
 
+            if (disLikesService.getDisLikes(userService.getUser(userId), question) != null) {
+                question.setDisapproved(true);
+            } else {
+                question.setDisapproved(false);
+            }
+
             //这里到底要不要用计算力代替空间还要考虑
             question.setAvatar(postUser.getAvatar());
             question.setNickname(postUser.getNickname());
@@ -81,7 +91,7 @@ public class IndexController
      * @param query    查询条件
      * @return 查询结果、查询条件
      */
-    @PostMapping("/searchQuestion")
+    @PostMapping("/searchQuestions")
     public Result<Map<String, Object>> search(@PageableDefault(size = 1000, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                               String query) {
         Map<String, Object> hashMap = new HashMap<>(2);
@@ -136,29 +146,52 @@ public class IndexController
             //初始化
             likes1.setLikeQuestion(true);
             likes1.setLikeComment(false);
+            likes1.setQuestion(question);
+
+            //不明白为什么把他们放在saveLikes之前就可以update
             question.setLikesNum(question.getLikesNum() + 1);
 
-            likesService.saveLikes(likes1, postUser, receiveUser);
+            //提问者贡献值对问题影响力+8 点赞本身+2
+            question.setImpact(question.getImpact() + 2 + 8);
 
             //问题被点赞 提问者贡献值+2
             receiveUser.setDonation(receiveUser.getDonation() + 2);
-            //提问者贡献值对问题影响力+8 点赞本身+2
-            question.setImpact(question.getImpact() + 2 + 8);
+
+            likesService.saveLikes(likes1, postUser, receiveUser);
         }
     }
 
     /**
      * 点踩
+     *
      * @param questionId 问题Id
      */
-    @GetMapping("/question/{questionId}/disapprove/")
-    public void  disapproved(@PathVariable Long questionId) {
-        Question question = questionService.getQuestion(questionId);
-        question.setDisLikesNum(question.getDisLikesNum() + 1);
+    @GetMapping("/question/{questionId}/disapprove")
+    public void disapprove(@PathVariable Long questionId, HttpServletRequest request) {
+        Long postUserId = GetTokenInfo.getCustomUserId(request);
 
-        //被踩到一定程度隐藏问题
-        if ((question.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (question.getLikesNum() <= Magic.HIDE_STANDARD2 * question.getDisLikesNum())) {
-            question.setHidden(true);
+        Question question = questionService.getQuestion(questionId);
+
+        User postUser = userService.getUser(postUserId);
+
+        DisLikes dislikes = disLikesService.getDisLikes(postUser, question);
+        if (dislikes != null) {
+            disLikesService.deleteDisLikes(dislikes);
+        } else {
+            DisLikes dislikes1 = new DisLikes();
+
+            dislikes1.setDislikeQuestion(true);
+            dislikes1.setDislikeComment(false);
+            dislikes1.setQuestion(question);
+
+            question.setDisLikesNum(question.getDisLikesNum() + 1);
+
+            //被踩到一定程度隐藏问题
+            if ((question.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (question.getLikesNum() <= Magic.HIDE_STANDARD2 * question.getDisLikesNum())) {
+                question.setHidden(true);
+            }
+
+            disLikesService.saveDisLikes(dislikes1, postUser);
         }
     }
 

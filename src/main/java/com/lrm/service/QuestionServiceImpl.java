@@ -51,18 +51,26 @@ public class QuestionServiceImpl implements QuestionService{
         //默认为不隐藏
         question.setHidden(false);
         //根据发布问题人的贡献初始化问题的影响力
-        user.setDonation(user.getDonation()+2);
+        user.setDonation(user.getDonation() + 2);
         question.setImpact(user.getDonation());
+        return questionRepository.save(question);
+    }
+
+    @Override
+    @Transactional
+    public Question saveQuestion(Question question) {
         return questionRepository.save(question);
     }
 
 
     /**
      * 管理页更新问题
+     *
      * @param question 需要更新的question
      * @return 被更新了的question
      */
     @Override
+    @Transactional
     public Question updateQuestion(Question question)
     {
         Question q = questionRepository.findOne(question.getId());
@@ -71,6 +79,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    @Transactional
     public void deleteQuestion(Long id) {
         questionRepository.delete(id);
     }
@@ -105,9 +114,8 @@ public class QuestionServiceImpl implements QuestionService{
         return questionRepository.findAll((root, cq, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             //""是空字节，而不是null 下面这种写法 而不是Question.getTitle().equals("")是防止它是null 从而造成空指针异常
-            if( question.getTitle() !=null && !"".equals(question.getTitle()) )
-            {
-                predicates.add(cb.like(root.get("title"), "%"+question.getTitle()+"%"));
+            if (question.getTitle() != null && !"".equals(question.getTitle())) {
+                predicates.add(cb.like(root.get("title"), "%" + question.getTitle() + "%"));
             }
             Join join = root.join("user");
             predicates.add(cb.equal(join.get("id"), userId));

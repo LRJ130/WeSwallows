@@ -7,6 +7,7 @@ import com.lrm.po.Question;
 import com.lrm.po.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -16,10 +17,10 @@ import java.util.List;
  */
 @Service
 public class LikesServiceImpl implements LikesService{
-
     @Autowired
     LikesRepository likesRepository;
 
+    @Transactional
     @Override
     public Likes saveLikes(Likes likes, User postUser, User receiveUser) {
         likes.setCreateTime(new Date());
@@ -30,6 +31,13 @@ public class LikesServiceImpl implements LikesService{
     }
 
     @Override
+    @Transactional
+    public Likes saveLikes(Likes likes) {
+        return likesRepository.save(likes);
+    }
+
+    @Override
+    @Transactional
     public void deleteLikes(Likes likes) {
         likesRepository.delete(likes);
     }
@@ -53,4 +61,5 @@ public class LikesServiceImpl implements LikesService{
     public List<Likes> listAllNotReadComment(Long userId) {
         return likesRepository.findByReceiveUserIdAndIsRead(userId, false);
     }
+
 }

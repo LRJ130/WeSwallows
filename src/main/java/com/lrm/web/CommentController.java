@@ -2,14 +2,8 @@ package com.lrm.web;
 
 import com.lrm.Exception.NoPermissionException;
 import com.lrm.Exception.NotFoundException;
-import com.lrm.po.Comment;
-import com.lrm.po.Likes;
-import com.lrm.po.Question;
-import com.lrm.po.User;
-import com.lrm.service.CommentService;
-import com.lrm.service.LikesService;
-import com.lrm.service.QuestionService;
-import com.lrm.service.UserService;
+import com.lrm.po.*;
+import com.lrm.service.*;
 import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
@@ -29,7 +23,7 @@ import java.util.*;
  * @author 山水夜止.
  */
 @RestController
-@RequestMapping("/{questionId}")
+@RequestMapping("question/{questionId}")
 public class CommentController
 {
     @Autowired
@@ -43,6 +37,9 @@ public class CommentController
 
     @Autowired
     private LikesService likesService;
+
+    @Autowired
+    private DisLikesService disLikesService;
 
     /**
      * 展示所有评论
@@ -77,8 +74,11 @@ public class CommentController
     @PostMapping("/comments")
     public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult) {
         Map<String, Object> hashMap = new HashMap<>(1);
+
+        //得到当前用户
         Long userId = GetTokenInfo.getCustomUserId(request);
         User postUser = userService.getUser(userId);
+
         Long questionId = comment.getQuestion().getId();
 
         //如果是空 报错
@@ -90,9 +90,12 @@ public class CommentController
         //保存
         commentService.saveComment(comment, questionId, postUser);
 
-        //如果有了，更新发布时间
+        //如果有了，更新问题的最新评论时间
         if (commentService.getComment(comment.getId()) != null) {
-            questionService.getQuestion(questionId).setNewCommentedTime(new Date());
+
+            Question question = questionService.getQuestion(questionId);
+            question.setNewCommentedTime(new Date());
+            questionService.saveQuestion(question);
 
             hashMap.put("comments", comment);
 
@@ -134,7 +137,7 @@ public class CommentController
     }
 
     /**
-     * 点赞.
+     * 给评论点赞
      */
     @GetMapping("/comment/{commentId}/approve")
     public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request) {
@@ -142,9 +145,11 @@ public class CommentController
 
         //只能给有效问题点赞
         if (comment.getAnswer()) {
+
             Long postUserId = GetTokenInfo.getCustomUserId(request);
             User postUser = userService.getUser(postUserId);
             User receiveUser = comment.getReceiveUser();
+
             Likes likes = likesService.getLikes(postUser, comment);
 
             //有则删除，无则增加
@@ -156,21 +161,27 @@ public class CommentController
                 //因为saveLikes是问题点赞和评论点赞公用的 所以要在这里写
                 likes1.setLikeQuestion(false);
                 likes1.setLikeComment(true);
+                likes1.setComment(comment);
+
+                comment.setLikesNum(comment.getLikesNum() + 1);
 
                 //点赞前的最高赞数
                 Integer maxNum0 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
+
+                commentService.saveComment(comment);
+
                 likesService.saveLikes(likes1, postUser, receiveUser);
-                comment.setLikesNum(comment.getLikesNum() + 1);
-                likes1.setComment(comment);
 
                 //问题被点赞 提问者贡献值+3
                 receiveUser.setDonation(receiveUser.getDonation() + 3);
+                userService.saveUser(receiveUser);
 
                 //提问者贡献值对问题影响力+12
                 //点赞后的最高赞数
                 Integer maxNum1 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
                 Question question = questionService.getQuestion(questionId);
                 question.setImpact(question.getImpact() + 2 * (maxNum1 - maxNum0) + 12);
+                questionService.saveQuestion(question);
             }
         }
     }
@@ -192,16 +203,34 @@ public class CommentController
 
     /**
      * 点踩 到标准就隐藏
+     *
      * @param commentId 评论Id
      */
-    @GetMapping("/comment/{commentId}/disapprove/")
-    public void  disapproved(@PathVariable Long commentId) {
+    @GetMapping("/comment/{commentId}/disapprove")
+    public void disapprove(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request) {
         Comment comment = commentService.getComment(commentId);
-        comment.setDisLikesNum(comment.getDisLikesNum()+1);
 
-        //符合规则就隐藏
-        if((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
-            comment.setHidden(true);
+        Long postUserId = GetTokenInfo.getCustomUserId(request);
+        User postUser = userService.getUser(postUserId);
+
+        DisLikes dislikes = disLikesService.getDisLikes(postUser, comment);
+        if (dislikes != null) {
+            disLikesService.deleteDisLikes(dislikes);
+        } else {
+            DisLikes dislikes1 = new DisLikes();
+
+            dislikes1.setDislikeQuestion(true);
+            dislikes1.setDislikeComment(false);
+            dislikes1.setComment(comment);
+
+            comment.setDisLikesNum(comment.getDisLikesNum() + 1);
+
+            //被踩到一定程度隐藏评论
+            if ((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
+                comment.setHidden(true);
+            }
+
+            disLikesService.saveDisLikes(dislikes1, postUser);
         }
     }
 
@@ -256,6 +285,12 @@ public class CommentController
                 comment.setApproved(true);
             } else {
                 comment.setApproved(false);
+            }
+
+            if (disLikesService.getDisLikes(userService.getUser(userId), comment) != null) {
+                comment.setDisapproved(true);
+            } else {
+                comment.setDisapproved(false);
             }
 
             //这里到底要不要用计算力代替空间还要考虑

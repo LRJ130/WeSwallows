@@ -9,6 +9,8 @@ public interface CommentService {
 
     Comment saveComment(Comment comment, Long questionId, User user);
 
+    Comment saveComment(Comment comment);
+
     List<Comment> listCommentByQuestionId(Long questionId, Boolean isAnswer);
 
     Comment getComment(Long commentId);

@@ -69,12 +69,18 @@ public class UserServiceImpl implements UserService
         return userRepository.save(user);
     }
 
+    @Override
+    @Transactional
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
     /**
      * 登录
      */
     @Override
     public User checkUser(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username,"M#D5+" + MD5Utils.code(password));
+        return userRepository.findByUsernameAndPassword(username, "M#D5+" + MD5Utils.code(password));
     }
 
     /**

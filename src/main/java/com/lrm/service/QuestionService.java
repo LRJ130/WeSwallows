@@ -16,6 +16,9 @@ import java.util.Set;
 public interface QuestionService {
     //简单的增删改查
     Question saveQuestion(Question question, User user);
+
+    Question saveQuestion(Question question);
+
     void deleteQuestion(Long id);
     Question updateQuestion(Question question);
     Question getQuestion(Long id);

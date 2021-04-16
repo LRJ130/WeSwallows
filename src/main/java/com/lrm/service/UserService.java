@@ -10,6 +10,8 @@ public interface UserService {
 
     User saveUser(String username, String password, String nickname);
 
+    User saveUser(User user);
+
     User checkUser(String username, String password);
 
     User updateUser(User user);

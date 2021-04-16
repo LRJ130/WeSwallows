@@ -1,11 +1,13 @@
 package com.lrm.po;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lrm.annotation.AccountInfoFormat;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,12 +36,15 @@ public class User
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @AccountInfoFormat
     private String password;
+
     //非必填 可以在前端显示默认值
     private String avatar;
+    @Transient
+    private File avatarFile;
     private String email;
     private String qqId;
     private String wechatId;
-        //男true 女false
+    //男true 女false
     private Boolean sex;
     private String personalSignature;
     private String academy;
@@ -60,15 +65,18 @@ public class User
         //懒加载
     @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
     private List<Comment> postComments = new ArrayList<>();
-        //懒加载
+    //懒加载
     @OneToMany(mappedBy = "receiveUser", fetch = FetchType.LAZY)
     private List<Comment> receiveComments = new ArrayList<>();
-        //懒加载
+    //懒加载
     @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
     private List<Likes> postLikes = new ArrayList<>();
-        //懒加载
-    @OneToMany(mappedBy = "receiveUser",fetch = FetchType.LAZY)
+    //懒加载
+    @OneToMany(mappedBy = "receiveUser", fetch = FetchType.LAZY)
     private List<Comment> receiveLikes = new ArrayList<>();
+    //懒加载
+    @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
+    private List<Comment> postDisLikes = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -116,6 +124,14 @@ public class User
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public File getAvatarFile() {
+        return avatarFile;
+    }
+
+    public void setAvatarFile(File avatarFile) {
+        this.avatarFile = avatarFile;
     }
 
     public String getEmail() {
@@ -241,6 +257,7 @@ public class User
         this.receiveComments = receiveComments;
     }
 
+    @JsonManagedReference
     public List<Likes> getPostLikes() {
         return postLikes;
     }
@@ -249,6 +266,7 @@ public class User
         this.postLikes = postLikes;
     }
 
+    @JsonManagedReference
     public List<Comment> getReceiveLikes() {
         return receiveLikes;
     }
@@ -257,7 +275,16 @@ public class User
         this.receiveLikes = receiveLikes;
     }
 
-//    @Override
+    @JsonManagedReference
+    public List<Comment> getPostDisLikes() {
+        return postDisLikes;
+    }
+
+    public void setPostDisLikes(List<Comment> postDisLikes) {
+        this.postDisLikes = postDisLikes;
+    }
+
+    //    @Override
 //    public String toString() {
 //        return "User{" +
 //                "id=" + id +

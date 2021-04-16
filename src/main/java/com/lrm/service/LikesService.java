@@ -9,10 +9,15 @@ import java.util.List;
 
 public interface LikesService {
     Likes saveLikes(Likes likes, User postUser, User receiveUser);
+
+    Likes saveLikes(Likes likes);
+
     void deleteLikes(Likes likes);
     Likes getLikes(User postUser, Question question);
+
     Likes getLikes(User postUser, Comment comment);
-    Likes getLikes(Long LikesId);
+
+    Likes getLikes(Long likesId);
 
     List<Likes> listAllNotReadComment(Long userId);
 
