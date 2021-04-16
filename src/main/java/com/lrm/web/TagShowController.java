@@ -45,7 +45,7 @@ public class TagShowController {
      * @param tagIds 以,分割的标签Id
      * @return 所有标签及其子集下的所有问题分页
      */
-    @PostMapping("/search")
+    @PostMapping("/searchQuestions")
     public Result<Map<String, Object>> showQuestions(@RequestParam String tagIds) {
         Map<String, Object> hashMap = new HashMap<>(1);
 

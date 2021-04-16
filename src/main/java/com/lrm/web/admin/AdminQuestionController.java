@@ -52,7 +52,7 @@ public class AdminQuestionController
      * @param userId 查询的用户Id.
      * @return 查询结果.
      */
-    @PostMapping("/questions/search")
+    @PostMapping("searchQuestions")
     public Result<Map<String, Object>> searchQuestion(@PageableDefault(size = 6, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                               QuestionQuery question, Long userId)
     {

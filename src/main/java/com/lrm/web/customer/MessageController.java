@@ -36,6 +36,7 @@ public class MessageController {
      * @return 未读评论和点赞
      * @throws JWTVerificationException JWT鉴权错误
      */
+    @GetMapping("/")
     public Result<Map<String, Object>> messages(HttpServletRequest request) throws JWTVerificationException
     {
         Map<String, Object> hashMap = new HashMap<>(2);

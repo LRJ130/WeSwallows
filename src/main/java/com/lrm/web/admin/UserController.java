@@ -22,7 +22,7 @@ public class UserController {
      * @param nickname 用户名
      * @return 查询得到的用户
      */
-    @PostMapping("/user/search")
+    @PostMapping("/searchUser")
     public Result<Map<String, Object>> searchCustomer(String nickname)
     {
         Map<String, Object> hashMap = new HashMap<>(1);
