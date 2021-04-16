@@ -70,8 +70,6 @@ GET http://localhost:8080/rank
 
 #### 问题内容
 
-#### 问题内容
-
 GET http://localhost:8080/question/{questionId}
 
 #### 获取评论
