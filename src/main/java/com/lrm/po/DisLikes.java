@@ -24,6 +24,7 @@ public class DisLikes {
 
     @ManyToOne
     private Comment comment;
+
     @ManyToOne
     private Question question;
 

@@ -55,15 +55,15 @@ public class Comment
     private Question question;
 
     //这里可以给个JsonIgnore 然后再放一个只装第二级评论的集合
-    @OneToMany(mappedBy = "parentComment")
+    @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY)
     private List<Comment> replyComments = new ArrayList<>();
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Comment parentComment;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Likes> likes;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DisLikes> dislikes;
 
     //消息的接收者

@@ -1,13 +1,7 @@
 package com.lrm.web;
 
-import com.lrm.po.DisLikes;
-import com.lrm.po.Likes;
-import com.lrm.po.Question;
-import com.lrm.po.User;
-import com.lrm.service.DisLikesService;
-import com.lrm.service.LikesService;
-import com.lrm.service.QuestionService;
-import com.lrm.service.UserService;
+import com.lrm.po.*;
+import com.lrm.service.*;
 import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
@@ -110,12 +104,14 @@ public class IndexController {
      * @return 问题的内容
      */
     @GetMapping("/question/{questionId}")
-    public Result<Map<String, Object>> question (@PathVariable Long questionId)
-    {
-        Map<String,Object> hashMap = new HashMap<>(1);
+    public Result<Map<String, Object>> question (@PathVariable Long questionId) {
+        Map<String, Object> hashMap = new HashMap<>(1);
 
         //返回markdown格式
         Question question = questionService.getAndConvert(questionId);
+
+        question.setAvatar(question.getUser().getAvatar());
+        question.setNickname(question.getUser().getNickname());
 
         hashMap.put("questions", question);
         return new Result<>(hashMap, true, "");
