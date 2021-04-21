@@ -150,6 +150,18 @@ public class CommentController
             User postUser = userService.getUser(postUserId);
             User receiveUser = comment.getReceiveUser();
 
+            //若点过踩 取消点擦
+            DisLikes dislikes = disLikesService.getDisLikes(postUser, comment);
+            if (dislikes != null) {
+                disLikesService.deleteDisLikes(dislikes);
+                //被踩到一定程度隐藏评论
+                if ((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
+                    comment.setHidden(true);
+                } else {
+                    comment.setHidden(false);
+                }
+            }
+
             Likes likes = likesService.getLikes(postUser, comment);
 
             //有则删除，无则增加
@@ -212,8 +224,26 @@ public class CommentController
 
         Long postUserId = GetTokenInfo.getCustomUserId(request);
         User postUser = userService.getUser(postUserId);
+        User receiveUser = comment.getReceiveUser();
+
+        //若点过赞 取消点赞 贡献值复原
+        Likes likes = likesService.getLikes(postUser, comment);
+        if (likes != null) {
+            //点赞前的最高赞数
+            Integer maxNum0 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
+
+            receiveUser.setDonation(receiveUser.getDonation() + -3);
+            userService.saveUser(receiveUser);
+
+            Integer maxNum1 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
+            Question question = questionService.getQuestion(questionId);
+            question.setImpact(question.getImpact() - 2 * (maxNum1 - maxNum0) - 12);
+            likesService.deleteLikes(likes);
+
+        }
 
         DisLikes dislikes = disLikesService.getDisLikes(postUser, comment);
+
         if (dislikes != null) {
             disLikesService.deleteDisLikes(dislikes);
         } else {
@@ -228,6 +258,8 @@ public class CommentController
             //被踩到一定程度隐藏评论
             if ((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
                 comment.setHidden(true);
+            } else {
+                comment.setHidden(false);
             }
 
             disLikesService.saveDisLikes(dislikes1, postUser);
