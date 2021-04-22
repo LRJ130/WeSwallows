@@ -48,13 +48,15 @@ public class AccountInfoValidator implements ConstraintValidator<AccountInfoForm
         }
 
         String msg = (String) value;
-        String top5 = msg.substring(0,5);
-        if("M#D5+".equals(top5))
-        {
-            return true;
+        if (msg.length() >= 5) {
+            String top5 = msg.substring(0, 5);
+            if ("M#D5+".equals(top5)) {
+                return true;
+            }
         }
+
         //如果有汉字 就直接false 如果有字母且不允许 返回false
-        boolean notPass = StringVerify.isContainChinese(msg) || (msg.length() >12 || msg.length() <7) || !(!letterNeeded || (StringVerify.isContainLetter(msg)));
+        boolean notPass = StringVerify.isContainChinese(msg) || (msg.length() > 12 || msg.length() < 7) || !(!letterNeeded || (StringVerify.isContainLetter(msg)));
         return !notPass;
     }
 
