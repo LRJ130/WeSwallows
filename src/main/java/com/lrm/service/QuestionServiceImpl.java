@@ -32,9 +32,10 @@ public class QuestionServiceImpl implements QuestionService{
 
     /**
      * 保存问题.
-     * @Transactional 一个数据库事务由一条或者多条sql语句构成，它们形成一个逻辑的工作单元。这些sql语句要么全部执行成功，要么全部执行失败.
+     * Transactional 一个数据库事务由一条或者多条sql语句构成，它们形成一个逻辑的工作单元。这些sql语句要么全部执行成功，要么全部执行失败.
+     *
      * @param question 前端封装的question
-     * @param user 发布问题的user.
+     * @param user     发布问题的user.
      * @return 新增了的问题.
      */
     @Transactional

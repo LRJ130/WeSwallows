@@ -5,6 +5,7 @@ import com.lrm.po.Comment;
 import com.lrm.po.DisLikes;
 import com.lrm.po.Question;
 import com.lrm.po.User;
+import com.lrm.vo.Magic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

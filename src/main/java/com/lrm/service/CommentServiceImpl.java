@@ -57,16 +57,14 @@ public class CommentServiceImpl implements CommentService {
             comment.setAnswer(parentComment.getAnswer());
 
         } else {
-
-            //所属问题评论数增加 不包含评论下的子评论了（待定）
-            question.setCommentsNum(question.getCommentsNum() + 1);
-
             //在第一行comment.getParentComment中实际上new了一个parentComment对象(初始化id为-1了) 但id不能为-1 没有将p...持久化所以会报错 要设成null
             comment.setParentComment(null);
             comment.setReceiveUser(questionService.getQuestion(questionId).getUser());
         }
 
         //初始化
+        //所属问题评论数增加 包含评论下的子评论了
+        question.setCommentsNum(question.getCommentsNum() + 1);
         comment.setQuestion(question);
         comment.setRead(false);
         comment.setCreateTime(new Date());
@@ -82,13 +80,12 @@ public class CommentServiceImpl implements CommentService {
         comment.setAdminComment(admin);
         comment.setRead(admin);
 
-        //如果是有效回答 回答者贡献+3 问题影响力+2
+        //如果是有效回答 回答者贡献+3 问题影响力+2 否则仅仅问题影响力+2
         if (comment.getAnswer()) {
             postUser.setDonation(postUser.getDonation() + 4);
-            question.setImpact(question.getImpact() + 2);
-        } else {
-            question.setImpact(question.getImpact() + 2);
         }
+
+        question.setImpact(question.getImpact() + 2);
 
         return commentRepository.save(comment);
     }
@@ -102,6 +99,27 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteComment(Long commentId) {
+
+        //复原
+        Comment comment = getComment(commentId);
+        //父评论
+        Comment parentComment = comment.getParentComment();
+        //评论发出者
+        User postUser = comment.getPostUser();
+        //评论所在问题
+        Question question = comment.getQuestion();
+
+        if (parentComment != null) {
+            parentComment.setCommentsNum(parentComment.getCommentsNum() - 1);
+        }
+
+        question.setCommentsNum(question.getCommentsNum() - 1);
+
+        if (comment.getAnswer()) {
+            postUser.setDonation(postUser.getDonation() - 4);
+        }
+        question.setImpact(question.getImpact() - 2);
+
         commentRepository.delete(commentId);
     }
 

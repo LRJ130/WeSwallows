@@ -113,8 +113,11 @@ public class CommentController
     @GetMapping("/comment/{commentId}/delete")
     public Result<Map<String, Object>> deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(1);
+
+        //得到当前用户 以判断权限
         User customUser = userService.getUser(GetTokenInfo.getCustomUserId(request));
         Boolean admin = GetTokenInfo.isAdmin(request);
+
         Comment comment = commentService.getComment(commentId);
 
         //如果评论不存在&没权限删除评论报错
@@ -125,7 +128,14 @@ public class CommentController
             throw new NoPermissionException("您无权限删除该评论");
         }
 
+
         commentService.deleteComment(commentId);
+
+        //复原
+        User postUser = comment.getPostUser();
+        postUser.setDonation(postUser.getDonation() - 2);
+        userService.saveUser(postUser);
+
         comment = commentService.getComment(commentId);
 
         if (comment != null) {
@@ -146,25 +156,23 @@ public class CommentController
         //只能给有效问题点赞
         if (comment.getAnswer()) {
 
+            //当前用户 点赞的人
             Long postUserId = GetTokenInfo.getCustomUserId(request);
             User postUser = userService.getUser(postUserId);
+            //被点赞的人
             User receiveUser = comment.getReceiveUser();
 
-            //若点过踩 取消点擦
+            //若点过踩 取消点踩
             DisLikes dislikes = disLikesService.getDisLikes(postUser, comment);
             if (dislikes != null) {
                 disLikesService.deleteDisLikes(dislikes);
-                //被踩到一定程度隐藏评论
-                if ((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
-                    comment.setHidden(true);
-                } else {
-                    comment.setHidden(false);
-                }
+                //复原
+                hideComment(comment, -1);
             }
 
             Likes likes = likesService.getLikes(postUser, comment);
 
-            //有则删除，无则增加
+            //点过赞删除，无则增加
             if (likes != null) {
                 likesService.deleteLikes(likes);
             } else {
@@ -175,47 +183,22 @@ public class CommentController
                 likes1.setLikeComment(true);
                 likes1.setComment(comment);
 
-                comment.setLikesNum(comment.getLikesNum() + 1);
 
                 //点赞前的最高赞数
                 Integer maxNum0 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
 
-                commentService.saveComment(comment);
-
+                //保存
                 likesService.saveLikes(likes1, postUser, receiveUser);
 
-                //问题被点赞 提问者贡献值+3
-                receiveUser.setDonation(receiveUser.getDonation() + 3);
-                userService.saveUser(receiveUser);
-
-                //提问者贡献值对问题影响力+12
-                //点赞后的最高赞数
-                Integer maxNum1 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
-                Question question = questionService.getQuestion(questionId);
-                question.setImpact(question.getImpact() + 2 * (maxNum1 - maxNum0) + 12);
-                questionService.saveQuestion(question);
+                //对impact属性的处理
+                dealLikes(receiveUser, comment, questionId, maxNum0, 1);
             }
         }
     }
 
-    /**
-     * @param comments 评论集合
-     * @return 集合中评论被点赞最多的这个点赞数
-     */
-    Integer getMaxLikesNum(List<Comment> comments) {
-        Integer max = 0;
-        for (Comment comment : comments) {
-            Integer maxNum = comment.getLikesNum();
-            if (maxNum > max) {
-                max = maxNum;
-            }
-        }
-        return max;
-    }
 
     /**
      * 点踩 到标准就隐藏
-     *
      * @param commentId 评论Id
      */
     @GetMapping("/comment/{commentId}/disapprove")
@@ -229,40 +212,29 @@ public class CommentController
         //若点过赞 取消点赞 贡献值复原
         Likes likes = likesService.getLikes(postUser, comment);
         if (likes != null) {
-            //点赞前的最高赞数
+            //取消点赞前的最高赞数
             Integer maxNum0 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
 
-            receiveUser.setDonation(receiveUser.getDonation() + -3);
-            userService.saveUser(receiveUser);
-
-            Integer maxNum1 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
-            Question question = questionService.getQuestion(questionId);
-            question.setImpact(question.getImpact() - 2 * (maxNum1 - maxNum0) - 12);
             likesService.deleteLikes(likes);
 
+            dealLikes(receiveUser, comment, questionId, maxNum0, -1);
         }
 
+        //若点过踩 取消点踩 否则点踩
         DisLikes dislikes = disLikesService.getDisLikes(postUser, comment);
-
         if (dislikes != null) {
             disLikesService.deleteDisLikes(dislikes);
+
+            hideComment(comment, -1);
         } else {
             DisLikes dislikes1 = new DisLikes();
 
             dislikes1.setDislikeQuestion(true);
             dislikes1.setDislikeComment(false);
             dislikes1.setComment(comment);
-
-            comment.setDisLikesNum(comment.getDisLikesNum() + 1);
-
-            //被踩到一定程度隐藏评论
-            if ((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
-                comment.setHidden(true);
-            } else {
-                comment.setHidden(false);
-            }
-
             disLikesService.saveDisLikes(dislikes1, postUser);
+
+            hideComment(comment, 1);
         }
     }
 
@@ -306,6 +278,49 @@ public class CommentController
 
         hashMap.put("photos", pathList);
         return new Result<>(hashMap, true, "上传成功");
+    }
+
+    /**
+     * @param comments 评论集合
+     * @return 集合中评论被点赞最多的这个点赞数
+     */
+    Integer getMaxLikesNum(List<Comment> comments) {
+        Integer max = 0;
+        for (Comment comment : comments) {
+            Integer maxNum = comment.getLikesNum();
+            if (maxNum > max) {
+                max = maxNum;
+            }
+        }
+        return max;
+    }
+
+    void hideComment(Comment comment, int p) {
+        comment.setDisLikesNum(comment.getDisLikesNum() + p);
+        //被踩到一定程度隐藏评论
+        if ((comment.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (comment.getLikesNum() <= Magic.HIDE_STANDARD2 * comment.getDisLikesNum())) {
+            comment.setHidden(true);
+        } else {
+            comment.setHidden(false);
+        }
+        commentService.saveComment(comment);
+    }
+
+    void dealLikes(User receiveUser, Comment comment, Long questionId, int maxNum0, int p) {
+
+        comment.setLikesNum(comment.getLikesNum() + p * 1);
+        commentService.saveComment(comment);
+
+        //问题被（取消）点赞 提问者贡献值+-3
+        receiveUser.setDonation(receiveUser.getDonation() + p * 3);
+        userService.saveUser(receiveUser);
+
+        //提问者贡献值对问题影响力+-12
+        //（取消）点赞后的最高赞数
+        Integer maxNum1 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
+        Question question = questionService.getQuestion(questionId);
+        question.setImpact(question.getImpact() + p * 2 * (maxNum1 - maxNum0) + p * 12);
+        questionService.saveQuestion(question);
     }
 
     List<Comment> dealComment(List<Comment> comments, Long userId) {

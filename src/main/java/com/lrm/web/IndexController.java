@@ -132,10 +132,20 @@ public class IndexController {
         User postUser = userService.getUser(postUserId);
         User receiveUser = question.getUser();
 
+        //若点过踩 取消点踩
+        DisLikes dislikes = disLikesService.getDisLikes(postUser, question);
+        if (dislikes != null) {
+            disLikesService.deleteDisLikes(dislikes);
+
+            hideQuestion(question, -1);
+        }
+
         //如果存在点赞对象 就删除 即取消点赞 否则点赞
         Likes likes = likesService.getLikes(postUser, question);
         if (likes != null) {
             likesService.deleteLikes(likes);
+
+            dealLikes(question, receiveUser, -1);
         } else {
             Likes likes1 = new Likes();
 
@@ -144,22 +154,15 @@ public class IndexController {
             likes1.setLikeComment(false);
             likes1.setQuestion(question);
 
-            //不明白为什么把他们放在saveLikes之前就可以update
-            question.setLikesNum(question.getLikesNum() + 1);
-
-            //提问者贡献值对问题影响力+8 点赞本身+2
-            question.setImpact(question.getImpact() + 2 + 8);
-
-            //问题被点赞 提问者贡献值+2
-            receiveUser.setDonation(receiveUser.getDonation() + 2);
-
             likesService.saveLikes(likes1, postUser, receiveUser);
+
+            //处理部分属性
+            dealLikes(question, receiveUser, 1);
         }
     }
 
     /**
      * 点踩
-     *
      * @param questionId 问题Id
      */
     @GetMapping("/question/{questionId}/disapprove")
@@ -169,10 +172,21 @@ public class IndexController {
         Question question = questionService.getQuestion(questionId);
 
         User postUser = userService.getUser(postUserId);
+        User receiveUser = question.getUser();
 
+        //若点过赞 取消点赞 贡献值复原
+        Likes likes = likesService.getLikes(postUser, question);
+        if (likes != null) {
+            likesService.deleteLikes(likes);
+            dealLikes(question, receiveUser, -1);
+        }
+
+        //若点过踩 取消点踩 否则点踩
         DisLikes dislikes = disLikesService.getDisLikes(postUser, question);
         if (dislikes != null) {
             disLikesService.deleteDisLikes(dislikes);
+
+            hideQuestion(question, -1);
         } else {
             DisLikes dislikes1 = new DisLikes();
 
@@ -180,15 +194,34 @@ public class IndexController {
             dislikes1.setDislikeComment(false);
             dislikes1.setQuestion(question);
 
-            question.setDisLikesNum(question.getDisLikesNum() + 1);
-
-            //被踩到一定程度隐藏问题
-            if ((question.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (question.getLikesNum() <= Magic.HIDE_STANDARD2 * question.getDisLikesNum())) {
-                question.setHidden(true);
-            }
-
             disLikesService.saveDisLikes(dislikes1, postUser);
+            hideQuestion(question, 1);
         }
     }
 
+    void dealLikes(Question question, User receiveUser, int p) {
+        //不明白为什么把他们放在saveLikes之前就可以update
+        question.setLikesNum(question.getLikesNum() + p * 1);
+
+        //提问者贡献值对问题影响力+-8 (取消）点赞本身+-2
+        question.setImpact(question.getImpact() + p * 2 + p * 8);
+
+        //问题被（取消）点赞 提问者贡献值+-2
+        receiveUser.setDonation(receiveUser.getDonation() + p * 2);
+
+        questionService.saveQuestion(question);
+        userService.saveUser(receiveUser);
+    }
+
+    void hideQuestion(Question question, int p) {
+        question.setDisLikesNum(question.getDisLikesNum() + p);
+
+        //被踩到一定程度隐藏评论
+        if ((question.getDisLikesNum() >= Magic.HIDE_STANDARD1) & (question.getLikesNum() <= Magic.HIDE_STANDARD2 * question.getDisLikesNum())) {
+            question.setHidden(true);
+        } else {
+            question.setHidden(false);
+        }
+        questionService.saveQuestion(question);
+    }
 }
