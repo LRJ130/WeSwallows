@@ -14,10 +14,12 @@ public class Likes {
     private Long id;
 
     //标识是bd问题还是支持评论
-    Boolean likeComment;
-    Boolean likeQuestion;
+    private Boolean likeComment;
+    private Boolean likeQuestion;
     //是否已读
-    Boolean isRead;
+    private Boolean isRead;
+
+    private Long postUserId0;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
@@ -62,6 +64,14 @@ public class Likes {
 
     public void setRead(Boolean read) {
         isRead = read;
+    }
+
+    public Long getPostUserId0() {
+        return postUserId0;
+    }
+
+    public void setPostUserId0(Long postUserId0) {
+        this.postUserId0 = postUserId0;
     }
 
     public Date getCreateTime() {
@@ -111,10 +121,11 @@ public class Likes {
     @Override
     public String toString() {
         return "Likes{" +
-                "likeComment=" + likeComment +
+                "id=" + id +
+                ", likeComment=" + likeComment +
                 ", likeQuestion=" + likeQuestion +
                 ", isRead=" + isRead +
-                ", id=" + id +
+                ", postUserId0=" + postUserId0 +
                 ", createTime=" + createTime +
                 ", comment=" + comment +
                 ", question=" + question +

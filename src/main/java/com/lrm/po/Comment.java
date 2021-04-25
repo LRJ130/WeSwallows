@@ -31,6 +31,8 @@ public class Comment
     private Integer disLikesNum;
     //是否被隐藏 后端只做属性设置的处理 仍然返回全部数据 前端做hidden判断
     private Boolean isHidden;
+    //返回user对象被json忽略 只能加个这个了
+    private Long postUserId0;
 
     //节约空间
     @Transient
@@ -38,9 +40,9 @@ public class Comment
     @Transient
     private String nickname;
     @Transient
-    private boolean approved;
+    private Boolean approved;
     @Transient
-    private boolean disapproved;
+    private Boolean disapproved;
 
     @Lob
     @NotBlank
@@ -117,22 +119,6 @@ public class Comment
         this.nickname = nickname;
     }
 
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
-    public boolean isDisapproved() {
-        return disapproved;
-    }
-
-    public void setDisapproved(boolean disapproved) {
-        this.disapproved = disapproved;
-    }
-
     public void setRead(Boolean read) {
         isRead = read;
     }
@@ -183,6 +169,30 @@ public class Comment
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
+    }
+
+    public Boolean getDisapproved() {
+        return disapproved;
+    }
+
+    public void setDisapproved(Boolean disapproved) {
+        this.disapproved = disapproved;
+    }
+
+    public Long getPostUserId0() {
+        return postUserId0;
+    }
+
+    public void setPostUserId0(Long postUserId0) {
+        this.postUserId0 = postUserId0;
     }
 
     @JsonBackReference

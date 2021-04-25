@@ -13,8 +13,8 @@ public class DisLikes {
     @GeneratedValue
     private Long id;
 
-    Boolean dislikeComment;
-    Boolean dislikeQuestion;
+    private Boolean dislikeComment;
+    private Boolean dislikeQuestion;
 
 //    是否已读
 //    Boolean isRead;

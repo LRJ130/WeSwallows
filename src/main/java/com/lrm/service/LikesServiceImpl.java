@@ -27,6 +27,7 @@ public class LikesServiceImpl implements LikesService{
         likes.setPostUser(postUser);
         likes.setReceiveUser(receiveUser);
         likes.setRead(false);
+        likes.setPostUserId0(postUser.getId());
         return likesRepository.save(likes);
     }
 
