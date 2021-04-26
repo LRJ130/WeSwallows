@@ -59,7 +59,7 @@ public class MessageController {
     @GetMapping("/{commentId}/read")
     public void readComment(@PathVariable Long commentId) {
         Comment comment = commentService.getComment(commentId);
-        comment.setRead(true);
+        comment.setLooked(true);
         commentService.saveComment(comment);
     }
 
@@ -70,25 +70,37 @@ public class MessageController {
     @GetMapping("/{likesId}/read")
     public void readLikes(@PathVariable Long likesId) {
         Likes likes = likesService.getLikes(likesId);
-        likes.setRead(true);
+        likes.setLooked(true);
         likesService.saveLikes(likes);
     }
 
     /**
-     * @param comments 评论集合
+     * 已读所有评论
+     *
+     * @param request 获取当前用户id
      */
     @GetMapping("/readAllComments")
-    public void readAllComments(List<Comment> comments) {
+    public void readAllComments(HttpServletRequest request) {
+        Long userId = GetTokenInfo.getCustomUserId(request);
+        List<Comment> comments = commentService.listAllNotReadComment(userId);
         for (Comment comment : comments) {
-            comment.setRead(true);
+            comment.setLooked(true);
             commentService.saveComment(comment);
         }
     }
 
+    /**
+     * 已读所有点赞
+     *
+     * @param request 获取当前用户id
+     */
     @GetMapping("/readAllLikes")
-    public void readAllLikes(List<Likes> likes) {
+    public void readAllLikes(HttpServletRequest request) {
+        Long userId = GetTokenInfo.getCustomUserId(request);
+
+        List<Likes> likes = likesService.listAllNotReadComment(userId);
         for (Likes likes1 : likes) {
-            likes1.setRead(true);
+            likes1.setLooked(true);
             likesService.saveLikes(likes1);
         }
     }

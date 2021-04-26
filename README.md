@@ -99,7 +99,7 @@ GET http://localhost:8080/question/{questionId}/comments
 
 #### 发布评论
 
-POST http://localhost:8080/question/{questionId}/comments
+POST http://localhost:8080/question/{questionId}/comment
 
 #### 点赞评论
 

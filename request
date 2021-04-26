@@ -1,8 +1,16 @@
-不必要的类引入
-作者
-去.
-类{}Autowired 和方法中{}第一行
-//隔一行
+待优化代码：
 
-用户点过踩了嘛
-取消对贡献的影响
+Likes和disLikes能否用泛型解决
+
+该忽略的属性忽略 如信息处理的comment不用有子评论数据
+
+JsonBack
+
+标签的结构
+
+一堆postUserId0
+
+valid校验数据库里的了
+
+saveComment游离态问题
+

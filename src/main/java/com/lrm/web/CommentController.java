@@ -74,7 +74,7 @@ public class CommentController
      * @param bindingResult 校验异常处理
      * @return 新增的评论或新增失败报错
      */
-    @PostMapping("/comments")
+    @PostMapping("/comment")
     public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult) {
         Map<String, Object> hashMap = new HashMap<>(1);
 
