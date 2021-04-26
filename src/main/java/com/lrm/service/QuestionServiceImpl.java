@@ -139,7 +139,8 @@ public class QuestionServiceImpl implements QuestionService{
         }
         //每多1次浏览，问题影响力+2
         question.setView(question.getView()+1);
-        question.setImpact(question.getImpact()+2);
+        question.setImpact(question.getImpact() + 2);
+        questionRepository.save(question);
         Question q = new Question();
         BeanUtils.copyProperties(question, q);
         String content = q.getContent();

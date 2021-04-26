@@ -260,15 +260,15 @@ public class Question {
         this.nickname = nickname;
     }
 
-    public boolean isApproved() {
+    public Boolean isApproved() {
         return approved;
     }
 
-    public void setApproved(boolean approved) {
+    public void setApproved(Boolean approved) {
         this.approved = approved;
     }
 
-    public boolean isDisapproved() {
+    public Boolean isDisapproved() {
         return disapproved;
     }
 
