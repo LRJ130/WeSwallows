@@ -24,6 +24,7 @@ public class ArchiveShowController {
     /**
      * 按年份归档 时间逆序
      *
+     * @param request 获取当前用户id
      * @return 已经分类的问题
      */
     @GetMapping("/archives")

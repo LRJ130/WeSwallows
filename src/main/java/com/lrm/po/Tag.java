@@ -14,27 +14,43 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "t_tag")
-public class Tag
-{
+public class Tag {
+    /**
+     * 主键
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * 标签名称 前端必填
+     */
     @NotBlank(message = "请输入标签名称")
     private String name;
 
+    /**
+     * 标签的子标签
+     */
     @JsonManagedReference
     @OneToMany(mappedBy = "parentTag")
     private List<Tag> sonTags = new ArrayList<>();
+    /**
+     * 标签的父标签
+     */
     @JsonBackReference
     @ManyToOne
     private Tag parentTag;
-    //避免json序列无限递归 只好出此下策 真拙劣啊...
+
+    /**
+     * 避免json序列无限递归 只好出此下策 真拙劣啊...
+     */
     Long parentTagId0;
 
-    //不用级联删除 这块需要返回错误页面 告知管理员标签下有博客的情况下不能删除标签
+    /**
+     * 不用级联删除 这块需要返回错误页面 告知管理员标签下有博客的情况下不能删除标签
+     */
     @JsonBackReference
-    @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
 
     public Long getId() {

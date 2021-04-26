@@ -9,28 +9,60 @@ import java.util.Date;
 @Entity
 @Table(name = "t_likes")
 public class Likes {
+    /**
+     * 主键
+     */
     @Id
     @GeneratedValue
     private Long id;
 
-    //标识是bd问题还是支持评论
+    /**
+     * 赞的是评论
+     */
     private Boolean likeComment;
+    /**
+     * 赞的是问题
+     */
     private Boolean likeQuestion;
-    //是否已读
+    /**
+     * 是否已读
+     */
     private Boolean isRead;
 
+    /**
+     * 返回user对象被json忽略 只能加个这个了
+     */
     private Long postUserId0;
 
+    /**
+     * 封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
+     * 点赞时间
+     */
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
+
+    /**
+     * 多likes对一comment
+     */
     @ManyToOne
     private Comment comment;
+
+    /**
+     * 多likes对一question
+     */
     @ManyToOne
     private Question question;
 
+    /**
+     * 多likes对一postUser
+     */
     @ManyToOne
     private User postUser;
+
+    /**
+     * 多likes对一receiveUser
+     */
     @ManyToOne
     private User receiveUser;
 

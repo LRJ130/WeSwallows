@@ -9,8 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * PasswordFormat注解 校验器 实现
  * @author 山水夜止 修改自网络
- * @date 2021-3-25
-        */
+ */
 public class AccountInfoValidator implements ConstraintValidator<AccountInfoFormat, Object> {
 
     /**

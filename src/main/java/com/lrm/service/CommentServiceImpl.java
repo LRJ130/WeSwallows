@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment saveComment(Comment comment, Long questionId, User postUser) {
         //得到前端封装返回的对象的parentId
-        Long parentCommentId = comment.getParentComment().getId();
+        Long parentCommentId = comment.getParentCommentId0();
 
         //得到当前评论对应的问题
         Question question = questionService.getQuestion(questionId);

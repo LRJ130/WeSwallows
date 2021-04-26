@@ -13,73 +13,131 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "t_question")
-public class Question
-{
+public class Question {
     @Id
     @GeneratedValue
     private Long id;
 
-    //懒加载 只有getContent了才加载
+    /**
+     * 懒加载 只有getContent了才加载
+     * 前端必填内容
+     */
     @Basic(fetch = FetchType.LAZY)
     @Lob
     @NotBlank(message = "请输入内容")
     private String content;
+
+
+    /**
+     * 问题描述 前端必填
+     */
     @Lob
     @NotBlank(message = "请输入概述")
     private String description;
+
+
+    /**
+     * 问题标题 前端必填
+     **/
     @NotBlank(message = "请输入标题")
     private String title;
-    //浏览次数
+
+    /**
+     * 浏览次数
+     */
     private Integer view;
-    //获得点赞数量
+
+    /**
+     * 获得点赞数量
+     */
     private Integer likesNum;
-    //被评论数
+
+    /**
+     * 获得评论数量
+     **/
     private Integer commentsNum;
-    //点踩
+
+    /**
+     * 被点踩数量
+     */
     private Integer disLikesNum;
-    //是否被隐藏
+
+
+    /**
+     * 是否被隐藏
+     */
     private Boolean isHidden;
 
-    //占比待定
-    //问题的影响力 推荐 impact=user.donation*4+question.view*2+question.comment.count*2+question.comment.maxLikes*2
-    //user.donation=user.comment2.count*3++user.comment2.likes*3+user.question.count*2+user.question.likes*2
+    /**
+     * 占比待定
+     * 问题的影响力 推荐 impact=user.donation*4+question.view*2+question.comment.count*2+question.comment.maxLikes*2
+     * user.donation=user.comment2.count*3++user.comment2.likes*3+user.question.count*2+user.question.likes*2
+     */
     private Integer impact;
-    //显式的点赞数
-    //private Integer likesNum;
 
-    //@Transient 不通过数据库与前端交互
-    // 直接在service层转化为tags
+    /**
+     * 节约空间不入库
+     * 前端传回多个标签 用,分割的字符组合
+     **/
     @Transient
     private String tagIds;
-    //节约空间
+    /**
+     * 节约空间不入库
+     * 返回前端的评论发布者的头像
+     **/
     @Transient
     private String avatar;
+    /**
+     * 节约空间不入库
+     * 返回前端的评论发布者的昵称
+     **/
     @Transient
     private String nickname;
+    /**
+     * 节约空间不入库
+     * 返回前端的判断该评论是否被当前用户点过赞
+     **/
     @Transient
-    private boolean approved;
+    private Boolean approved;
+    /**
+     * 节约空间不入库
+     * 返回前端的判断该评论是否被当前用户点过踩
+     **/
     @Transient
-    private boolean disapproved;
+    private Boolean disapproved;
 
-    //被它修饰的时间会封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
-    //首页展示根据发布时间展示
+    /**
+     * 时间会封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
+     * 首页展示根据发布时间展示
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
-    //推荐时根据最新被评论时间展示
+
+    /**
+     * 最新被评论时间展示
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Temporal(TemporalType.TIMESTAMP)
     private Date newCommentedTime;
 
-    //无级联关系
+    /**
+     * 一question对应多tag
+     */
     @ManyToMany
     @JsonManagedReference
     private List<Tag> tags = new ArrayList<>();
 
+    /**
+     * 多question对应一user
+     **/
     @JsonBackReference
     @ManyToOne
     private User user;
 
+    /**
+     * 多question对应一user
+     */
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Likes> likes;
 

@@ -9,11 +9,22 @@ import java.util.Date;
 @Entity
 @Table(name = "t_dislikes")
 public class DisLikes {
+
+    /**
+     * 主键
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+
+    /**
+     * 踩的是评论
+     */
     private Boolean dislikeComment;
+    /**
+     * 踩的是问题
+     */
     private Boolean dislikeQuestion;
 
 //    是否已读
@@ -22,12 +33,22 @@ public class DisLikes {
 //    @Temporal(TemporalType.TIMESTAMP)
 //    private Date createTime;
 
+
+    /**
+     * 多dislikes对一comment
+     */
     @ManyToOne
     private Comment comment;
 
+    /**
+     * 多dislikes对一question
+     */
     @ManyToOne
     private Question question;
 
+    /**
+     * 多dislikes对一user
+     */
     @ManyToOne
     private User postUser;
 //    @ManyToOne

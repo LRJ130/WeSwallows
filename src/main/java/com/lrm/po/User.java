@@ -15,66 +15,134 @@ import java.util.List;
 //应用于懒加载 在Repository层要使用@EntityGrahph配置在查询方法上 缺一不可
 @NamedEntityGraph(name = "User",
         attributeNodes = {@NamedAttributeNode("postComments"),
-                          @NamedAttributeNode("receiveComments")})
+                @NamedAttributeNode("receiveComments")})
 @Entity
 @Table(name = "t_user")
-public class User
-{
+public class User {
+    /**
+     * 每个类都要有一个id主键
+     */
     @Id
     @GeneratedValue
-    private Long id;     //每个类都要有一个id主键
-    //用户个人属性
-    private Boolean isAdmin;     //是否为管理员
-    private Boolean canSpeak;  //能否发言
-    //必填部分
-        //@NotBlank需要搭配有@Valid的controller方法使用 且只能用在String上
+    private Long id;
+
+    /**
+     * 是否为管理员
+     */
+    private Boolean isAdmin;
+
+    /**
+     * 能否发言
+     */
+    private Boolean canSpeak;
+
+    /**
+     * NotBlank需要搭配有@Valid的controller方法使用 且只能用在String上
+     * 前端必填 用户昵称
+     */
     @NotBlank(message = "请输入昵称")
     private String nickname;
+
+    /**
+     * 前端必填 用户名 后端校验
+     */
     @AccountInfoFormat(message = "请输入正确账号格式————长度为7至12且不能包含汉字", need = "false")
     private String username;
-    //返回前端的user对象中不含密码
+
+    /**
+     * 返回Json忽略password
+     * 前端必填密码
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @AccountInfoFormat
     private String password;
 
-    //非必填 可以在前端显示默认值
+
+    /**
+     * 用户头像 非必填 可以在前端显示默认值
+     */
     private String avatar;
     @Transient
     private File avatarFile;
+    /**
+     * 用户邮箱 非必填 可以在前端显示默认值
+     */
     private String email;
+    /**
+     * 用户QQ 非必填 可以在前端显示默认值
+     */
     private String qqId;
+    /**
+     * 用户微信 非必填 可以在前端显示默认值
+     */
     private String wechatId;
-    //男true 女false
+
+    /**
+     * 用户头像 非必填 可以在前端显示默认值
+     * 男true 女false
+     */
     private Boolean sex;
+
+    /**
+     * 个性签名 非必填 可以在前端显示默认值
+     */
     private String personalSignature;
+    /**
+     * 院系 非必填 可以在前端显示默认值
+     */
     private String academy;
+    /**
+     * 专业 非必填 可以在前端显示默认值
+     */
     private String major;
-    //贡献值
+
+    /**
+     * 贡献值
+     */
     private Integer donation;
-    //自动生成时间
+
+    /**
+     * 注册时间
+     */
     @Temporal(TemporalType.TIMESTAMP)
     private Date registerTime;
 
-
-    //关联关系 Merge Refresh Remove Persist
-        //mappedBy="name" name为外键所在的表中关联的字段的名字
-        //没必要设置Remove 因为不打算做注销账号功能
+    /**
+     * 没必要设置Remove 因为不打算做注销账号功能
+     * 一user对多questions 发布的问题
+     */
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
-        //懒加载
+
+
+    /**
+     * 一user对多postComments 发布的评论
+     */
     @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
     private List<Comment> postComments = new ArrayList<>();
-    //懒加载
+
+    /**
+     * 一user对多receiveComments 获得的评论
+     */
     @OneToMany(mappedBy = "receiveUser", fetch = FetchType.LAZY)
     private List<Comment> receiveComments = new ArrayList<>();
-    //懒加载
+
+    /**
+     * 一user对多postLikes 发布的点赞
+     */
     @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
     private List<Likes> postLikes = new ArrayList<>();
-    //懒加载
+
+    /**
+     * 一user对多receiveLikes 接受的点赞
+     */
     @OneToMany(mappedBy = "receiveUser", fetch = FetchType.LAZY)
     private List<Comment> receiveLikes = new ArrayList<>();
-    //懒加载
+
+    /**
+     * 一user对多postDisLikes 发布的点踩
+     */
     @OneToMany(mappedBy = "postUser", fetch = FetchType.LAZY)
     private List<Comment> postDisLikes = new ArrayList<>();
 

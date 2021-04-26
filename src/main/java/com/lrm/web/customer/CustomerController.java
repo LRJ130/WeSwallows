@@ -34,6 +34,7 @@ public class CustomerController {
 
     /**
      * 返回个人信息
+     * 获取当前用户id
      *
      * @return user: 当前用户对象
      */
@@ -56,7 +57,7 @@ public class CustomerController {
 
     /**
      * 上传头像到本地 获取path返回
-     *
+     * @param req 获取当前用户id
      * @param file 被上传的文件
      * @return avatar 文件在服务器端的路径
      * @throws IOException 文件大小溢出

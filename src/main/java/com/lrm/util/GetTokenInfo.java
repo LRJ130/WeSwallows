@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class GetTokenInfo {
     /**
-     * @return 得到当前UserId
+     * @param request 得到当前token
+     * @return 返回当前UserId
      * @throws JWTVerificationException JWT鉴权错误
      */
     public static Long getCustomUserId(HttpServletRequest request) throws JWTVerificationException {
@@ -23,6 +24,8 @@ public class GetTokenInfo {
 
     /**
      * 验证是否是管理页
+     *
+     * @param request 获得当前token
      * @return true是 false不是
      * @throws JWTVerificationException JWT鉴权错误
      */

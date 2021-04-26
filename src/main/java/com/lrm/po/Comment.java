@@ -12,66 +12,141 @@ import java.util.List;
 
 @Entity
 @Table(name = "t_comment")
-public class Comment
-{
+public class Comment {
+    /**
+     * 主键
+     */
     @Id
     @GeneratedValue
     private Long id;
-    //如果标识为1 即question.user是发布这个comment的人 那么它应该有一个标识
+
+    /**
+     * 如果标识为1 即question.user是发布这个comment的人 那么它应该有一个标识
+     */
     private Boolean adminComment;
-    //通知是否已读
+
+    /**
+     * 通知是否已读
+     */
     private Boolean isRead;
-    //是否是第二类回答
+
+    /**
+     * 是否是第二类回答 即正式回答
+     */
     private Boolean isAnswer;
-    //点赞数
+
+    /**
+     * 点赞数
+     */
     private Integer likesNum;
-    //被评论数
+
+    /**
+     * 被评论数
+     */
     private Integer commentsNum;
-    //点踩数
+
+    /**
+     * 点踩数
+     */
     private Integer disLikesNum;
-    //是否被隐藏 后端只做属性设置的处理 仍然返回全部数据 前端做hidden判断
+
+    /**
+     * 是否被隐藏
+     */
     private Boolean isHidden;
-    //返回user对象被json忽略 只能加个这个了
+
+    /**
+     * 返回user对象被json忽略 只能加个这个了
+     */
     private Long postUserId0;
 
-    //节约空间
+    /**
+     * 节约空间不入库
+     * 返回前端的评论发布者的头像
+     */
     @Transient
     private String avatar;
+    /**
+     * 节约空间不入库
+     * 返回前端的评论发布者的昵称
+     */
     @Transient
     private String nickname;
+    /**
+     * 节约空间不入库
+     * 返回前端的判断该评论是否被当前用户点过赞
+     */
     @Transient
     private Boolean approved;
+    /**
+     * 节约空间不入库
+     * 返回前端的判断该评论是否被当前用户点过踩
+     */
     @Transient
     private Boolean disapproved;
+    /**
+     * 节约空间不入库
+     * 前端传回comment 保存parentComment的媒介
+     */
+    @Transient
+    private Long parentCommentId0;
 
+    /**
+     * 前端必填内容
+     * 评论内容
+     */
     @Lob
     @NotBlank
     private String content;
 
-    //被它修饰的时间会封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
+    /**
+     * 封装成完整的"yyyy-MM-dd HH:mm:ss"的Date类型
+     * 评论时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
+
+    /**
+     * 多comment对一question
+     */
     @ManyToOne
     private Question question;
 
-    //这里可以给个JsonIgnore 然后再放一个只装第二级评论的集合
+    /**
+     * 这里可以给个JsonIgnore 然后再放一个只装第二级评论的集合
+     */
     @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY)
     private List<Comment> replyComments = new ArrayList<>();
+
+    /**
+     * 跟replyComments的父子关系
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment parentComment;
 
+    /**
+     * 一comment对多likes
+     */
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Likes> likes;
 
+
+    /**
+     * 一comment对多dislikes
+     */
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DisLikes> dislikes;
 
-    //消息的接收者
+    /**
+     * 消息的接收者
+     */
     @ManyToOne
     private User receiveUser;
-    //消息的发送者
+    /**
+     * 消息的发送者
+     */
     @ManyToOne
     private User postUser;
 
@@ -193,6 +268,14 @@ public class Comment
 
     public void setPostUserId0(Long postUserId0) {
         this.postUserId0 = postUserId0;
+    }
+
+    public Long getParentCommentId0() {
+        return parentCommentId0;
+    }
+
+    public void setParentCommentId0(Long parentCommentId0) {
+        this.parentCommentId0 = parentCommentId0;
     }
 
     @JsonBackReference

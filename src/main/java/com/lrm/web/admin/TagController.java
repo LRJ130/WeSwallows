@@ -104,6 +104,9 @@ public class TagController {
 
     /**
      * 删除标签
+     *
+     * @param tagId 标签id
+     * @return 成功\失败信息
      */
     @GetMapping("/{tagId}/delete")
     public Result<Map<String, Object>> delete(@PathVariable Long tagId) {

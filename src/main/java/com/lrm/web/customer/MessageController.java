@@ -33,6 +33,7 @@ public class MessageController {
     /**
      * 返回所有通知
      *
+     * @param request 获取当前用户id
      * @return 未读评论和点赞
      * @throws JWTVerificationException JWT鉴权错误
      */
@@ -53,7 +54,7 @@ public class MessageController {
     }
 
     /**
-     * 两个单独已读
+     * @param commentId 评论id
      */
     @GetMapping("/{commentId}/read")
     public void readComment(@PathVariable Long commentId) {
@@ -62,6 +63,10 @@ public class MessageController {
         commentService.saveComment(comment);
     }
 
+
+    /**
+     * @param likesId 点赞id
+     */
     @GetMapping("/{likesId}/read")
     public void readLikes(@PathVariable Long likesId) {
         Likes likes = likesService.getLikes(likesId);
@@ -70,7 +75,7 @@ public class MessageController {
     }
 
     /**
-     * 两个全部已读
+     * @param comments 评论集合
      */
     @GetMapping("/readAllComments")
     public void readAllComments(List<Comment> comments) {

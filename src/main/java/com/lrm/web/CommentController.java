@@ -44,7 +44,8 @@ public class CommentController
     /**
      * 展示所有评论
      *
-     * @param request 用于得到当前userId 处理当前用户点没点过赞的
+     * @param questionId 评论在哪个问题下 对应的问题Id
+     * @param request    用于得到当前userId 处理当前用户点没点过赞的
      * @return 第一类评论+对应在线用户是否点过赞、第二类评论+对应在线用户是否点过赞
      */
     @GetMapping("/comments")
@@ -68,7 +69,9 @@ public class CommentController
     /**
      * 新增评论
      * 提交表单后 到这里 然后得到id 然后刷新评论
-     *
+     * @param comment 前端封装的comment对象
+     * @param request 用于得到当前userId 为评论的postUser
+     * @param bindingResult 校验异常处理
      * @return 新增的评论或新增失败报错
      */
     @PostMapping("/comments")
@@ -107,7 +110,8 @@ public class CommentController
 
     /**
      * 删除评论
-     *
+     * @param commentId 被删除的评论对应的Id
+     * @param request 获取要执行删除操作的用户id
      * @return 报错信息
      */
     @GetMapping("/comment/{commentId}/delete")
@@ -148,6 +152,9 @@ public class CommentController
 
     /**
      * 给评论点赞
+     * @param commentId 被点赞的评论Id
+     * @param questionId 被点赞的评论在哪个问题下 问题的Id
+     * @param request 获取执行点赞动作的用户Id
      */
     @GetMapping("/comment/{commentId}/approve")
     public void approve(@PathVariable Long questionId, @PathVariable Long commentId, HttpServletRequest request) {
@@ -199,6 +206,8 @@ public class CommentController
 
     /**
      * 点踩 到标准就隐藏
+     * @param questionId 被点踩的评论在哪个问题下 问题的Id
+     * @param request 获取执行点踩动作的用户Id
      * @param commentId 评论Id
      */
     @GetMapping("/comment/{commentId}/disapprove")
@@ -240,7 +249,8 @@ public class CommentController
 
     /**
      * 评论上传的图片
-     *
+     * @param commentId 评论的Id
+     * @param req 获取上传图片的用户Id
      * @param files      多文件上传
      * @param questionId 发布问题的Id
      * @return 多文件在本地的路径
@@ -345,5 +355,10 @@ public class CommentController
             comment.setNickname(postUser.getNickname());
         }
         return comments;
+    }
+
+    @PostMapping("/test")
+    void test(boolean b) {
+        System.out.println(b);
     }
 }

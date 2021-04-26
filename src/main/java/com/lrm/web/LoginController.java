@@ -28,8 +28,9 @@ public class LoginController {
     /**
      * 注册
      *
-     * @param user 前端封装好的User对象 包含用户名、密码、昵称
-     * @return 返回<User> 注册成功得到的User对象 需要确定泛型，否则操作无效了; 返回注册失败的报错信息
+     * @param result 校验异常处理
+     * @param user   前端封装好的User对象 包含用户名、密码、昵称
+     * @return 返回注册成功得到的User对象 需要确定泛型，否则操作无效了; 返回注册失败的报错信息
      */
     @PostMapping("/register")
     public Result<Map<String, Object>> register(@Valid User user, BindingResult result)
@@ -76,6 +77,8 @@ public class LoginController {
 
     /**
      * 登录
+     * @param username 用户名
+     * @param password 密码
      * @return 登录成功的token; 登陆失败的报错信息
      */
     @PostMapping("/login")

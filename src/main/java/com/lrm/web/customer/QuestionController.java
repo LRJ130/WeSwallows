@@ -45,6 +45,7 @@ public class QuestionController {
     /**
      * 返回个人主页的个人问题
      *
+     * @param request  获得当前用户id
      * @param pageable 分页对象
      * @param question 因为有一堆数据，所以查询条件封装成QuestionQuery了
      * @return 个人所发问题的列表
@@ -66,7 +67,7 @@ public class QuestionController {
     /**
      * 个人主页搜索 根据标题 返回个人发出的问题
      * 跟上面那个get方法的不同就是 一个是空的 一个不是空的
-     *
+     * @param request 获得当前用户id
      * @param pageable 分页标准
      * @param question 封装的query对象
      * @return pages:查询所得问题分页
@@ -118,6 +119,7 @@ public class QuestionController {
 
     /**
      * 新增问题 初始化各部分属性
+     * @param request 获得当前用户id
      * @param question 前端封装的question对象
      * @param bindingResult 配合@Valid检测是否为空
      * @return 报错信息/成功信息
@@ -161,12 +163,12 @@ public class QuestionController {
 
 
     /**
+     * @param request 获得当前用户id
      * @param questionId 问题Id
      * @return 报错信息/成功信息
      */
     @GetMapping("/question/{questionId}/delete")
-    public Result<Map<String, Object>> delete(@PathVariable Long questionId, HttpServletRequest request)
-    {
+    public Result<Map<String, Object>> delete(@PathVariable Long questionId, HttpServletRequest request) {
         Map<String, Object> hashMap = new HashMap<>(1);
 
         Long userId = GetTokenInfo.getCustomUserId(request);
@@ -199,7 +201,7 @@ public class QuestionController {
 
     /**
      * 问题内容的图片上传
-     *
+     * @param req 获得当前用户id
      * @param files      多文件上传
      * @param questionId 发布问题的Id
      * @return 多文件在本地的路径

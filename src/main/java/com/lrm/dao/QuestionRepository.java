@@ -22,7 +22,7 @@ public interface QuestionRepository extends JpaRepository<Question,Long>, JpaSpe
      * @param pageable 分页对象
      * @return 查询结果
      */
-    @Query("select q from Question q where q.title like ?1 or q.content like ?1")
+    @Query("select q from Question q where q.title like ?1 or q.content like ?1 or q.description like ?1")
     Page<Question> findByQuery(String query, Pageable pageable);
 
     /**

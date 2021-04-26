@@ -120,6 +120,7 @@ public class IndexController {
     /**
      * 点赞
      *
+     * @param request    获得执行点赞动作的用户id
      * @param questionId 问题Id
      */
     @GetMapping("/question/{questionId}/approve")
@@ -163,6 +164,7 @@ public class IndexController {
 
     /**
      * 点踩
+     * @param request 获取执行点踩动作的用户id
      * @param questionId 问题Id
      */
     @GetMapping("/question/{questionId}/disapprove")
