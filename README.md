@@ -63,11 +63,11 @@ GET http://localhost:8080/
 
 POST http://localhost:8080/searchQuestions
 
-#### 点赞
+#### 点赞问题
 
 GET http://localhost:8080/question/{questionId}/approve
 
-#### 点踩
+#### 点踩问题
 
 GET http://localhost:8080/question/{questionId}/disapprove
 
@@ -101,11 +101,11 @@ GET http://localhost:8080/question/{questionId}/comments
 
 POST http://localhost:8080/question/{questionId}/comments
 
-#### 点赞
+#### 点赞评论
 
 GET http://localhost:8080/question/{questionId}/comment/{commentId}/approve
 
-#### 点踩
+#### 点踩评论
 
 GET http://localhost:8080/question/{questionId}/comment/{commentId}/disapprove
 
