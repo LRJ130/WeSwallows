@@ -66,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
         //所属问题评论数增加 包含评论下的子评论了
         question.setCommentsNum(question.getCommentsNum() + 1);
         comment.setQuestion(question);
-        comment.setRead(false);
+        comment.setLooked(false);
         comment.setCreateTime(new Date());
         comment.setLikesNum(0);
         comment.setDisLikesNum(0);
@@ -79,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
 
         //如果是 初始化这两项
         comment.setAdminComment(admin);
-        comment.setRead(admin);
+        comment.setLooked(admin);
 
         //如果是有效回答 回答者贡献+3 问题影响力+2 否则仅仅问题影响力+2
         if (comment.getAnswer()) {
@@ -221,7 +221,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<Comment> listAllNotReadComment(Long userId) {
-        return commentRepository.findByReceiveUserIdAndIsRead(userId, false);
+        return commentRepository.findByReceiveUserIdAndLooked(userId, false);
     }
 
 }

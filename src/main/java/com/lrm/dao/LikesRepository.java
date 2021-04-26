@@ -12,5 +12,6 @@ public interface LikesRepository extends JpaRepository<Likes,Long> {
 
     Likes findByPostUserAndQuestion(User postUser, Question question);
     Likes findByPostUserAndComment(User postUser, Comment comment);
-    List<Likes> findByReceiveUserIdAndIsRead(Long userId, Boolean isRead);
+
+    List<Likes> findByReceiveUserIdAndLooked(Long userId, Boolean isLooked);
 }

@@ -26,7 +26,7 @@ public class LikesServiceImpl implements LikesService{
         likes.setCreateTime(new Date());
         likes.setPostUser(postUser);
         likes.setReceiveUser(receiveUser);
-        likes.setRead(false);
+        likes.setLooked(receiveUser == postUser);
         likes.setPostUserId0(postUser.getId());
         return likesRepository.save(likes);
     }
@@ -60,7 +60,7 @@ public class LikesServiceImpl implements LikesService{
 
     @Override
     public List<Likes> listAllNotReadComment(Long userId) {
-        return likesRepository.findByReceiveUserIdAndIsRead(userId, false);
+        return likesRepository.findByReceiveUserIdAndLooked(userId, false);
     }
 
 }

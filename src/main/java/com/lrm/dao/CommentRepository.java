@@ -20,10 +20,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @param answer     哪类回答
      * @return 评论集合
      */
-    @Query("select c from Comment c where c.parentComment.id is null and c.question.id = ?1 and c.isAnswer = ?2")
+    @Query("select c from Comment c where c.parentComment.id is null and c.question.id = ?1 and c.answer = ?2")
     List<Comment> findByQuestionIdAndAnswer(Long questionId, Boolean answer, Sort sort);
 
-    //原本是这样的 会报错无法识别Answer 应该是jpa的缺陷吧
+    //原本是这样的 会报错无法识别Answer 不过当时是用的isAnswer 似乎POJO属性不能是isxxx
     //List<Comment> findByQuestionIdAndParentCommentNullAndAnswer(Long questionId, Sort sort, Boolean answer);
 
 
@@ -38,9 +38,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     /**
      * 查询用户未读评论
-     * @param userId 用户Id
-     * @param isRead 是否已读
+     *
+     * @param userId   用户Id
+     * @param isLooked 是否已读
      * @return 评论集合
      */
-    List<Comment> findByReceiveUserIdAndIsRead(Long userId, Boolean isRead);
+    List<Comment> findByReceiveUserIdAndLooked(Long userId, Boolean isLooked);
 }

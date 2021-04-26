@@ -27,13 +27,15 @@ public class Comment {
 
     /**
      * 通知是否已读
+     * 不能用isRead 也不能用read关键字 只能这样了。。。
      */
-    private Boolean isRead;
+    private Boolean looked;
 
     /**
      * 是否是第二类回答 即正式回答
+     * 因为Boolean前端传入后端有问题 所以换成Long 改动处：repository俺按answer查找 saveComment
      */
-    private Boolean isAnswer;
+    private Boolean answer;
 
     /**
      * 点赞数
@@ -166,16 +168,20 @@ public class Comment {
         this.adminComment = adminComment;
     }
 
-    public Boolean getRead() {
-        return isRead;
-    }
-
     public Boolean getAnswer() {
-        return isAnswer;
+        return answer;
     }
 
     public void setAnswer(Boolean answer) {
-        isAnswer = answer;
+        this.answer = answer;
+    }
+
+    public Boolean getLooked() {
+        return looked;
+    }
+
+    public void setLooked(Boolean looked) {
+        this.looked = looked;
     }
 
     public String getAvatar() {
@@ -194,9 +200,6 @@ public class Comment {
         this.nickname = nickname;
     }
 
-    public void setRead(Boolean read) {
-        isRead = read;
-    }
 
     public Integer getCommentsNum() {
         return commentsNum;

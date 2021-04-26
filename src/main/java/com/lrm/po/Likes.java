@@ -26,8 +26,9 @@ public class Likes {
     private Boolean likeQuestion;
     /**
      * 是否已读
+     * 不能用isRead 也不能用read关键字 只能这样了。。。
      */
-    private Boolean isRead;
+    private Boolean looked;
 
     /**
      * 返回user对象被json忽略 只能加个这个了
@@ -90,12 +91,12 @@ public class Likes {
         this.likeQuestion = likeQuestion;
     }
 
-    public Boolean getRead() {
-        return isRead;
+    public Boolean getLooked() {
+        return looked;
     }
 
-    public void setRead(Boolean read) {
-        isRead = read;
+    public void setLooked(Boolean looked) {
+        this.looked = looked;
     }
 
     public Long getPostUserId0() {
@@ -156,7 +157,7 @@ public class Likes {
                 "id=" + id +
                 ", likeComment=" + likeComment +
                 ", likeQuestion=" + likeQuestion +
-                ", isRead=" + isRead +
+                ", looked=" + looked +
                 ", postUserId0=" + postUserId0 +
                 ", createTime=" + createTime +
                 ", comment=" + comment +
