@@ -3,6 +3,7 @@ package com.lrm.web.customer;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.lrm.po.Comment;
 import com.lrm.po.Likes;
+import com.lrm.po.User;
 import com.lrm.service.CommentService;
 import com.lrm.service.LikesService;
 import com.lrm.util.GetTokenInfo;
@@ -38,14 +39,26 @@ public class MessageController {
      * @throws JWTVerificationException JWT鉴权错误
      */
     @GetMapping("/")
-    public Result<Map<String, Object>> messages(HttpServletRequest request) throws JWTVerificationException
-    {
+    public Result<Map<String, Object>> messages(HttpServletRequest request) throws JWTVerificationException {
         Map<String, Object> hashMap = new HashMap<>(2);
 
         Long userId = GetTokenInfo.getCustomUserId(request);
 
         List<Comment> comments = commentService.listAllNotReadComment(userId);
+
+        for (Comment comment : comments) {
+            User postUser = comment.getPostUser();
+            comment.setAvatar(postUser.getAvatar());
+            comment.setNickname(postUser.getNickname());
+        }
+
         List<Likes> likes = likesService.listAllNotReadComment(userId);
+
+        for (Likes likes1 : likes) {
+            User postUser = likes1.getPostUser();
+            likes1.setAvatar(postUser.getAvatar());
+            likes1.setNickname(postUser.getNickname());
+        }
 
         hashMap.put("Comments", comments);
         hashMap.put("Likes", likes);

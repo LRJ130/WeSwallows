@@ -73,6 +73,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setCommentsNum(0);
         comment.setHidden(false);
         comment.setPostUserId0(postUser.getId());
+        comment.setPostUser(postUser);
 
         //判断发出评论的人是否是问题所有者
         boolean admin = (postUser == question.getUser());

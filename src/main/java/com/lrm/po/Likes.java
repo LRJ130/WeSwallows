@@ -42,6 +42,18 @@ public class Likes {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
+    /**
+     * 节约空间不入库
+     * 返回前端的评论发布者的头像
+     */
+    @Transient
+    private String avatar;
+    /**
+     * 节约空间不入库
+     * 返回前端的评论发布者的昵称
+     */
+    @Transient
+    private String nickname;
 
     /**
      * 多likes对一comment
@@ -115,6 +127,22 @@ public class Likes {
         this.createTime = createTime;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     @JsonManagedReference
     public Comment getComment() {
         return comment;
@@ -160,6 +188,8 @@ public class Likes {
                 ", looked=" + looked +
                 ", postUserId0=" + postUserId0 +
                 ", createTime=" + createTime +
+                ", avatar='" + avatar + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", comment=" + comment +
                 ", question=" + question +
                 ", postUser=" + postUser +

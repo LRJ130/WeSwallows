@@ -63,6 +63,11 @@ public class Comment {
     private Long postUserId0;
 
     /**
+     * 前端传回comment 保存parentCommentId的媒介
+     */
+    private Long parentCommentId0;
+
+    /**
      * 节约空间不入库
      * 返回前端的评论发布者的头像
      */
@@ -88,11 +93,11 @@ public class Comment {
     private Boolean disapproved;
     /**
      * 节约空间不入库
-     * 前端传回comment 保存parentComment的媒介
+     * 前端传回comment 保存父级评论者昵称的媒介
      */
     @Transient
-    private Long parentCommentId0;
 
+    private String parentCommentName;
     /**
      * 前端必填内容
      * 评论内容
@@ -119,7 +124,7 @@ public class Comment {
     /**
      * 这里可以给个JsonIgnore 然后再放一个只装第二级评论的集合
      */
-    @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> replyComments = new ArrayList<>();
 
     /**
@@ -279,6 +284,14 @@ public class Comment {
 
     public void setParentCommentId0(Long parentCommentId0) {
         this.parentCommentId0 = parentCommentId0;
+    }
+
+    public String getParentCommentName() {
+        return parentCommentName;
+    }
+
+    public void setParentCommentName(String parentCommentName) {
+        this.parentCommentName = parentCommentName;
     }
 
     @JsonBackReference

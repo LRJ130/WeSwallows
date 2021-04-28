@@ -181,7 +181,12 @@ public class CommentController
 
             //点过赞删除，无则增加
             if (likes != null) {
+                //取消点赞前的最高赞数
+                Integer maxNum0 = getMaxLikesNum(commentService.listAllCommentByQuestionId(questionId));
+
                 likesService.deleteLikes(likes);
+
+                dealLikes(receiveUser, comment, questionId, maxNum0, -1);
             } else {
                 Likes likes1 = new Likes();
 
@@ -238,8 +243,8 @@ public class CommentController
         } else {
             DisLikes dislikes1 = new DisLikes();
 
-            dislikes1.setDislikeQuestion(true);
-            dislikes1.setDislikeComment(false);
+            dislikes1.setDislikeQuestion(false);
+            dislikes1.setDislikeComment(true);
             dislikes1.setComment(comment);
             disLikesService.saveDisLikes(dislikes1, postUser);
 
@@ -333,32 +338,52 @@ public class CommentController
         questionService.saveQuestion(question);
     }
 
+    /**
+     * @param comments 被处理的comment集合
+     * @param userId   当前用户对象 用于处理是否点过赞的
+     * @return 给前端的comment集合
+     */
     List<Comment> dealComment(List<Comment> comments, Long userId) {
-        for (Comment comment : comments) {
-            //得到发布问题的人
-            User postUser = comment.getPostUser();
-
-            if (likesService.getLikes(userService.getUser(userId), comment) != null) {
-                comment.setApproved(true);
-            } else {
-                comment.setApproved(false);
+        if (comments.size() != 0) {
+            for (Comment comment : comments) {
+                insertAttribute(comment, userId);
+                List<Comment> replyComments = comment.getReplyComments();
+                if (replyComments.size() != 0) {
+                    for (Comment replyComment : replyComments) {
+                        replyComment.setParentCommentName(comment.getPostUser().getNickname());
+                        insertAttribute(replyComment, userId);
+                    }
+                }
             }
-
-            if (disLikesService.getDisLikes(userService.getUser(userId), comment) != null) {
-                comment.setDisapproved(true);
-            } else {
-                comment.setDisapproved(false);
-            }
-
-            //这里到底要不要用计算力代替空间还要考虑
-            comment.setAvatar(postUser.getAvatar());
-            comment.setNickname(postUser.getNickname());
         }
         return comments;
     }
 
-    @PostMapping("/test")
-    void test(boolean b) {
-        System.out.println(b);
+
+    /**
+     * 配合dealComment插入数据
+     *
+     * @param comment 被插入的评论对象
+     * @param userId  当前用户对象 用于处理是否点过赞的
+     */
+    void insertAttribute(Comment comment, Long userId) {
+        //得到发布问题的人
+        User postUser = comment.getPostUser();
+
+        if (likesService.getLikes(userService.getUser(userId), comment) != null) {
+            comment.setApproved(true);
+        } else {
+            comment.setApproved(false);
+        }
+
+        if (disLikesService.getDisLikes(userService.getUser(userId), comment) != null) {
+            comment.setDisapproved(true);
+        } else {
+            comment.setDisapproved(false);
+        }
+
+        //这里到底要不要用计算力代替空间还要考虑
+        comment.setAvatar(postUser.getAvatar());
+        comment.setNickname(postUser.getNickname());
     }
 }

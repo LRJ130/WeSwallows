@@ -90,8 +90,17 @@ public class IndexController {
                                               String query) {
         Map<String, Object> hashMap = new HashMap<>(2);
 
+        Page<Question> questions = questionService.listQuestion("%" + query + "%", pageable);
+
+        for (Question question : questions.getContent()) {
+            //得到发布问题的人
+            User postUser = question.getUser();
+
+            question.setAvatar(postUser.getAvatar());
+            question.setNickname(postUser.getNickname());
+        }
         //mysql语句 模糊查询的格式 jpa不会帮处理string前后有没有%的
-        hashMap.put("pages", questionService.listQuestion("%" + query + "%", pageable));
+        hashMap.put("pages", questions);
 
         //还要传回 保证在新的查询页面 查询框中也有自己之前查询的条件的内容
         hashMap.put("queries", query);
