@@ -37,19 +37,22 @@ public class LogAspect
     }
 
     @After("log()")
-    public void doAfter()
-    {
+    public void doAfter() {
         logger.info("------doAfter-----");
     }
 
     @AfterReturning(pointcut = "log()", returning = "result")
-    public void doAfterReturning(Object result)
-    {
+    public void doAfterReturning(Object result) {
         logger.info("Result : {}", result);
     }
 
-    private class RequestLog
-    {
+    @AfterThrowing(value = "log()", throwing = "exception")
+    public void afterThrowing(JoinPoint jp, Exception exception) {
+        String name = jp.getSignature().getName();
+        logger.info("Exception : {}", name + "方法抛异常了，" + exception.getMessage());
+    }
+
+    private class RequestLog {
         private String url;
         private String ip;
         private String classMethod;
