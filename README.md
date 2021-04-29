@@ -139,6 +139,10 @@ GET http://localhost:8080/customer/archives
 
 #### 个人信息
 
+##### 问题归档
+
+GET http://localhost:8080/customer/archives
+
 ##### 个人信息
 
 GET http://localhost:8080/customer/personal
@@ -191,11 +195,7 @@ POST http://localhost:8080/admin/tags/input
 
 GET http://localhost:8080/admin/tags/{tagId}/delete
 
-#### 删除问题
-
-GET http://localhost:8080/admin/searchQuestions
-
-#### 编辑问题
+#### 编辑并发布问题
 
 GET http://localhost:8080/admin/question/{questionId}/edit
 
@@ -204,3 +204,7 @@ POST http://localhost:8080/admin/question
 #### 删除问题
 
 GET http://localhost:8080/admin/question/{questionId}/delete
+
+#### 搜索问题
+
+POST http://localhost:8080/admin/searchQuestions

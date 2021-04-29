@@ -172,13 +172,14 @@ public class QuestionController {
         Map<String, Object> hashMap = new HashMap<>(1);
 
         Long userId = GetTokenInfo.getCustomUserId(request);
+        Boolean admin = GetTokenInfo.isAdmin(request);
 
         Question question = questionService.getQuestion(questionId);
 
         if (question == null) {
             throw new NotFoundException("该问题不存在");
         }
-        if (!question.getUser().getId().equals(userId)) {
+        if ((!question.getUser().getId().equals(userId)) && (!admin)) {
             throw new NoPermissionException("您无权限删除该问题");
         }
 

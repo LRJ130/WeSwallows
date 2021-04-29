@@ -8,6 +8,7 @@ import com.lrm.service.CommentService;
 import com.lrm.service.LikesService;
 import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Result;
+import com.lrm.web.IndexController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,9 @@ public class MessageController {
 
     @Autowired
     private LikesService likesService;
+
+    @Autowired
+    private IndexController indexController;
 
     /**
      * 返回所有通知
@@ -76,7 +80,6 @@ public class MessageController {
         commentService.saveComment(comment);
     }
 
-
     /**
      * @param likesId 点赞id
      */
@@ -89,7 +92,6 @@ public class MessageController {
 
     /**
      * 已读所有评论
-     *
      * @param request 获取当前用户id
      */
     @GetMapping("/readAllComments")
@@ -104,7 +106,6 @@ public class MessageController {
 
     /**
      * 已读所有点赞
-     *
      * @param request 获取当前用户id
      */
     @GetMapping("/readAllLikes")
