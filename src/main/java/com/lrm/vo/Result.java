@@ -19,7 +19,7 @@ public class Result <T> {
 
     Boolean isSuccess;
 
-    Integer errorCode;
+    Integer code;
 
     String msg;
 
@@ -29,6 +29,7 @@ public class Result <T> {
     public Result(T data, Boolean isSuccess, String msg) {
         this.setData(data);
         this.setSuccess(isSuccess);
+        this.setCode(200);
         this.setMsg(msg);
     }
 
@@ -47,7 +48,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg(noPermissionException.getErrorMsg());
         result.setUrl(url);
-        result.setErrorCode(403);
+        result.setCode(403);
         return result;
     }
 
@@ -57,7 +58,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg(notFoundException.getErrorMsg());
         result.setUrl(url);
-        result.setErrorCode(404);
+        result.setCode(404);
         return result;
     }
 
@@ -67,7 +68,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg("文件超过了1MB");
         result.setUrl(url);
-        result.setErrorCode(402);
+        result.setCode(402);
         return result;
     }
 
@@ -77,7 +78,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg("用户令牌无效");
         result.setUrl(url);
-        result.setErrorCode(401);
+        result.setCode(401);
         return result;
     }
 
@@ -88,7 +89,7 @@ public class Result <T> {
         result.setSuccess(false);
         result.setMsg("我也不知道发生甚么事了...");
         result.setUrl(url);
-        result.setErrorCode(400);
+        result.setCode(400);
         return result;
     }
 
@@ -124,12 +125,12 @@ public class Result <T> {
         this.url = url;
     }
 
-    public Integer getErrorCode() {
-        return errorCode;
+    public Integer getCode() {
+        return code;
     }
 
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     @Override
@@ -137,7 +138,7 @@ public class Result <T> {
         return "Result{" +
                 "data=" + data +
                 ", isSuccess=" + isSuccess +
-                ", errorCode=" + errorCode +
+                ", code=" + code +
                 ", msg='" + msg + '\'' +
                 ", url=" + url +
                 '}';
