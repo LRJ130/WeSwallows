@@ -96,7 +96,6 @@ public class Comment {
      * 前端传回comment 保存父级评论者昵称的媒介
      */
     @Transient
-
     private String parentCommentName;
     /**
      * 前端必填内容

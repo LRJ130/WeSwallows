@@ -201,10 +201,7 @@ public class CommentServiceImpl implements CommentService {
 
             //遍历第三级评论 添加到临时存放集合
             for (Comment reply : replys) {
-                tempReplys.add(reply);
-                if (reply.getReplyComments().size() > 0) {
                     recursively(reply);
-                }
             }
         }
     }
