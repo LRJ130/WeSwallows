@@ -18,9 +18,9 @@ public class DividePage {
      * @return 转换结果
      */
     public static <T> Page<T> listConvertToPage(List<T> list, Pageable pageable) {
-        int start = pageable.getOffset();
+        int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), list.size());
-        return new PageImpl<T>(list.subList(start, end), pageable, list.size());
+        return new PageImpl<>(list.subList(start, end), pageable, list.size());
     }
 
 }

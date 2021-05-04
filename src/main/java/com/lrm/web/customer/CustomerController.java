@@ -2,12 +2,13 @@ package com.lrm.web.customer;
 
 import com.lrm.po.User;
 import com.lrm.service.UserService;
-import com.lrm.util.FileControl;
+import com.lrm.util.FileUtils;
 import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.Magic;
 import com.lrm.vo.Result;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author 山水夜止
@@ -31,6 +29,10 @@ import java.util.UUID;
 public class CustomerController {
     @Autowired
     private UserService userService;
+
+    @Value("${web.upload-path}")
+    private String path;
+
 
     /**
      * 返回个人信息
@@ -57,55 +59,39 @@ public class CustomerController {
 
     /**
      * 上传头像到本地 获取path返回
-     * @param req 获取当前用户id
+     *
+     * @param req  获取当前用户id
      * @param file 被上传的文件
      * @return avatar 文件在服务器端的路径
-     * @throws IOException 文件大小溢出
      */
     @PostMapping("/uploadAvatar")
-    public Result<Map<String, Object>> uploadAvatar(MultipartFile file, HttpServletRequest req) throws IOException {
+    public Result<Map<String, Object>> uploadAvatar(MultipartFile file, HttpServletRequest req) {
         Map<String, Object> hashMap = new HashMap<>(1);
 
-        //创建存放文件的文件夹的流程
         Long userId = GetTokenInfo.getCustomUserId(req);
-        SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd/");
-        String format = sdf.format(new Date());
 
-        //相对路径 名字含时间
-        String path = "/upload/" + userId + "/avatar" + format;
+        //创建存放文件的文件夹的流程
 
-        //新文件夹目录绝对路径
-        String realPath = req.getServletContext().getRealPath(path);
-        File folder = new File(req.getServletContext().getRealPath("/upload/" + userId + "/avatar"));
-        File folder1 = new File(realPath);
+        //头像文件夹的绝对路径
+        String realPath = path + "/" + userId + "/avatar";
 
-        //如果头像文件夹不存在，创建文件夹 否则删除文件夹
-        if (folder.exists())
-        {
-            FileControl.deleteFile(folder);
-        }
-        if (!folder1.exists()) {
-          folder.mkdirs();
-        }
-
-        //保存文件到文件夹中
 
         //所上传的文件原名
         String oldName = file.getOriginalFilename();
 
-        //新文件名
-        String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
-        file.transferTo(new File(folder, newName));
-        String absPath = realPath + "/" + newName;
+        //保存文件到文件夹中 获得新文件名
+        String newName = FileUtils.upload(file, realPath, oldName);
 
-        hashMap.put("avatar", absPath);
+        if (newName != null) {
+            User user = userService.getUser(userId);
+            user.setAvatar("images/" + userId + "/avatar/" + newName);
 
-        User user = userService.getUser(userId);
-        user.setAvatar(absPath);
+            userService.saveUser(user);
 
-        userService.saveUser(user);
-
-        return new Result<>(hashMap, true, "上传成功");
+            return new Result<>(hashMap, true, "上传成功");
+        } else {
+            return new Result<>(hashMap, false, "上传失败");
+        }
     }
 
     /**

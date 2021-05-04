@@ -10,6 +10,8 @@ JsonBack
 
 一堆postUserId0
 
+comment对象里的replyComments和question省略
+
 valid校验数据库里的了
 
 saveComment游离态问题

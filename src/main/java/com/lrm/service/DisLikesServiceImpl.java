@@ -5,14 +5,15 @@ import com.lrm.po.Comment;
 import com.lrm.po.DisLikes;
 import com.lrm.po.Question;
 import com.lrm.po.User;
-import com.lrm.vo.Magic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
+/**
+ * @author 山水夜止
+ */
 @Service
 public class DisLikesServiceImpl implements DisLikesService {
     @Autowired
@@ -49,11 +50,8 @@ public class DisLikesServiceImpl implements DisLikesService {
 
     @Override
     public DisLikes getDisLikes(Long disLikesId) {
-        return disLikesRepository.findOne(disLikesId);
+        Optional<DisLikes> disLikes = disLikesRepository.findById(disLikesId);
+        return disLikes.orElse(null);
     }
 
-//    @Override
-//    public List<DisLikes> listAllNotReadComment(Long userId) {
-//        return DisLikesRepository.findByReceiveUserIdAndIsRead(userId, false);
-//    }
 }

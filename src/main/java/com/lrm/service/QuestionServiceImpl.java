@@ -74,7 +74,7 @@ public class QuestionServiceImpl implements QuestionService{
     @Transactional
     public Question updateQuestion(Question question)
     {
-        Question q = questionRepository.findOne(question.getId());
+        Question q = getQuestion(question.getId());
         BeanUtils.copyProperties(question, q, MyBeanUtils.getNullPropertyNames(question));
         return questionRepository.save(q);
     }
@@ -82,12 +82,13 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     @Transactional
     public void deleteQuestion(Long id) {
-        questionRepository.delete(id);
+        questionRepository.deleteById(id);
     }
 
     @Override
     public Question getQuestion(Long id) {
-        return questionRepository.findOne(id);
+        Optional<Question> opQuestion = questionRepository.findById(id);
+        return opQuestion.orElse(null);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class QuestionServiceImpl implements QuestionService{
             if (question.getTitle() != null && !"".equals(question.getTitle())) {
                 predicates.add(cb.like(root.get("title"), "%" + question.getTitle() + "%"));
             }
-            Join join = root.join("user");
+            Join<Object, Object> join = root.join("user");
             predicates.add(cb.equal(join.get("id"), userId));
 
             cq.where(predicates.toArray(new Predicate[0]));
@@ -133,7 +134,7 @@ public class QuestionServiceImpl implements QuestionService{
      */
     @Override
     public Question getAndConvert(Long questionId) {
-        Question question = questionRepository.findOne(questionId);
+        Question question = getQuestion(questionId);
         if (question == null) {
             throw new NotFoundException("该问题不存在");
         }
@@ -173,12 +174,9 @@ public class QuestionServiceImpl implements QuestionService{
      */
     @Override
     public Set<Question> listQuestion(Long tagId) {
-        return new HashSet<>(questionRepository.findAll(new Specification<Question>() {
-            @Override
-            public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-                Join join = root.join("tags");
-                return cb.equal(join.get("id"), tagId);
-            }
+        return new HashSet<>(questionRepository.findAll((Specification<Question>) (root, cq, cb) -> {
+            Join<Object, Object> join = root.join("tags");
+            return cb.equal(join.get("id"), tagId);
         }));
     }
 
@@ -190,12 +188,12 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public List<Question> listImpactQuestionTop(Integer size) {
 
-        List< Order> orders=new ArrayList< Order>();
+        List<Order> orders = new ArrayList<>();
         Order order1 = new Order(Sort.Direction.DESC, "createTime");
         Order order2 = new Order(Sort.Direction.DESC, "impact");
         orders.add(order1);
         orders.add(order2);
-        Pageable pageable = new PageRequest(0, size, new Sort(orders));
+        Pageable pageable = PageRequest.of(0, size, Sort.by((orders)));
         List<Question> questions = questionRepository.findTop(pageable);
 
         if(questions.size() > size-1)

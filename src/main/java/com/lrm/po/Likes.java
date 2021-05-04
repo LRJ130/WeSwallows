@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * @author 山水夜止
+ */
 @Entity
 @Table(name = "t_likes")
 public class Likes {
@@ -13,7 +16,7 @@ public class Likes {
      * 主键
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

@@ -64,7 +64,7 @@ public class TagShowController {
         }
 
         //每页十条
-        Pageable pageRequest = new PageRequest(1, Magic.PAGE_SIZE);
+        Pageable pageRequest = PageRequest.of(1, Magic.PAGE_SIZE);
 
         //将set转换为list
         hashMap.put("pages", DividePage.listConvertToPage(new ArrayList<>(questions), pageRequest));

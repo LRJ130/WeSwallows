@@ -33,35 +33,6 @@ public class TagController {
         return new Result<>(hashMap, true, "");
     }
 
-    //采用评论区的js方法
-    //新增第一级标签
-//    @GetMapping("/tags/input")
-//    public Result<Map<String, Object>> input() {
-//        Map<String, Object> hashMap = new HashMap<>();
-//        Tag tag = new Tag();
-//        hashMap.put("tags", tag);
-//        return new Result<>(hashMap, true, "");
-//    }
-
-    //如果我这里不使用类似评论区的js功能——直接在本页面修改封装成form表单 而是通过getMapping获得返回的新的Tag 是不是必须要在这里直接设置parentTag？
-    //否则会丢失这个parentCommentId
-    //新增下级标签
-//    @GetMapping("/tags/{tagId}/add")
-//    public Result<Map<String, Object>> add() {
-//        Map<String, Object> hashMap = new HashMap<>();
-//        Tag tag = new Tag();
-//        hashMap.put("tags", tag);
-//        return new Result<>(hashMap, true, "");
-//    }
-
-    //修改标签
-//    @GetMapping("/tags/{tagId}/input")
-//    public Result<Map<String, Object>> editInput(@PathVariable Long tagId) {
-//        Map<String, Object> hashMap = new HashMap<>();
-//        hashMap.put("tags", tagService.getTag(tagId));
-//        return new Result<>(hashMap, true, "");
-//    }
-
     /**
      * @param tag 前端封装好的Tag对象
      * @return 返回报错信息; 已保存的Tag对象

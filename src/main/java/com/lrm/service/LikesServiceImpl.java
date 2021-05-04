@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author 山水夜止
@@ -55,7 +56,8 @@ public class LikesServiceImpl implements LikesService{
 
     @Override
     public Likes getLikes(Long likesId) {
-        return likesRepository.findOne(likesId);
+        Optional<Likes> likes = likesRepository.findById(likesId);
+        return likes.orElse(null);
     }
 
     @Override

@@ -36,19 +36,19 @@ public class JWTInterceptor extends HandlerInterceptorAdapter
         } catch (TokenExpiredException e) {
             map.put("isSuccess", false);
             map.put("msg", "用户令牌已经过期，请重新登陆");
-            map.put("errorCode", "401");
+            map.put("code", "401");
         } catch (SignatureVerificationException e){
             map.put("isSuccess", false);
             map.put("msg", "签名错误");
-            map.put("errorCode", "401");
+            map.put("code", "401");
         } catch (AlgorithmMismatchException e){
             map.put("isSuccess", false);
             map.put("msg", "加密算法不匹配");
-            map.put("errorCode", "401");
+            map.put("code", "401");
         } catch (Exception e) {
             map.put("isSuccess", false);
             map.put("msg", "无效令牌");
-            map.put("errorCode", "401");
+            map.put("code", "401");
         }
         //转化为json返回前端
         String json = new ObjectMapper().writeValueAsString(map);

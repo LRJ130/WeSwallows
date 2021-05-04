@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lrm.annotation.AccountInfoFormat;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author 山水夜止
+ */
 //应用于懒加载 在Repository层要使用@EntityGrahph配置在查询方法上 缺一不可
 @NamedEntityGraph(name = "User",
         attributeNodes = {@NamedAttributeNode("postComments"),
@@ -29,7 +32,7 @@ public class User {
     /**
      * 是否为管理员
      */
-    private Boolean isAdmin;
+    private Boolean admin;
 
     /**
      * 能否发言
@@ -154,12 +157,12 @@ public class User {
         this.id = id;
     }
 
-    public Boolean getIsAdmin() {
-        return isAdmin;
+    public Boolean getAdmin() {
+        return admin;
     }
 
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     public String getNickname() {
@@ -218,13 +221,6 @@ public class User {
         this.qqId = qqId;
     }
 
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
-    }
 
     public String getQqId() {
         return qqId;
@@ -302,6 +298,7 @@ public class User {
     public List<Question> getQuestions() {
         return questions;
     }
+
     @JsonManagedReference
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
@@ -352,31 +349,5 @@ public class User {
         this.postDisLikes = postDisLikes;
     }
 
-    //    @Override
-//    public String toString() {
-//        return "User{" +
-//                "id=" + id +
-//                ", isAdmin=" + isAdmin +
-//                ", canSpeak=" + canSpeak +
-//                ", nickname='" + nickname + '\'' +
-//                ", username='" + username + '\'' +
-//                ", password='" + password + '\'' +
-//                ", avatar='" + avatar + '\'' +
-//                ", email='" + email + '\'' +
-//                ", qqId='" + qqId + '\'' +
-//                ", wechatId='" + wechatId + '\'' +
-//                ", sex=" + sex +
-//                ", personalSignature='" + personalSignature + '\'' +
-//                ", academy='" + academy + '\'' +
-//                ", major='" + major + '\'' +
-//                ", donation=" + donation +
-//                ", registerTime=" + registerTime +
-//                ", questions=" + questions +
-//                ", postComments=" + postComments +
-//                ", receiveComments=" + receiveComments +
-//                ", postLikes=" + postLikes +
-//                ", receiveLikes=" + receiveLikes +
-//                '}';
-//    }
 }
 

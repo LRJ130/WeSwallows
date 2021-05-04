@@ -2,14 +2,16 @@ package com.lrm.po;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author 山水夜止
+ */
 @Entity
 @Table(name = "t_comment")
 public class Comment {
@@ -17,7 +19,7 @@ public class Comment {
      * 主键
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -97,6 +99,13 @@ public class Comment {
      */
     @Transient
     private String parentCommentName;
+    /**
+     * 节约空间不入库
+     * 作为传回前端评论区的Comments集合
+     */
+    @Transient
+    private List<Comment> receiveComments = new ArrayList<>();
+
     /**
      * 前端必填内容
      * 评论内容
@@ -204,7 +213,6 @@ public class Comment {
         this.nickname = nickname;
     }
 
-
     public Integer getCommentsNum() {
         return commentsNum;
     }
@@ -293,6 +301,14 @@ public class Comment {
         this.parentCommentName = parentCommentName;
     }
 
+    public List<Comment> getReceiveComments() {
+        return receiveComments;
+    }
+
+    public void setReceiveComments(List<Comment> receiveComments) {
+        this.receiveComments = receiveComments;
+    }
+
     @JsonBackReference
     public Question getQuestion() {
         return question;
@@ -302,7 +318,7 @@ public class Comment {
         this.question = question;
     }
 
-    @JsonManagedReference
+    @JsonBackReference
     public List<Comment> getReplyComments() {
         return replyComments;
     }
@@ -347,6 +363,12 @@ public class Comment {
         this.likes = likes;
     }
 
+    /**
+     * 只需要likes的json对象中含有question或comment 而后二者的json对象中只需要有数量 不需要有dislikes
+     * 所以用这种方向的Json控制
+     *
+     * @return 关联dislikes 实际上json不会返回
+     */
     @JsonBackReference
     public List<DisLikes> getDislikes() {
         return dislikes;
@@ -356,28 +378,4 @@ public class Comment {
         this.dislikes = dislikes;
     }
 
-    //    @Override
-//    public String toString() {
-//        return "Comment{" +
-//                "id=" + id +
-//                ", adminComment=" + adminComment +
-//                ", isRead=" + isRead +
-//                ", isAnswer=" + isAnswer +
-//                ", likesNum=" + likesNum +
-//                ", commentsNum=" + commentsNum +
-//                ", disLikesNum=" + disLikesNum +
-//                ", isHidden=" + isHidden +
-//                ", avatar='" + avatar + '\'' +
-//                ", nickname='" + nickname + '\'' +
-//                ", approved=" + approved +
-//                ", content='" + content + '\'' +
-//                ", createTime=" + createTime +
-//                ", question=" + question +
-//                ", replyComments=" + replyComments +
-//                ", parentComment=" + parentComment +
-//                ", likes=" + likes +
-//                ", receiveUser=" + receiveUser +
-//                ", postUser=" + postUser +
-//                '}';
-//    }
 }

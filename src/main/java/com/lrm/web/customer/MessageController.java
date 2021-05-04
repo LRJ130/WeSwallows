@@ -32,9 +32,6 @@ public class MessageController {
     @Autowired
     private LikesService likesService;
 
-    @Autowired
-    private IndexController indexController;
-
     /**
      * 返回所有通知
      * @param request 获取当前用户id

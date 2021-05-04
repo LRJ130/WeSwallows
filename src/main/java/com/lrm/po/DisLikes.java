@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.util.Date;
 
+/**
+ * @author 山水夜止
+ */
 @Entity
 @Table(name = "t_dislikes")
 public class DisLikes {
@@ -14,7 +16,7 @@ public class DisLikes {
      * 主键
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
@@ -26,12 +28,6 @@ public class DisLikes {
      * 踩的是问题
      */
     private Boolean dislikeQuestion;
-
-//    是否已读
-//    Boolean isRead;
-
-//    @Temporal(TemporalType.TIMESTAMP)
-//    private Date createTime;
 
 
     /**
@@ -51,8 +47,6 @@ public class DisLikes {
      */
     @ManyToOne
     private User postUser;
-//    @ManyToOne
-//    private User receiveUser;
 
     public Long getId() {
         return id;
@@ -78,24 +72,12 @@ public class DisLikes {
         this.dislikeQuestion = dislikeQuestion;
     }
 
-//    public Boolean getRead() {
-//        return isRead;
-//    }
-//
-//    public void setRead(Boolean read) {
-//        isRead = read;
-//    }
-//
-//    public Date getCreateTime() {
-//        return createTime;
-//    }
-//
-//    public void setCreateTime(Date createTime) {
-//        this.createTime = createTime;
-//    }
-
-    //因为我想让likes的json对象中含有question或comment 而后二者的json对象中只需要有数量 不需要有对象
-    // 所以用这种方向的Json控制
+    /**
+     * 只需要likes的json对象中含有question或comment 而后二者的json对象中只需要有数量 不需要有dislikes
+     * 所以用这种方向的Json控制
+     *
+     * @return 关联评论
+     */
     @JsonManagedReference
     public Comment getComment() {
         return comment;
@@ -123,26 +105,4 @@ public class DisLikes {
         this.postUser = postUser;
     }
 
-//    public User getReceiveUser() {
-//        return receiveUser;
-//    }
-//
-//    public void setReceiveUser(User receiveUser) {
-//        this.receiveUser = receiveUser;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "Likes{" +
-//                "likeComment=" + likeComment +
-//                ", likeQuestion=" + likeQuestion +
-//                ", isRead=" + isRead +
-//                ", id=" + id +
-//                ", createTime=" + createTime +
-//                ", comment=" + comment +
-//                ", question=" + question +
-//                ", postUser=" + postUser +
-//                ", receiveUser=" + receiveUser +
-//                '}';
-//    }
 }

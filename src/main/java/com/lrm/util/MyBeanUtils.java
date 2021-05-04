@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author 网络.
+ * @author 网络
  */
 public class MyBeanUtils {
 
@@ -27,7 +27,7 @@ public class MyBeanUtils {
                 nullPropertyNames.add(propertyName);
             }
         }
-        return nullPropertyNames.toArray(new String[nullPropertyNames.size()]);
+        return nullPropertyNames.toArray(new String[0]);
     }
 
 }

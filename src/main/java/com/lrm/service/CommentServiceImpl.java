@@ -1,5 +1,6 @@
 package com.lrm.service;
 
+import com.lrm.Exception.NotFoundException;
 import com.lrm.dao.CommentRepository;
 import com.lrm.po.Comment;
 import com.lrm.po.Question;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author 山水夜止
@@ -27,6 +29,11 @@ public class CommentServiceImpl implements CommentService {
     private QuestionService questionService;
 
     /**
+     * 存放迭代找出的所有子代的集合
+     */
+    private List<Comment> tempReplys = new ArrayList<>();
+
+    /**
      * 保存评论 如果不是通过回复的方式 那么前端传回parentCommentId默认设置为1
      *
      * @param comment    前端封装好了的Comment对象
@@ -35,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Transactional
     @Override
-    public Comment saveComment(Comment comment, Long questionId, User postUser) {
+    public Comment saveComment(Comment comment, Long questionId, User postUser) throws NotFoundException {
         //得到前端封装返回的对象的parentId
         Long parentCommentId = comment.getParentCommentId0();
 
@@ -45,7 +52,10 @@ public class CommentServiceImpl implements CommentService {
         //有父评论 则获得通知的人是父评论的发出者 否则为问题的发出者
         if (parentCommentId != -1) {
 
-            Comment parentComment = commentRepository.findOne(parentCommentId);
+            Comment parentComment = getComment(parentCommentId);
+            if (parentComment == null) {
+                throw new NotFoundException("该父评论不存在");
+            }
 
             //父问题评论数增加
             parentComment.setCommentsNum(parentComment.getCommentsNum() + 1);
@@ -122,17 +132,13 @@ public class CommentServiceImpl implements CommentService {
         }
         question.setImpact(question.getImpact() - 2);
 
-        commentRepository.delete(commentId);
+        commentRepository.deleteById(commentId);
     }
-
-    /**
-     * 存放迭代找出的所有子代的集合
-     */
-    private List<Comment> tempReplys = new ArrayList<>();
 
     @Override
     public Comment getComment(Long commentId) {
-        return commentRepository.findOne(commentId);
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        return comment.orElse(null);
     }
 
     /**
@@ -184,7 +190,7 @@ public class CommentServiceImpl implements CommentService {
             }
 
             //修改顶级节点的reply集合为迭代处理后的集合
-            comment.setReplyComments(tempReplys);
+            comment.setReceiveComments(tempReplys);
 
             //清除临时存放区
             tempReplys = new ArrayList<>();

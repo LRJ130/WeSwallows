@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author 山水夜止
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService
         user.setAvatar("images/3.jpg");
         user.setDonation(0);
         user.setCanSpeak(true);
-        user.setIsAdmin(false);
+        user.setAdmin(false);
         user.setRegisterTime(new Date());
         return userRepository.save(user);
     }
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService
     public User updateUser(User user) {
         //这个u和user虽然id相同，但是已经不是一个对象了！！！user里有新内容，但不包含 前端隐含域不包括的内容。u没有新内容，但是有全部的内容。
         // 所以说要不要这么做 主要看前端有没有隐含域
-        User u = userRepository.findOne(user.getId());
+        User u = getUser(user.getId());
         //user赋值给u
         BeanUtils.copyProperties(user, u, MyBeanUtils.getNullPropertyNames(user));
         return userRepository.save(user);
@@ -102,7 +103,8 @@ public class UserServiceImpl implements UserService
 
     @Override
     public User getUser(Long userId) {
-        return userRepository.findOne(userId);
+        Optional<User> opUser = userRepository.findById(userId);
+        return opUser.orElse(null);
     }
 
     @Override
@@ -118,7 +120,7 @@ public class UserServiceImpl implements UserService
     @Override
     public List<User> listTopUsers(int size) {
         Sort sort = new Sort(Sort.Direction.DESC, "donation");
-        Pageable pageable = new PageRequest(0, size, sort);
+        Pageable pageable = PageRequest.of(0, size, sort);
         return userRepository.findTop(pageable);
     }
 }

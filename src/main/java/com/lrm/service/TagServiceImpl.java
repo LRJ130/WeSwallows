@@ -1,5 +1,6 @@
 package com.lrm.service;
 
+import com.lrm.Exception.NotFoundException;
 import com.lrm.dao.TagRepository;
 import com.lrm.po.Tag;
 import org.springframework.beans.BeanUtils;
@@ -7,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 山水夜止
@@ -29,11 +27,17 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public Tag saveTag(Tag tag) {
+    public Tag saveTag(Tag tag) throws NotFoundException {
         Long parentTagId = tag.getParentTag().getId();
         if (parentTagId != -1) {
-            tag.setParentTag(tagRepository.findOne(parentTagId));
-            tag.setParentTagId0(parentTagId);
+            Optional<Tag> parentTag = tagRepository.findById(parentTagId);
+            if (!parentTag.isPresent()) {
+                throw new NotFoundException("该父标签不存在");
+            } else {
+                tag.setParentTag(parentTag.get());
+                tag.setParentTagId0(parentTagId);
+            }
+
         } else {
             //对象new了(初始化id为-1了) 但没有持久化会报错 所以设成null
             tag.setParentTag(null);
@@ -44,20 +48,23 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void deleteTag(Long id) {
-        tagRepository.delete(id);
+        tagRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public Tag updateTag(Tag tag) {
-        Tag t = tagRepository.findOne(tag.getId());
-        BeanUtils.copyProperties(tag,t);
+        Optional<Tag> opTag = tagRepository.findById(tag.getId());
+        Tag t = opTag.get();
+        BeanUtils.copyProperties(tag, t);
         return tagRepository.save(t);
     }
 
+
     @Override
     public Tag getTag(Long id) {
-        return tagRepository.findOne(id);
+        Optional<Tag> opTag = tagRepository.findById(id);
+        return opTag.orElse(null);
     }
 
     /**
@@ -83,7 +90,12 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public List<Tag> listTag(String ids) { //1,2,3
-        return tagRepository.findAll(convertToList(ids));
+        List<Tag> tags = new ArrayList<>();
+        List<Long> tagIds = convertToList(ids);
+        for (Long tagId : tagIds) {
+            tags.add(getTag(tagId));
+        }
+        return tags;
     }
 
     private List<Long> convertToList(String ids) {

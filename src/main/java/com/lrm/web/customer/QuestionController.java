@@ -8,7 +8,7 @@ import com.lrm.po.User;
 import com.lrm.service.QuestionService;
 import com.lrm.service.TagService;
 import com.lrm.service.UserService;
-import com.lrm.util.FileControl;
+import com.lrm.util.FileUtils;
 import com.lrm.util.GetTokenInfo;
 import com.lrm.vo.QuestionQuery;
 import com.lrm.vo.Result;
@@ -83,25 +83,6 @@ public class QuestionController {
 
         return new Result<>(hashMap, true, "搜索完成");
     }
-
-
-    /**
-     * 发布问题
-     * 有初始化的作用 所有属性都是null
-     *
-     * @return questions:新question对象 tags:第一级标签
-     */
-//    @GetMapping("/questions/input")
-//    public Result<Map<String, Object>> input() {
-//        Map<String, Object> hashMap = new HashMap<>(1);
-//
-//        Question question = new Question();
-//
-//        hashMap.put("questions", question);
-//
-//        return new Result<>(hashMap, true, "");
-//    }
-
 
     /**
      * @return 返回所有第一级标签
@@ -224,7 +205,7 @@ public class QuestionController {
 
         //如果文件夹不存在，创建文件夹 否则删除文件夹
         if (folder.exists()) {
-            FileControl.deleteFile(folder);
+            FileUtils.deleteFile(folder);
         }
 
         List<String> pathList = new ArrayList<>();

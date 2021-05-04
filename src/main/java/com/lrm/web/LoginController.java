@@ -41,7 +41,7 @@ public class LoginController {
         if(result.hasErrors())
         {
             List<FieldError> errors = result.getFieldErrors();
-            StringBuffer buffer = new StringBuffer(64);
+            StringBuilder buffer = new StringBuilder(64);
             for (ObjectError error : errors)
             {
                 buffer.append(error.getDefaultMessage()).append("；");
@@ -112,7 +112,7 @@ public class LoginController {
             map.put("userId", user1.getId().toString());
             map.put("nickname", user1.getNickname());
             map.put("avatar", user1.getAvatar());
-            map.put("isAdmin", user1.getIsAdmin().toString());
+            map.put("admin", user1.getAdmin().toString());
             map.put("canSpeak", user1.getCanSpeak().toString());
             String token = JWTUtils.getToken(map);
 

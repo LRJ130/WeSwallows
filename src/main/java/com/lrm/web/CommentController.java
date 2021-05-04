@@ -69,13 +69,14 @@ public class CommentController
     /**
      * 新增评论
      * 提交表单后 到这里 然后得到id 然后刷新评论
-     * @param comment 前端封装的comment对象
-     * @param request 用于得到当前userId 为评论的postUser
+     *
+     * @param comment       前端封装的comment对象
+     * @param request       用于得到当前userId 为评论的postUser
      * @param bindingResult 校验异常处理
      * @return 新增的评论或新增失败报错
      */
     @PostMapping("/comment")
-    public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult) {
+    public Result<Map<String, Object>> post(@Valid Comment comment, HttpServletRequest request, BindingResult bindingResult) throws NotFoundException {
         Map<String, Object> hashMap = new HashMap<>(1);
 
         //得到当前用户
@@ -339,7 +340,8 @@ public class CommentController
     }
 
     /**
-     * @param comments 被处理的comment集合
+     * @param comments 被处理的comment集合 我更改的只是comment的receiveComment[]属性
+     * 并没有更改他们的父级评论属性 所以仍然可以根据他们的parentComment获取nickname
      * @param userId   当前用户对象 用于处理是否点过赞的
      * @return 给前端的comment集合
      */
@@ -350,7 +352,7 @@ public class CommentController
                 List<Comment> replyComments = comment.getReplyComments();
                 if (replyComments.size() != 0) {
                     for (Comment replyComment : replyComments) {
-                        replyComment.setParentCommentName(comment.getPostUser().getNickname());
+                        replyComment.setParentCommentName(replyComment.getParentComment().getPostUser().getNickname());
                         insertAttribute(replyComment, userId);
                     }
                 }
@@ -362,7 +364,6 @@ public class CommentController
 
     /**
      * 配合dealComment插入数据
-     *
      * @param comment 被插入的评论对象
      * @param userId  当前用户对象 用于处理是否点过赞的
      */

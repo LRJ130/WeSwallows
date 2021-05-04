@@ -3,19 +3,22 @@ package com.lrm.po;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author 山水夜止
+ */
 @Entity
 @Table(name = "t_question")
 public class Question {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -294,7 +297,7 @@ public class Question {
         this.user = user;
     }
 
-    @JsonManagedReference
+    @JsonBackReference
     public List<Comment> getComments() {
         return comments;
     }
@@ -336,7 +339,12 @@ public class Question {
         this.tagIds = tagsToIds(this.getTags());
     }
 
-    //前端Tag对象的格式是以,分割的 tagIds作为一个媒介
+    /**
+     * 前端Tag对象的格式是以,分割的 tagIds作为一个媒介
+     *
+     * @param tags 与question关联的tag集合
+     * @return , 分割的tagid
+     */
     private String tagsToIds(List<Tag> tags) {
         if (!tags.isEmpty()) {
             StringBuilder ids = new StringBuilder();
@@ -364,7 +372,7 @@ public class Question {
             return false;
         }
         Question question = (Question) o;
-        return isApproved() == question.isApproved() && isDisapproved() == question.isDisapproved() && getId().equals(question.getId()) && getContent().equals(question.getContent()) && getDescription().equals(question.getDescription()) && getTitle().equals(question.getTitle()) && getView().equals(question.getView()) && getLikesNum().equals(question.getLikesNum()) && getCommentsNum().equals(question.getCommentsNum()) && getDisLikesNum().equals(question.getDisLikesNum()) && Objects.equals(isHidden, question.isHidden) && getImpact().equals(question.getImpact()) && Objects.equals(getTagIds(), question.getTagIds()) && Objects.equals(getAvatar(), question.getAvatar()) && Objects.equals(getNickname(), question.getNickname()) && Objects.equals(getCreateTime(), question.getCreateTime()) && getNewCommentedTime().equals(question.getNewCommentedTime()) && Objects.equals(getTags(), question.getTags()) && Objects.equals(getUser(), question.getUser()) && Objects.equals(getLikes(), question.getLikes()) && Objects.equals(getDislikes(), question.getDislikes()) && Objects.equals(getComments(), question.getComments());
+        return isApproved().equals(question.isApproved()) && isDisapproved().equals(question.isDisapproved()) && getId().equals(question.getId()) && getContent().equals(question.getContent()) && getDescription().equals(question.getDescription()) && getTitle().equals(question.getTitle()) && getView().equals(question.getView()) && getLikesNum().equals(question.getLikesNum()) && getCommentsNum().equals(question.getCommentsNum()) && getDisLikesNum().equals(question.getDisLikesNum()) && Objects.equals(isHidden, question.isHidden) && getImpact().equals(question.getImpact()) && Objects.equals(getTagIds(), question.getTagIds()) && Objects.equals(getAvatar(), question.getAvatar()) && Objects.equals(getNickname(), question.getNickname()) && Objects.equals(getCreateTime(), question.getCreateTime()) && getNewCommentedTime().equals(question.getNewCommentedTime()) && Objects.equals(getTags(), question.getTags()) && Objects.equals(getUser(), question.getUser()) && Objects.equals(getLikes(), question.getLikes()) && Objects.equals(getDislikes(), question.getDislikes()) && Objects.equals(getComments(), question.getComments());
     }
 
     @Override
